@@ -3,7 +3,7 @@ using FancyWidgets.Models;
 
 namespace FancyWidgets;
 
-internal class JsonFileManager
+public class JsonFileManager
 {
     private readonly string _workingDirectory = Directory.GetCurrentDirectory();
 
