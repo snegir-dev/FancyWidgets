@@ -1,23 +1,34 @@
-﻿using Avalonia;
+﻿using System.Diagnostics;
+using System.Reactive.Disposables;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Platform;
+using Avalonia.ReactiveUI;
 using FancyWidgets.Models;
+using FancyWidgets.Views;
+using ReactiveUI;
 using WinApi.User32;
 using Window = Avalonia.Controls.Window;
 
 namespace FancyWidgets;
 
-public class Widget : Window
+public class Widget : ReactiveWindow<Window>
 {
     private readonly IntPtr _windowHandler;
     private readonly JsonFileManager _jsonFileManager = new();
     private readonly WidgetSetting _widgetSettings;
     private readonly WidgetMetadata _widgetMetadata;
+    private const int CountStartCallingPositionChanges = 2;
+    private int _currentCountStartCallingPositionChanges;
+    protected readonly ContextMenuWindow ContextMenuWindow;
 
     protected Widget()
     {
+        ContextMenuWindow = new ContextMenuWindow();
+        ContextMenuWindow.SetSenderWidget(this);
         _windowHandler = PlatformImpl.Handle.Handle;
         _widgetSettings = _jsonFileManager.GetModelFromJson<WidgetSetting>(AppSettings.WidgetSettingsFile);
         _widgetMetadata = _jsonFileManager.GetModelFromJson<WidgetMetadata>(AppSettings.WidgetMetadataFile);
@@ -36,12 +47,12 @@ public class Widget : Window
         base.OnApplyTemplate(e);
     }
 
-    public void AllowToEdit()
+    protected void AllowToEdit()
     {
         SystemDecorations = SystemDecorations.Full;
     }
 
-    public void DenyToEdit()
+    protected void DenyToEdit()
     {
         SystemDecorations = SystemDecorations.None;
     }
@@ -62,16 +73,28 @@ public class Widget : Window
         ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.NoChrome;
         ExtendClientAreaTitleBarHeightHint = -1;
         ShowInTaskbar = false;
-        IsHitTestVisible = false;
         SystemDecorations = SystemDecorations.None;
         Topmost = false;
+    }
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        if (e.GetCurrentPoint(this).Properties.PointerUpdateKind != PointerUpdateKind.RightButtonPressed)
+            return;
+    
+        if (e.KeyModifiers != KeyModifiers.Control)
+            return;
+        
+        ContextMenuWindow.Show();
+        base.OnPointerPressed(e);
     }
 
     private void WidgetToBottom()
     {
         var handle = PlatformImpl.Handle.Handle;
-        User32Methods.SetWindowPos(handle, 
-            (IntPtr)HwndZOrder.HWND_BOTTOM, Position.X, Position.Y, (int)Width, (int)Height, WindowPositionFlags.SWP_NOACTIVATE);
+        User32Methods.SetWindowPos(handle,
+            (IntPtr)HwndZOrder.HWND_BOTTOM, Position.X, Position.Y, (int)Width, (int)Height,
+            WindowPositionFlags.SWP_NOACTIVATE);
     }
 
     private void HideFromAltTab()
@@ -92,26 +115,29 @@ public class Widget : Window
 
     private void OnPositionChanged(object? sender, EventArgs e)
     {
-        _jsonFileManager.UpdateModel<WidgetSetting>(widgetSettings =>
+        if (_currentCountStartCallingPositionChanges >= CountStartCallingPositionChanges)
         {
-            widgetSettings.XPosition = Position.X;
-            widgetSettings.YPosition = Position.Y;
-        }, AppSettings.WidgetSettingsFile);
+            _jsonFileManager.UpdateModel<WidgetSetting>(widgetSettings =>
+            {
+                widgetSettings.XPosition = Position.X;
+                widgetSettings.YPosition = Position.Y;
+            }, AppSettings.WidgetSettingsFile);
+        }
+        else
+        {
+            _currentCountStartCallingPositionChanges++;
+        }
     }
 
     private void OnStarted(object? sender, EventArgs eventArgs)
     {
-        _jsonFileManager.UpdateModel<WidgetSetting>(widgetSettings =>
-        {
-            widgetSettings.IsEnable = true;
-        }, AppSettings.WidgetSettingsFile);
+        _jsonFileManager.UpdateModel<WidgetSetting>(widgetSettings => { widgetSettings.IsEnable = true; },
+            AppSettings.WidgetSettingsFile);
     }
 
     private void OnClosed(object? sender, EventArgs eventArgs)
     {
-        _jsonFileManager.UpdateModel<WidgetSetting>(widgetSettings =>
-        {
-            widgetSettings.IsEnable = false;
-        }, AppSettings.WidgetSettingsFile);
+        _jsonFileManager.UpdateModel<WidgetSetting>(widgetSettings => { widgetSettings.IsEnable = false; },
+            AppSettings.WidgetSettingsFile);
     }
 }
