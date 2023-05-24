@@ -1,7 +1,7 @@
 ﻿using Avalonia.Controls;
 using ReactiveUI;
 
-namespace FancyWidgets.ContextMenuElements.Buttons;
+namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 
 public class ChangeWindow : WidgetContextMenu
 {
