@@ -1,7 +1,7 @@
 ﻿using System.Reactive;
 using ReactiveUI;
 
-namespace FancyWidgets.ContextMenuElements;
+namespace FancyWidgets.Common.Controls.ContextMenuElements;
 
 public abstract class WidgetContextMenu : ReactiveObject
 {

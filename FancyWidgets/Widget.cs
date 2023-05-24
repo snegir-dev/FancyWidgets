@@ -1,15 +1,13 @@
-﻿using System.Diagnostics;
-using System.Reactive.Disposables;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
+using FancyWidgets.Common.StyleProvider;
 using FancyWidgets.Models;
 using FancyWidgets.Views;
-using ReactiveUI;
 using WinApi.User32;
 using Window = Avalonia.Controls.Window;
 
@@ -24,9 +22,11 @@ public class Widget : ReactiveWindow<Window>
     private const int CountStartCallingPositionChanges = 2;
     private int _currentCountStartCallingPositionChanges;
     protected readonly ContextMenuWindow ContextMenuWindow;
+    public bool IsStyleRegenerate { get; set; }
 
-    protected Widget()
+    public Widget()
     {
+        FancyDependency.RegisterDependency();
         ContextMenuWindow = new ContextMenuWindow();
         ContextMenuWindow.SetSenderWidget(this);
         _windowHandler = PlatformImpl.Handle.Handle;
@@ -36,6 +36,7 @@ public class Widget : ReactiveWindow<Window>
         PositionChanged += OnPositionChanged;
         Closed += OnClosed;
         Initialized += OnStarted;
+        DataContextChanged += OnDataContextChanged;
     }
 
     protected sealed override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -45,16 +46,6 @@ public class Widget : ReactiveWindow<Window>
         LoadWidgetData();
         LoadDefaultStyles();
         base.OnApplyTemplate(e);
-    }
-
-    protected void AllowToEdit()
-    {
-        SystemDecorations = SystemDecorations.Full;
-    }
-
-    protected void DenyToEdit()
-    {
-        SystemDecorations = SystemDecorations.None;
     }
 
     private void LoadWidgetData()
@@ -81,10 +72,10 @@ public class Widget : ReactiveWindow<Window>
     {
         if (e.GetCurrentPoint(this).Properties.PointerUpdateKind != PointerUpdateKind.RightButtonPressed)
             return;
-    
+
         if (e.KeyModifiers != KeyModifiers.Control)
             return;
-        
+
         ContextMenuWindow.Show();
         base.OnPointerPressed(e);
     }
@@ -127,6 +118,14 @@ public class Widget : ReactiveWindow<Window>
         {
             _currentCountStartCallingPositionChanges++;
         }
+    }
+
+    private void OnDataContextChanged(object? sender, EventArgs e)
+    {
+        if (DataContext == null)
+            return;
+        var styleController = new StyleProvider(DataContext, IsStyleRegenerate);
+        styleController.LoadStyles();
     }
 
     private void OnStarted(object? sender, EventArgs eventArgs)

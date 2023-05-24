@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace FancyWidgets.ContextMenuElements.Buttons;
+namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 
 public class Disable : WidgetContextMenu
 {
