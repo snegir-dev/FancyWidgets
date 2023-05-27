@@ -1,4 +1,5 @@
-﻿using FancyWidgets.Common.Controls.ContextMenuElements;
+﻿using Avalonia.Controls;
+using FancyWidgets.Common.Controls.ContextMenuElements;
 using ReactiveUI;
 using Splat;
 

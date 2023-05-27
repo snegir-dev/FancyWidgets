@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
@@ -21,7 +22,6 @@ public class ContextMenuWindow : ReactiveWindow<ContextMenuWindowViewModel>
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
-        Opened += OnOpened;
         PointerLeave += (_, _) => Hide();
     }
 
@@ -31,11 +31,12 @@ public class ContextMenuWindow : ReactiveWindow<ContextMenuWindowViewModel>
         if (ViewModel != null) ViewModel.SenderWidget = Widget;
     }
 
-    private void OnOpened(object? sender, EventArgs eventArgs)
+    public override void Show()
     {
         User32Methods.GetCursorPos(out var point);
         Position =
-            new PixelPoint(point.X + 10, (int)(point.Y - Height));
+            new PixelPoint(point.X - 5, (int)(point.Y - Height));
+        base.Show();
     }
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)

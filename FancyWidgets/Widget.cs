@@ -8,12 +8,12 @@ using Avalonia.ReactiveUI;
 using FancyWidgets.Common.StyleProvider;
 using FancyWidgets.Models;
 using FancyWidgets.Views;
+using ReactiveUI;
 using WinApi.User32;
-using Window = Avalonia.Controls.Window;
 
 namespace FancyWidgets;
 
-public class Widget : ReactiveWindow<Window>
+public class Widget : ReactiveWindow<ReactiveObject>
 {
     private readonly IntPtr _windowHandler;
     private readonly JsonFileManager _jsonFileManager = new();
@@ -75,7 +75,7 @@ public class Widget : ReactiveWindow<Window>
 
         if (e.KeyModifiers != KeyModifiers.Control)
             return;
-
+        
         ContextMenuWindow.Show();
         base.OnPointerPressed(e);
     }

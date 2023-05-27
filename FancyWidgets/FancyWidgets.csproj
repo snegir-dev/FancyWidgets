@@ -4,7 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.1-alpha</Version>
+        <Version>0.0.4-alpha</Version>
         <Title>FancyWidgets</Title>
         <Authors>Snegir.null</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="Avalonia" Version="0.10.19" />
+      <PackageReference Include="Avalonia.Diagnostics" Version="0.10.19" />
       <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.19" />
       <PackageReference Include="FluentAvaloniaUI" Version="1.4.5" />
       <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.4.0" />
