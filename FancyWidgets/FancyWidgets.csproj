@@ -9,7 +9,7 @@
         <Authors>Snegir.null</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
-
+    
     <ItemGroup>
       <PackageReference Include="Avalonia" Version="0.10.19" />
       <PackageReference Include="Avalonia.Diagnostics" Version="0.10.19" />
@@ -26,6 +26,7 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="ReactiveUI" Version="13.2.10" />
       <PackageReference Include="Splat.DryIoc" Version="14.6.8" />
+      <PackageReference Include="ThemeEditor.Controls.ColorPicker" Version="0.10.17" />
       <PackageReference Include="WinApi" Version="4.0.0" />
     </ItemGroup>
 

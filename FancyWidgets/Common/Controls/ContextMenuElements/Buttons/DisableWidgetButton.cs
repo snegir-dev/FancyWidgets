@@ -2,11 +2,11 @@
 
 namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 
-public class Disable : WidgetContextMenu
+public class DisableWidgetButton : WidgetContextMenu
 {
     public override string Content { get; set; } = "Disable";
 
-    public Disable()
+    public DisableWidgetButton()
     {
         ExecuteCommand = ReactiveCommand.Create<Widget>(Execute);
     }

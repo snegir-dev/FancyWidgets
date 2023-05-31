@@ -1,14 +1,17 @@
 ﻿using Newtonsoft.Json;
 
-namespace FancyWidgets.Common.StyleProvider.Models;
+namespace FancyWidgets.Common.SettingProvider.Models;
 
-public class Style
+public class SettingElement
 {
+    [JsonProperty(nameof(Id))]
+    public string? Id { get; set; }
+    
+    [JsonProperty(nameof(Namespace))]
+    public string? Namespace { get; set; }
+    
     [JsonProperty(nameof(Name))]
     public string Name { get; set; }
-
-    [JsonProperty(nameof(Description))] 
-    public string? Description { get; set; }
 
     [JsonProperty(nameof(DataType))] 
     public string DataType { get; set; }

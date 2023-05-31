@@ -3,7 +3,7 @@ using ReactiveUI;
 
 namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 
-public class ChangeWindow : WidgetContextMenu
+public class ChangeWindowButton : WidgetContextMenu
 {
     private const string EditContentButton = "Edit";
     private const string DisableEditingContentButton = "Disable editing";
