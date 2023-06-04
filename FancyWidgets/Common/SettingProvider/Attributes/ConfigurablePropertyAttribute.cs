@@ -1,12 +1,9 @@
 ﻿namespace FancyWidgets.Common.SettingProvider.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
-public class ChangeablePropertyAttribute : Attribute
+public class ConfigurablePropertyAttribute : Attribute
 {
     public string? Id { get; }
 
-    public ChangeablePropertyAttribute(string? id = null)
-    {
-        Id = id;
-    }
+    public ConfigurablePropertyAttribute(string? id = null) => Id = id;
 }

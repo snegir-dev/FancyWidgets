@@ -11,44 +11,44 @@ namespace FancyWidgets.Common.SettingProvider;
 
 internal class SettingProvider : ISettingProvider
 {
-    private static readonly JsonFileManager JsonFileManager = new();
+    private readonly JsonFileManager _jsonFileManager = new();
     private readonly object _editableObject;
     private readonly List<SettingElement> _settingElements;
 
     public SettingProvider(object editableObject)
     {
         _editableObject = editableObject;
-        _settingElements = JsonFileManager.GetModelFromJson<List<SettingElement>>(AppSettings.SettingFile);
+        _settingElements = _jsonFileManager.GetModelFromJson<List<SettingElement>>(AppSettings.SettingFile);
     }
 
     public SettingProvider()
     {
         var editableObject = Locator.Current.GetService<IScreen>();
-        if (editableObject != null)
+        if (editableObject is not null)
         {
             _editableObject = editableObject;
-            _settingElements = JsonFileManager.GetModelFromJson<List<SettingElement>>(AppSettings.SettingFile);
+            _settingElements = _jsonFileManager.GetModelFromJson<List<SettingElement>>(AppSettings.SettingFile);
         }
         else
         {
             throw new NotImplementedException("To use SettingProvider, the model must implement the IScreen interface");
         }
     }
-    
+
     public void InitializeSettings()
     {
         var settingElements = GenerateSettings();
-        JsonFileManager.SaveJsonFile(settingElements, AppSettings.SettingFile);
+        _jsonFileManager.SaveJsonFile(settingElements, AppSettings.SettingFile);
     }
 
     public void LoadSettings()
     {
         var propertyInfos = _editableObject.GetType().GetProperties()
-            .Where(p => p.GetCustomAttribute<ChangeablePropertyAttribute>() != null).ToList();
+            .Where(p => p.GetCustomAttribute<ConfigurablePropertyAttribute>() != null).ToList();
 
         foreach (var settingElement in _settingElements)
         {
-            if (settingElement.Value == null)
+            if (settingElement.Value is null)
                 continue;
             var property = propertyInfos.First(p => p.Name == settingElement.Name
                                                     && p.DeclaringType?.FullName == settingElement.FullNameClass);
@@ -67,14 +67,13 @@ internal class SettingProvider : ISettingProvider
             Value = value
         };
         _settingElements.Add(settingElement);
-        JsonFileManager.SaveJsonFile(_settingElements, AppSettings.SettingFile);
+        _jsonFileManager.SaveJsonFile(_settingElements, AppSettings.SettingFile);
     }
 
     public void SetValue(string id, object? value)
     {
         var settingElement = _settingElements.FirstOrDefault(e => e.Id == id);
-
-        if (settingElement == null)
+        if (settingElement is null)
             return;
 
         var property = GetEditableObjectPropertyById(id);
@@ -83,12 +82,12 @@ internal class SettingProvider : ISettingProvider
 
     public void SetValue(string fullNameClass, string propertyName, object? value)
     {
-        var settingElements = JsonFileManager.GetModelFromJson<List<SettingElement>>(AppSettings.SettingFile);
+        var settingElements = _jsonFileManager.GetModelFromJson<List<SettingElement>>(AppSettings.SettingFile);
         var settingElement =
             settingElements.FirstOrDefault(e => e.FullNameClass == fullNameClass
                                                 && e.Name == propertyName);
 
-        if (settingElement == null)
+        if (settingElement is null)
             return;
 
         var property = GetEditableObjectPropertyByNamespaceAndName(fullNameClass, propertyName);
@@ -110,13 +109,9 @@ internal class SettingProvider : ISettingProvider
 
     private void SetValue(PropertyInfo? property, SettingElement settingElement, object? value)
     {
-        if (property != null)
-        {
-            property.SetValue(_editableObject, value);
-        }
-
+        property?.SetValue(_editableObject, value);
         settingElement.Value = value;
-        JsonFileManager.SaveJsonFile(_settingElements, AppSettings.SettingFile);
+        _jsonFileManager.SaveJsonFile(_settingElements, AppSettings.SettingFile);
     }
 
     private PropertyInfo? GetEditableObjectPropertyById(string id)
@@ -126,7 +121,7 @@ internal class SettingProvider : ISettingProvider
 
         return editableObjectProperties.FirstOrDefault(p =>
         {
-            var attribute = p.GetCustomAttribute<ChangeablePropertyAttribute>();
+            var attribute = p.GetCustomAttribute<ConfigurablePropertyAttribute>();
             return attribute?.Id == id;
         });
     }
@@ -145,19 +140,19 @@ internal class SettingProvider : ISettingProvider
         var classes = GetChangeableClasses();
         var properties = classes
             .SelectMany(c => c.GetProperties())
-            .Where(p => p.GetCustomAttribute<ChangeablePropertyAttribute>() != null);
+            .Where(p => p.GetCustomAttribute<ConfigurablePropertyAttribute>() != null);
 
         var settingElements = new List<SettingElement>();
         foreach (var property in properties)
         {
-            if (property.DeclaringType == null)
+            if (property.DeclaringType is null)
                 continue;
 
             var editableObject = Activator.CreateInstance(property.DeclaringType);
             var propertyValue = property.GetValue(editableObject);
             var settingElement = new SettingElement
             {
-                Id = property.GetCustomAttribute<ChangeablePropertyAttribute>()?.Id,
+                Id = property.GetCustomAttribute<ConfigurablePropertyAttribute>()?.Id,
                 FullNameClass = property.DeclaringType?.FullName,
                 Name = property.Name,
                 DataType = $"{propertyValue?.GetType().FullName}, {propertyValue?.GetType().Assembly.FullName}",
@@ -174,6 +169,6 @@ internal class SettingProvider : ISettingProvider
     {
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         return assemblies.SelectMany(a => a.GetExportedTypes()
-            .Where(c => c.GetCustomAttribute<ChangeableObjectAttribute>() != null));
+            .Where(c => c.GetCustomAttribute<ConfigurableObjectAttribute>() != null));
     }
 }

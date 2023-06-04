@@ -4,7 +4,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:FancyWidgets.ViewModels"
         xmlns:controls="clr-namespace:FancyWidgets.Controls"
-        xmlns:colorPicker="clr-namespace:ThemeEditor.Controls.ColorPicker;assembly=ThemeEditor.Controls.ColorPicker"
         d:DataContext="{d:DesignInstance viewModels:StylesChangeWindowViewModel, IsDesignTimeCreatable=True}"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="FancyWidgets.Views.SettingWindow"
