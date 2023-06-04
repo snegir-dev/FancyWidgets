@@ -1,0 +1,23 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:FancyWidgets.ViewModels"
+        xmlns:controls="clr-namespace:FancyWidgets.Controls"
+        d:DataContext="{d:DesignInstance viewModels:StylesChangeWindowViewModel, IsDesignTimeCreatable=True}"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="FancyWidgets.Views.SettingWindow"
+        Title="StylesChangeWindow"
+        Background="#202020"
+        Width="400"
+        Height="500">
+
+    <Window.Styles>
+        <StyleInclude Source="/Controls/DynamicInputControl.axaml" />
+    </Window.Styles>
+
+    <StackPanel>
+        <controls:DynamicInputControl />
+    </StackPanel>
+
+</Window>

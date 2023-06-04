@@ -1,0 +1,65 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DataContext="{d:DesignInstance viewModels:FancyToggleSwitchViewModel, IsDesignTimeCreatable=True}"
+             xmlns:xamlConverter="clr-namespace:FancyWidgets.Common.XamlConverter"
+             xmlns:viewModels="clr-namespace:FancyWidgets.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="FancyWidgets.Controls.SettingPanel.FancyToggleSwitch">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Resources/BaseResource.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <xamlConverter:SubtractionConverter x:Key="SubtractionConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border Background="{StaticResource PanelColor}"
+            CornerRadius="5"
+            Margin="5">
+        <Border HorizontalAlignment="Stretch"
+                Padding="10">
+            <Grid Name="Grid"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Stretch"
+                  ColumnDefinitions="Auto,Auto">
+
+                <TextBlock Text="{Binding Title}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                           TextWrapping="Wrap"
+                           TextTrimming="CharacterEllipsis"
+                           FontSize="15"
+                           Padding="0 0 5 0"
+                           Grid.Column="0">
+
+                    <TextBlock.Width>
+                        <MultiBinding Converter="{StaticResource SubtractionConverter}">
+                            <Binding ElementName="ToggleSwitch" Path="Bounds.Width" />
+                            <Binding ElementName="Grid" Path="Bounds.Width" />
+                        </MultiBinding>
+                    </TextBlock.Width>
+                </TextBlock>
+
+                <ToggleSwitch Name="ToggleSwitch"
+                              HorizontalAlignment="Right"
+                              FontSize="15"
+                              Padding="15 6 15 6"
+                              Grid.Column="1" />
+            </Grid>
+        </Border>
+    </Border>
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Text}"></Setter>
+        </Style>
+        <Style Selector="ToggleSwitch">
+            <Setter Property="Foreground" Value="{StaticResource Text}"></Setter>
+        </Style>
+    </UserControl.Styles>
+    
+</UserControl>

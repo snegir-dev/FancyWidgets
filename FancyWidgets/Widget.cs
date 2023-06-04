@@ -5,15 +5,17 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
-using FancyWidgets.Common.StyleProvider;
+using FancyWidgets.Common.SettingProvider;
+using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.Models;
 using FancyWidgets.Views;
+using ReactiveUI;
+using Splat;
 using WinApi.User32;
-using Window = Avalonia.Controls.Window;
 
 namespace FancyWidgets;
 
-public class Widget : ReactiveWindow<Window>
+public abstract class Widget : ReactiveWindow<ReactiveObject>
 {
     private readonly IntPtr _windowHandler;
     private readonly JsonFileManager _jsonFileManager = new();
@@ -24,7 +26,7 @@ public class Widget : ReactiveWindow<Window>
     protected readonly ContextMenuWindow ContextMenuWindow;
     public bool IsStyleRegenerate { get; set; }
 
-    public Widget()
+    protected Widget()
     {
         FancyDependency.RegisterDependency();
         ContextMenuWindow = new ContextMenuWindow();
@@ -42,7 +44,8 @@ public class Widget : ReactiveWindow<Window>
     protected sealed override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         HideFromAltTab();
-        WidgetToBottom();
+        // WidgetToBottom();
+        Topmost = true;
         LoadWidgetData();
         LoadDefaultStyles();
         base.OnApplyTemplate(e);
@@ -73,9 +76,9 @@ public class Widget : ReactiveWindow<Window>
         if (e.GetCurrentPoint(this).Properties.PointerUpdateKind != PointerUpdateKind.RightButtonPressed)
             return;
 
-        if (e.KeyModifiers != KeyModifiers.Control)
-            return;
-
+        // if (e.KeyModifiers != KeyModifiers.Control)
+        //     return;
+        
         ContextMenuWindow.Show();
         base.OnPointerPressed(e);
     }
@@ -124,8 +127,8 @@ public class Widget : ReactiveWindow<Window>
     {
         if (DataContext == null)
             return;
-        var styleController = new StyleProvider(DataContext, IsStyleRegenerate);
-        styleController.LoadStyles();
+        var settingProvider = new SettingProvider(DataContext);
+        settingProvider.LoadSettings();
     }
 
     private void OnStarted(object? sender, EventArgs eventArgs)

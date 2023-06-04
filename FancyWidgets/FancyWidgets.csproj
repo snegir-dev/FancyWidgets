@@ -4,14 +4,15 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.1-alpha</Version>
+        <Version>0.0.4-alpha</Version>
         <Title>FancyWidgets</Title>
         <Authors>Snegir.null</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
-
+    
     <ItemGroup>
       <PackageReference Include="Avalonia" Version="0.10.19" />
+      <PackageReference Include="Avalonia.Diagnostics" Version="0.10.19" />
       <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.19" />
       <PackageReference Include="FluentAvaloniaUI" Version="1.4.5" />
       <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.4.0" />
@@ -25,6 +26,7 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="ReactiveUI" Version="13.2.10" />
       <PackageReference Include="Splat.DryIoc" Version="14.6.8" />
+      <PackageReference Include="ThemeEditor.Controls.ColorPicker" Version="0.10.17" />
       <PackageReference Include="WinApi" Version="4.0.0" />
     </ItemGroup>
 
