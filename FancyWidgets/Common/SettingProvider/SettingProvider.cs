@@ -9,7 +9,7 @@ using Splat;
 
 namespace FancyWidgets.Common.SettingProvider;
 
-public class SettingProvider : ISettingProvider
+internal class SettingProvider : ISettingProvider
 {
     private static readonly JsonFileManager JsonFileManager = new();
     private readonly object _editableObject;
@@ -34,6 +34,12 @@ public class SettingProvider : ISettingProvider
             throw new NotImplementedException("To use SettingProvider, the model must implement the IScreen interface");
         }
     }
+    
+    public void InitializeSettings()
+    {
+        var settingElements = GenerateSettings();
+        JsonFileManager.SaveJsonFile(settingElements, AppSettings.SettingFile);
+    }
 
     public void LoadSettings()
     {
@@ -50,6 +56,18 @@ public class SettingProvider : ISettingProvider
             var type = CustomConvert.ChangeType(settingElement.Value, destinationType);
             property.SetValue(_editableObject, type);
         }
+    }
+
+    public void AddValue(string id, Type dataType, object value)
+    {
+        var settingElement = new SettingElement()
+        {
+            Id = id,
+            DataType = $"{dataType.FullName}, {dataType.Assembly.FullName}",
+            Value = value
+        };
+        _settingElements.Add(settingElement);
+        JsonFileManager.SaveJsonFile(_settingElements, AppSettings.SettingFile);
     }
 
     public void SetValue(string id, object? value)
@@ -88,12 +106,6 @@ public class SettingProvider : ISettingProvider
         var value = _settingElements.First(e => e.FullNameClass == fullNameClass
                                                 && e.Name == propertyName).Value;
         return (T?)CustomConvert.ChangeType(value, typeof(T));
-    }
-
-    public static void InitializeSettings()
-    {
-        var settingElements = GenerateSettings();
-        JsonFileManager.SaveJsonFile(settingElements, AppSettings.SettingFile);
     }
 
     private void SetValue(PropertyInfo? property, SettingElement settingElement, object? value)

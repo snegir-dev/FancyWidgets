@@ -6,9 +6,11 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.SettingProvider;
+using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.Models;
 using FancyWidgets.Views;
 using ReactiveUI;
+using Splat;
 using WinApi.User32;
 
 namespace FancyWidgets;

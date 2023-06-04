@@ -11,7 +11,7 @@ public class SettingElement
     public string? FullNameClass { get; set; }
     
     [JsonProperty(nameof(Name))]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [JsonProperty(nameof(DataType))] 
     public string DataType { get; set; }
