@@ -17,57 +17,8 @@
         <StyleInclude Source="/Controls/DynamicInputControl.axaml" />
     </Window.Styles>
 
-
     <StackPanel>
         <controls:DynamicInputControl />
     </StackPanel>
-    
-    <!-- <TabControl Items="{Binding Pages}"> -->
-    <!--     <TabControl.ItemTemplate> -->
-    <!--         <DataTemplate> -->
-    <!--             <TextBlock Text="{Binding Name}" /> -->
-    <!--         </DataTemplate> -->
-    <!--     </TabControl.ItemTemplate> -->
-    <!--     <TabControl.ContentTemplate> -->
-    <!--         <DataTemplate> -->
-    <!--             <ItemsControl Items="{Binding Sections}"> -->
-    <!--                 <ItemsControl.ItemTemplate> -->
-    <!--                     <DataTemplate DataType="models:Section"> -->
-    <!-- -->
-    <!--                         <StackPanel Margin="0 0 0 10"> -->
-    <!--                             <TextBlock Text="{Binding Name}" /> -->
-    <!--                             <Border Background="#404142" -->
-    <!--                                     CornerRadius="3" -->
-    <!--                                     Padding="0 7 0 7"> -->
-    <!-- -->
-    <!--                                 <ItemsControl Items="{Binding Styles}"> -->
-    <!--                                     <ItemsControl.ItemTemplate> -->
-    <!--                                         <DataTemplate> -->
-    <!--                                             <StackPanel> -->
-    <!--                                                 <TextBlock Text="{Binding Name}" /> -->
-    <!-- -->
-    <!--                                             </StackPanel> -->
-    <!--                                         </DataTemplate> -->
-    <!--                                     </ItemsControl.ItemTemplate> -->
-    <!--                                 </ItemsControl> -->
-    <!-- -->
-    <!--                             </Border> -->
-    <!--                         </StackPanel> -->
-    <!-- -->
-    <!--                     </DataTemplate> -->
-    <!--                 </ItemsControl.ItemTemplate> -->
-    <!--             </ItemsControl> -->
-    <!--         </DataTemplate> -->
-    <!--     </TabControl.ContentTemplate> -->
-    <!-- </TabControl> -->
-
-    <Window.Styles>
-        <Style Selector="TabItem /template/ Border#PART_SelectedPipe">
-            <Setter Property="IsVisible" Value="False"></Setter>
-        </Style>
-        <Style Selector="TabItem:selected">
-            <Setter Property="Background" Value="#1e1f22"></Setter>
-        </Style>
-    </Window.Styles>
 
 </Window>

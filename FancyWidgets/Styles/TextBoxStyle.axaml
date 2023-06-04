@@ -1,0 +1,30 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+    
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Resources/BaseResource.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+
+    <Styles>
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="{StaticResource PanelColor}"></Setter>
+            <Setter Property="BorderBrush" Value="{StaticResource Text}"></Setter>
+        </Style>
+        <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{StaticResource PanelColor}"></Setter>
+        </Style>
+        <Style Selector="TextBox:focus-within /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{StaticResource PanelColor}"></Setter>
+            <Setter Property="BorderBrush" Value="{StaticResource ButtonColor}"></Setter>
+        </Style>
+    </Styles>
+</Styles>

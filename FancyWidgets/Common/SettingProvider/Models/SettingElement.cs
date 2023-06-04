@@ -7,8 +7,8 @@ public class SettingElement
     [JsonProperty(nameof(Id))]
     public string? Id { get; set; }
     
-    [JsonProperty(nameof(Namespace))]
-    public string? Namespace { get; set; }
+    [JsonProperty(nameof(FullNameClass))]
+    public string? FullNameClass { get; set; }
     
     [JsonProperty(nameof(Name))]
     public string Name { get; set; }

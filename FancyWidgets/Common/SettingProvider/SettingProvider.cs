@@ -45,7 +45,7 @@ public class SettingProvider : ISettingProvider
             if (settingElement.Value == null)
                 continue;
             var property = propertyInfos.First(p => p.Name == settingElement.Name
-                                                    && p.DeclaringType?.Namespace == settingElement.Namespace);
+                                                    && p.DeclaringType?.FullName == settingElement.FullNameClass);
             var destinationType = Type.GetType(settingElement.DataType)!;
             var type = CustomConvert.ChangeType(settingElement.Value, destinationType);
             property.SetValue(_editableObject, type);
@@ -59,21 +59,35 @@ public class SettingProvider : ISettingProvider
         if (settingElement == null)
             return;
 
-        var property = GetPropertyById(id);
+        var property = GetEditableObjectPropertyById(id);
         SetValue(property, settingElement, value);
     }
 
-    public void SetValue(string namespaceName, string propertyName, object? value)
+    public void SetValue(string fullNameClass, string propertyName, object? value)
     {
         var settingElements = JsonFileManager.GetModelFromJson<List<SettingElement>>(AppSettings.SettingFile);
         var settingElement =
-            settingElements.FirstOrDefault(e => e.Namespace == namespaceName && e.Name == propertyName);
+            settingElements.FirstOrDefault(e => e.FullNameClass == fullNameClass
+                                                && e.Name == propertyName);
 
         if (settingElement == null)
             return;
 
-        var property = GetPropertyByNamespaceAndName(namespaceName, propertyName);
+        var property = GetEditableObjectPropertyByNamespaceAndName(fullNameClass, propertyName);
         SetValue(property, settingElement, value);
+    }
+
+    public T? GetValue<T>(string id)
+    {
+        var value = _settingElements.First(e => e.Id == id).Value;
+        return (T?)CustomConvert.ChangeType(value, typeof(T));
+    }
+
+    public T? GetValue<T>(string fullNameClass, string propertyName)
+    {
+        var value = _settingElements.First(e => e.FullNameClass == fullNameClass
+                                                && e.Name == propertyName).Value;
+        return (T?)CustomConvert.ChangeType(value, typeof(T));
     }
 
     public static void InitializeSettings()
@@ -86,19 +100,14 @@ public class SettingProvider : ISettingProvider
     {
         if (property != null)
         {
-            var destinationType = Type.GetType(settingElement.DataType);
-            if (destinationType != null)
-            {
-                var convertedValue = CustomConvert.ChangeType(value, destinationType);
-                property.SetValue(_editableObject, convertedValue);
-            }
+            property.SetValue(_editableObject, value);
         }
 
         settingElement.Value = value;
         JsonFileManager.SaveJsonFile(_settingElements, AppSettings.SettingFile);
     }
 
-    private PropertyInfo? GetPropertyById(string id)
+    private PropertyInfo? GetEditableObjectPropertyById(string id)
     {
         var typeEditableObject = _editableObject.GetType();
         var editableObjectProperties = typeEditableObject.GetProperties();
@@ -110,13 +119,13 @@ public class SettingProvider : ISettingProvider
         });
     }
 
-    private PropertyInfo? GetPropertyByNamespaceAndName(string namespaceName, string propertyName)
+    private PropertyInfo? GetEditableObjectPropertyByNamespaceAndName(string fullNameClass, string propertyName)
     {
         var typeEditableObject = _editableObject.GetType();
         var editableObjectProperties = typeEditableObject.GetProperties();
 
         return editableObjectProperties.FirstOrDefault(p =>
-            p.PropertyType.Namespace == namespaceName && p.Name == propertyName);
+            p.PropertyType.FullName == fullNameClass && p.Name == propertyName);
     }
 
     private static IEnumerable<SettingElement> GenerateSettings()
@@ -137,9 +146,10 @@ public class SettingProvider : ISettingProvider
             var settingElement = new SettingElement
             {
                 Id = property.GetCustomAttribute<ChangeablePropertyAttribute>()?.Id,
-                Namespace = property.DeclaringType?.Namespace,
+                FullNameClass = property.DeclaringType?.FullName,
                 Name = property.Name,
-                DataType = $"{propertyValue?.GetType().FullName}, {propertyValue?.GetType().Assembly.FullName}"
+                DataType = $"{propertyValue?.GetType().FullName}, {propertyValue?.GetType().Assembly.FullName}",
+                Value = propertyValue
             };
 
             settingElements.Add(settingElement);

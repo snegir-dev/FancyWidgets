@@ -2,22 +2,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             d:DataContext="{d:DesignInstance base:FancyButton, IsDesignTimeCreatable=True}"
+             d:DataContext="{d:DesignInstance viewModels:FancyComboBoxViewModel, IsDesignTimeCreatable=True}"
              xmlns:xamlConverter="clr-namespace:FancyWidgets.Common.XamlConverter"
-             xmlns:base="clr-namespace:FancyWidgets.Controls.Base"
+             xmlns:viewModels="clr-namespace:FancyWidgets.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="FancyWidgets.Controls.Base.FancyButton">
-    
+             x:Class="FancyWidgets.Controls.SettingPanel.FancyComboBox">
+
     <UserControl.Resources>
-        <xamlConverter:SubtractionConverter x:Key="SubtractionConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Resources/BaseResource.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <xamlConverter:SubtractionConverter x:Key="SubtractionConverter" />
+            <xamlConverter:DarkenColorConvertor x:Key="DarkenColorConvertor" />
+        </ResourceDictionary>
     </UserControl.Resources>
-    
-    <Border Background="#303030"
+
+    <Border Background="{StaticResource PanelColor}"
             CornerRadius="5"
             Margin="5">
         <Border HorizontalAlignment="Stretch"
                 Padding="10">
-            <Grid Name="Grid" VerticalAlignment="Center"
+            <Grid Name="Grid"
+                  VerticalAlignment="Center"
                   HorizontalAlignment="Stretch"
                   ColumnDefinitions="Auto,Auto">
 
@@ -32,19 +39,20 @@
 
                     <TextBlock.Width>
                         <MultiBinding Converter="{StaticResource SubtractionConverter}">
-                            <Binding ElementName="Button" Path="Bounds.Width" />
+                            <Binding ElementName="ComboBox" Path="Bounds.Width" />
                             <Binding ElementName="Grid" Path="Bounds.Width" />
                         </MultiBinding>
                     </TextBlock.Width>
                 </TextBlock>
 
-                <Button Name="Button"
-                        HorizontalAlignment="Right"
-                        FontSize="15"
-                        Padding="15 6 15 6"
-                        Grid.Column="1" />
+                <ComboBox Name="ComboBox"
+                          SelectedIndex="0"
+                          HorizontalAlignment="Right"
+                          FontSize="15"
+                          Grid.Column="1">
+                </ComboBox>
             </Grid>
         </Border>
     </Border>
-    
+
 </UserControl>
