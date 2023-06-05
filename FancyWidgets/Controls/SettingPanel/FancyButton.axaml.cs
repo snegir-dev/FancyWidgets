@@ -6,9 +6,9 @@ using ReactiveUI;
 
 namespace FancyWidgets.Controls.SettingPanel;
 
-public class FancyButton : ReactiveUserControl<FancyButtonViewModel>
+public partial class FancyButton : ReactiveUserControl<FancyButtonViewModel>
 {
-    public Button Button { get; set; }
+    public Button CustomButton { get; set; }
     public string? Title { get; set; }
     
     public FancyButton()
@@ -34,5 +34,6 @@ public class FancyButton : ReactiveUserControl<FancyButtonViewModel>
             this.WhenAnyValue(x => x.Title).BindTo(this, x => x.ViewModel!.Title);
             this.WhenAnyValue(x => x.Button).BindTo(this, x => x.ViewModel!.Button);
         });
+        CustomButton = Button;
     }
 }

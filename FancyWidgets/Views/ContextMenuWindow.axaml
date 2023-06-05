@@ -1,14 +1,9 @@
-<Window xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="clr-namespace:FancyWidgets.ViewModels"
-        xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        xmlns:fancyWidgets="clr-namespace:FancyWidgets"
-        d:DataContext="{d:DesignInstance viewModels:ContextMenuWindowViewModel, IsDesignTimeCreatable=True}"
         mc:Ignorable="d"
         x:Class="FancyWidgets.Views.ContextMenuWindow"
-        Title="CommandBar"
         SizeToContent="WidthAndHeight"
         Width="100"
         Height="200"
@@ -17,7 +12,6 @@
         Topmost="True"
         SystemDecorations="None"
         CanResize="False"
-        CornerRadius="99"
         Focusable="False"
         ShowInTaskbar="False">
 
@@ -26,7 +20,7 @@
             CornerRadius="3"
             Background="#202020">
         <StackPanel>
-            <ItemsControl Items="{Binding ContextMenuButtons}">
+            <ItemsControl ItemsSource="{Binding ContextMenuButtons}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Content="{Binding Content}"

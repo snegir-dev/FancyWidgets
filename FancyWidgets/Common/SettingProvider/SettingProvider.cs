@@ -50,11 +50,12 @@ internal class SettingProvider : ISettingProvider
         {
             if (settingElement.Value is null)
                 continue;
-            var property = propertyInfos.First(p => p.Name == settingElement.Name
-                                                    && p.DeclaringType?.FullName == settingElement.FullNameClass);
+            var property = propertyInfos
+                .FirstOrDefault(p => p.Name == settingElement.Name
+                                     && p.DeclaringType?.FullName == settingElement.FullNameClass);
             var destinationType = Type.GetType(settingElement.DataType)!;
             var type = CustomConvert.ChangeType(settingElement.Value, destinationType);
-            property.SetValue(_editableObject, type);
+            property?.SetValue(_editableObject, type);
         }
     }
 

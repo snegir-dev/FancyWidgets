@@ -6,9 +6,9 @@ using ReactiveUI;
 
 namespace FancyWidgets.Controls.SettingPanel;
 
-public class FancyToggleSwitch : ReactiveUserControl<FancyToggleSwitchViewModel>
+public partial class FancyToggleSwitch : ReactiveUserControl<FancyToggleSwitchViewModel>
 {
-    public ToggleSwitch ToggleSwitch { get; set; }
+    public ToggleSwitch CustomToggleSwitch { get; set; }
     public string? Title { get; set; }
 
     public FancyToggleSwitch()
@@ -34,5 +34,6 @@ public class FancyToggleSwitch : ReactiveUserControl<FancyToggleSwitchViewModel>
             this.WhenAnyValue(x => x.Title).BindTo(this, x => x.ViewModel!.Title);
             this.WhenAnyValue(x => x.ToggleSwitch).BindTo(this, x => x.ViewModel!.ToggleSwitch);
         });
+        CustomToggleSwitch = ToggleSwitch;
     }
 }

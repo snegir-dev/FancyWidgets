@@ -9,7 +9,7 @@ namespace FancyWidgets;
 
 public static class FancyDependency
 {
-    internal static void RegisterDependency()
+    public static void RegisterDependency()
     {
         Locator.CurrentMutable.Register<WidgetContextMenu, DisableWidgetButton>();
         Locator.CurrentMutable.Register<WidgetContextMenu, ChangeWindowButton>();

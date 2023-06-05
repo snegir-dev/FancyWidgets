@@ -9,7 +9,7 @@ using Splat;
 
 namespace FancyWidgets.Controls;
 
-public class DynamicInputControl : TemplatedControl, IActivatableView
+public partial class DynamicInputControl : TemplatedControl, IActivatableView
 {
     public static readonly StyledProperty<string> DataTypeProperty =
         AvaloniaProperty.Register<DynamicInputControl, string>(nameof(DataType));
