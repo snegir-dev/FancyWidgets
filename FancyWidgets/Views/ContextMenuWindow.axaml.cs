@@ -1,5 +1,4 @@
-using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
@@ -8,7 +7,7 @@ using WinApi.User32;
 
 namespace FancyWidgets.Views;
 
-public class ContextMenuWindow : ReactiveWindow<ContextMenuWindowViewModel>
+public partial class ContextMenuWindow : ReactiveWindow<ContextMenuWindowViewModel>
 {
     public Widget Widget { get; set; }
 
@@ -22,7 +21,7 @@ public class ContextMenuWindow : ReactiveWindow<ContextMenuWindowViewModel>
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
-        PointerLeave += (_, _) => Hide();
+        PointerExited += (_, _) => Hide();
     }
 
     public void SetSenderWidget(Widget widget)

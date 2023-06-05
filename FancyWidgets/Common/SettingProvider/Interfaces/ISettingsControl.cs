@@ -5,6 +5,6 @@ namespace FancyWidgets.Common.SettingProvider.Interfaces;
 
 public interface ISettingsControl : IStyleable
 {
-    public IControl Control { get; }
+    public Control Control { get; }
     new Type StyleKey { get; }
 }

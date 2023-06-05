@@ -9,7 +9,7 @@ public static class CustomConvert
     {
         if (string.IsNullOrWhiteSpace(value?.ToString()))
             return null;
-
+        
         if (typeof(IBrush).IsAssignableFrom(conversionType))
             return Brush.Parse(value.ToString());
         if (typeof(Enum).IsAssignableFrom(conversionType))

@@ -6,9 +6,9 @@ using ReactiveUI;
 
 namespace FancyWidgets.Controls.SettingPanel;
 
-public class FancyComboBox : ReactiveUserControl<FancyComboBoxViewModel>
+public partial class FancyComboBox : ReactiveUserControl<FancyComboBoxViewModel>
 {
-    public ComboBox ComboBox { get; set; }
+    public ComboBox CustomComboBox { get; set; }
     public string? Title { get; set; } 
     
     public FancyComboBox()
@@ -34,5 +34,6 @@ public class FancyComboBox : ReactiveUserControl<FancyComboBoxViewModel>
             this.WhenAnyValue(x => x.Title).BindTo(this, x => x.ViewModel!.Title);
             this.WhenAnyValue(x => x.ComboBox).BindTo(this, x => x.ViewModel!.ComboBox);
         });
+        CustomComboBox = ComboBox;
     }
 }

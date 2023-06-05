@@ -6,11 +6,11 @@ using ReactiveUI;
 
 namespace FancyWidgets.Controls.SettingPanel;
 
-public class FancyColorSelection : ReactiveUserControl<FancyColorSelectionViewModel>
+public partial class FancyColorSelection : ReactiveUserControl<FancyColorSelectionViewModel>
 {
     public string? Title { get; set; }
 
-    public TextBox TextBox { get; set; }
+    public TextBox CustomTextBox { get; set; }
     
     public FancyColorSelection()
     {
@@ -35,5 +35,6 @@ public class FancyColorSelection : ReactiveUserControl<FancyColorSelectionViewMo
             this.WhenAnyValue(x => x.Title).BindTo(this, x => x.ViewModel!.Title);
             this.WhenAnyValue(x => x.TextBox).BindTo(this, x => x.ViewModel!.TextBox);
         });
+        CustomTextBox = TextBox;
     }
 }

@@ -6,9 +6,9 @@ using ReactiveUI;
 
 namespace FancyWidgets.Controls.SettingPanel;
 
-public class FancyCheckBox : ReactiveUserControl<FancyCheckBoxViewModel>
+public partial class FancyCheckBox : ReactiveUserControl<FancyCheckBoxViewModel>
 {
-    public CheckBox CheckBox { get; set; }
+    public CheckBox CustomCheckBox { get; set; }
     public string? Title { get; set; }
     
     public FancyCheckBox()
@@ -34,5 +34,6 @@ public class FancyCheckBox : ReactiveUserControl<FancyCheckBoxViewModel>
             this.WhenAnyValue(x => x.Title).BindTo(this, x => x.ViewModel!.Title);
             this.WhenAnyValue(x => x.CheckBox).BindTo(this, x => x.ViewModel!.CheckBox);
         });
+        CustomCheckBox = CheckBox;
     }
 }

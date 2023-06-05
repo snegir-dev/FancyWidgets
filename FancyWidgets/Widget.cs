@@ -6,11 +6,9 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.SettingProvider;
-using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.Models;
 using FancyWidgets.Views;
 using ReactiveUI;
-using Splat;
 using WinApi.User32;
 
 namespace FancyWidgets;
@@ -24,14 +22,13 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
     private const int CountStartCallingPositionChanges = 2;
     private int _currentCountStartCallingPositionChanges;
     protected readonly ContextMenuWindow ContextMenuWindow;
-    public bool IsStyleRegenerate { get; set; }
 
     protected Widget()
     {
         FancyDependency.RegisterDependency();
         ContextMenuWindow = new ContextMenuWindow();
         ContextMenuWindow.SetSenderWidget(this);
-        _windowHandler = PlatformImpl.Handle.Handle;
+        _windowHandler = TryGetPlatformHandle()!.Handle;
         _widgetSettings = _jsonFileManager.GetModelFromJson<WidgetSetting>(AppSettings.WidgetSettingsFile);
         _widgetMetadata = _jsonFileManager.GetModelFromJson<WidgetMetadata>(AppSettings.WidgetMetadataFile);
         LayoutUpdated += OnLayoutUpdated;
@@ -45,6 +42,7 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
     {
         HideFromAltTab();
         // WidgetToBottom();
+        HideMinimizeAndMaximizeButtons();
         Topmost = true;
         LoadWidgetData();
         LoadDefaultStyles();
@@ -61,7 +59,7 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
 
     private void LoadDefaultStyles()
     {
-        TransparencyLevelHint = WindowTransparencyLevel.Transparent;
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Transparent };
         Background = Brushes.Transparent;
         ExtendClientAreaToDecorationsHint = false;
         ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.NoChrome;
@@ -78,15 +76,14 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
 
         // if (e.KeyModifiers != KeyModifiers.Control)
         //     return;
-        
+
         ContextMenuWindow.Show();
         base.OnPointerPressed(e);
     }
 
     private void WidgetToBottom()
     {
-        var handle = PlatformImpl.Handle.Handle;
-        User32Methods.SetWindowPos(handle,
+        User32Methods.SetWindowPos(_windowHandler,
             (IntPtr)HwndZOrder.HWND_BOTTOM, Position.X, Position.Y, (int)Width, (int)Height,
             WindowPositionFlags.SWP_NOACTIVATE);
     }
@@ -96,6 +93,13 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
         var currentStyle = User32Helpers.GetWindowLongPtr(_windowHandler, WindowLongFlags.GWL_EXSTYLE);
         User32Helpers.SetWindowLongPtr(_windowHandler, WindowLongFlags.GWL_EXSTYLE,
             currentStyle | (int)WindowExStyles.WS_EX_NOACTIVATE);
+    }
+
+    private void HideMinimizeAndMaximizeButtons()
+    {
+        var currentStyle = User32Methods.GetWindowLongPtr(_windowHandler, (int)WindowLongFlags.GWL_STYLE);
+        var newStyle = currentStyle & (IntPtr)(~(WindowStyles.WS_MINIMIZEBOX | WindowStyles.WS_MAXIMIZEBOX));
+        User32Methods.SetWindowLongPtr(_windowHandler, (int)WindowLongFlags.GWL_STYLE, newStyle);
     }
 
     private void OnLayoutUpdated(object? sender, EventArgs e)

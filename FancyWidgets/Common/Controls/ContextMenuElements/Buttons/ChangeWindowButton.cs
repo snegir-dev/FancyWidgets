@@ -1,4 +1,8 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Platform;
 using ReactiveUI;
 
 namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
@@ -9,6 +13,8 @@ public class ChangeWindowButton : WidgetContextMenu
     private const string DisableEditingContentButton = "Disable editing";
     private bool _isPressed;
     private string _content = EditContentButton;
+    private Point _startPosition;
+    private Widget _widget;
 
     public override string Content
     {
@@ -18,6 +24,7 @@ public class ChangeWindowButton : WidgetContextMenu
 
     protected override void Execute(Widget widget)
     {
+        _widget = widget;
         if (_isPressed == false)
         {
             widget.SystemDecorations = SystemDecorations.Full;
