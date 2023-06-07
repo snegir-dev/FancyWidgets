@@ -4,7 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.4-alpha</Version>
+        <Version>0.0.5-alpha</Version>
         <Title>FancyWidgets</Title>
         <Authors>Snegir.null</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -37,5 +37,11 @@
 
     <ItemGroup>
       <Folder Include="Common\Controls\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Controls\DynamicInputControlUi.cs">
+        <DependentUpon>DynamicInputControl.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>
