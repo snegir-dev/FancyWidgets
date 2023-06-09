@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Reflection;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -6,31 +7,35 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.SettingProvider;
+using FancyWidgets.Common.System;
 using FancyWidgets.Models;
 using FancyWidgets.Views;
 using ReactiveUI;
 using WinApi.User32;
+using Path = System.IO.Path;
 
 namespace FancyWidgets;
 
 public abstract class Widget : ReactiveWindow<ReactiveObject>
 {
     private readonly IntPtr _windowHandler;
-    private readonly JsonFileManager _jsonFileManager = new();
+    private readonly WidgetJsonProvider _widgetJsonProvider = new();
     private readonly WidgetSetting _widgetSettings;
     private readonly WidgetMetadata _widgetMetadata;
     private const int CountStartCallingPositionChanges = 2;
     private int _currentCountStartCallingPositionChanges;
     protected readonly ContextMenuWindow ContextMenuWindow;
+    private readonly WindowSystemManager _windowSystemManager;
 
     protected Widget()
     {
-        FancyDependency.RegisterDependency();
+        WidgetApplication.CreateBuilder();
         ContextMenuWindow = new ContextMenuWindow();
         ContextMenuWindow.SetSenderWidget(this);
         _windowHandler = TryGetPlatformHandle()!.Handle;
-        _widgetSettings = _jsonFileManager.GetModelFromJson<WidgetSetting>(AppSettings.WidgetSettingsFile);
-        _widgetMetadata = _jsonFileManager.GetModelFromJson<WidgetMetadata>(AppSettings.WidgetMetadataFile);
+        _windowSystemManager = new WindowSystemManager(_windowHandler);
+        _widgetSettings = _widgetJsonProvider.GetModel<WidgetSetting>(AppSettings.WidgetSettingsFile);
+        _widgetMetadata = _widgetJsonProvider.GetModel<WidgetMetadata>(AppSettings.WidgetMetadataFile);
         LayoutUpdated += OnLayoutUpdated;
         PositionChanged += OnPositionChanged;
         Closed += OnClosed;
@@ -40,12 +45,12 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
 
     protected sealed override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        HideFromAltTab();
-        // WidgetToBottom();
-        HideMinimizeAndMaximizeButtons();
         Topmost = true;
         LoadWidgetData();
         LoadDefaultStyles();
+        _windowSystemManager.HideFromAltTab();
+        _windowSystemManager.HideMinimizeAndMaximizeButtons();
+        _windowSystemManager.WidgetToBottom(Position, (int)Width, (int)Height);
         base.OnApplyTemplate(e);
     }
 
@@ -74,37 +79,16 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
         if (e.GetCurrentPoint(this).Properties.PointerUpdateKind != PointerUpdateKind.RightButtonPressed)
             return;
 
-        // if (e.KeyModifiers != KeyModifiers.Control)
-        //     return;
+        if (e.KeyModifiers != KeyModifiers.Control)
+            return;
 
         ContextMenuWindow.Show();
         base.OnPointerPressed(e);
     }
 
-    private void WidgetToBottom()
-    {
-        User32Methods.SetWindowPos(_windowHandler,
-            (IntPtr)HwndZOrder.HWND_BOTTOM, Position.X, Position.Y, (int)Width, (int)Height,
-            WindowPositionFlags.SWP_NOACTIVATE);
-    }
-
-    private void HideFromAltTab()
-    {
-        var currentStyle = User32Helpers.GetWindowLongPtr(_windowHandler, WindowLongFlags.GWL_EXSTYLE);
-        User32Helpers.SetWindowLongPtr(_windowHandler, WindowLongFlags.GWL_EXSTYLE,
-            currentStyle | (int)WindowExStyles.WS_EX_NOACTIVATE);
-    }
-
-    private void HideMinimizeAndMaximizeButtons()
-    {
-        var currentStyle = User32Methods.GetWindowLongPtr(_windowHandler, (int)WindowLongFlags.GWL_STYLE);
-        var newStyle = currentStyle & (IntPtr)(~(WindowStyles.WS_MINIMIZEBOX | WindowStyles.WS_MAXIMIZEBOX));
-        User32Methods.SetWindowLongPtr(_windowHandler, (int)WindowLongFlags.GWL_STYLE, newStyle);
-    }
-
     private void OnLayoutUpdated(object? sender, EventArgs e)
     {
-        _jsonFileManager.UpdateModel<WidgetSetting>(widgetSettings =>
+        _widgetJsonProvider.UpdateModel<WidgetSetting>(widgetSettings =>
         {
             widgetSettings.Width = Width;
             widgetSettings.Height = Height;
@@ -115,7 +99,7 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
     {
         if (_currentCountStartCallingPositionChanges >= CountStartCallingPositionChanges)
         {
-            _jsonFileManager.UpdateModel<WidgetSetting>(widgetSettings =>
+            _widgetJsonProvider.UpdateModel<WidgetSetting>(widgetSettings =>
             {
                 widgetSettings.XPosition = Position.X;
                 widgetSettings.YPosition = Position.Y;
@@ -137,13 +121,13 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
 
     private void OnStarted(object? sender, EventArgs eventArgs)
     {
-        _jsonFileManager.UpdateModel<WidgetSetting>(widgetSettings => { widgetSettings.IsEnable = true; },
+        _widgetJsonProvider.UpdateModel<WidgetSetting>(widgetSettings => { widgetSettings.IsEnable = true; },
             AppSettings.WidgetSettingsFile);
     }
 
     private void OnClosed(object? sender, EventArgs eventArgs)
     {
-        _jsonFileManager.UpdateModel<WidgetSetting>(widgetSettings => { widgetSettings.IsEnable = false; },
+        _widgetJsonProvider.UpdateModel<WidgetSetting>(widgetSettings => { widgetSettings.IsEnable = false; },
             AppSettings.WidgetSettingsFile);
     }
 }

@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.SettingProvider.Models;
+using FancyWidgets.Common.System;
 using FancyWidgets.ViewModels;
 using ReactiveUI;
 using WinApi.User32;
@@ -20,9 +21,8 @@ public partial class SettingWindow : ReactiveWindow<StylesChangeWindowViewModel>
     public SettingWindow()
     {
         InitializeComponent();
-#if DEBUG
-        this.AttachDevTools();
-#endif
+        var windowSystemManager = new WindowSystemManager(TryGetPlatformHandle()!.Handle);
+        windowSystemManager.HideMinimizeAndMaximizeButtons();
     }
 
     private void InitializeComponent()

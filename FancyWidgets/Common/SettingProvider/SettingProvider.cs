@@ -11,14 +11,14 @@ namespace FancyWidgets.Common.SettingProvider;
 
 internal class SettingProvider : ISettingProvider
 {
-    private readonly JsonFileManager _jsonFileManager = new();
+    private readonly WidgetJsonProvider _widgetJsonProvider = new();
     private readonly object _editableObject;
     private readonly List<SettingElement> _settingElements;
 
     public SettingProvider(object editableObject)
     {
         _editableObject = editableObject;
-        _settingElements = _jsonFileManager.GetModelFromJson<List<SettingElement>>(AppSettings.SettingFile);
+        _settingElements = _widgetJsonProvider.GetModel<List<SettingElement>>(AppSettings.SettingFile);
     }
 
     public SettingProvider()
@@ -27,7 +27,7 @@ internal class SettingProvider : ISettingProvider
         if (editableObject is not null)
         {
             _editableObject = editableObject;
-            _settingElements = _jsonFileManager.GetModelFromJson<List<SettingElement>>(AppSettings.SettingFile);
+            _settingElements = _widgetJsonProvider.GetModel<List<SettingElement>>(AppSettings.SettingFile);
         }
         else
         {
@@ -38,7 +38,7 @@ internal class SettingProvider : ISettingProvider
     public void InitializeSettings()
     {
         var settingElements = GenerateSettings();
-        _jsonFileManager.SaveJsonFile(settingElements, AppSettings.SettingFile);
+        _widgetJsonProvider.SaveModel(settingElements, AppSettings.SettingFile);
     }
 
     public void LoadSettings()
@@ -68,7 +68,7 @@ internal class SettingProvider : ISettingProvider
             Value = value
         };
         _settingElements.Add(settingElement);
-        _jsonFileManager.SaveJsonFile(_settingElements, AppSettings.SettingFile);
+        _widgetJsonProvider.SaveModel(_settingElements, AppSettings.SettingFile);
     }
 
     public void SetValue(string id, object? value)
@@ -83,7 +83,7 @@ internal class SettingProvider : ISettingProvider
 
     public void SetValue(string fullNameClass, string propertyName, object? value)
     {
-        var settingElements = _jsonFileManager.GetModelFromJson<List<SettingElement>>(AppSettings.SettingFile);
+        var settingElements = _widgetJsonProvider.GetModel<List<SettingElement>>(AppSettings.SettingFile);
         var settingElement =
             settingElements.FirstOrDefault(e => e.FullNameClass == fullNameClass
                                                 && e.Name == propertyName);
@@ -112,7 +112,7 @@ internal class SettingProvider : ISettingProvider
     {
         property?.SetValue(_editableObject, value);
         settingElement.Value = value;
-        _jsonFileManager.SaveJsonFile(_settingElements, AppSettings.SettingFile);
+        _widgetJsonProvider.SaveModel(_settingElements, AppSettings.SettingFile);
     }
 
     private PropertyInfo? GetEditableObjectPropertyById(string id)
