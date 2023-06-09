@@ -29,7 +29,7 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
 
     protected Widget()
     {
-        FancyDependency.RegisterDependency();
+        WidgetApplication.CreateBuilder();
         ContextMenuWindow = new ContextMenuWindow();
         ContextMenuWindow.SetSenderWidget(this);
         _windowHandler = TryGetPlatformHandle()!.Handle;
