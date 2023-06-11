@@ -19,7 +19,7 @@ public static class WidgetApplication
         builder.RegisterType<ChangeWindowButton>().As<WidgetContextMenu>();
         builder.RegisterType<ChangeStylesButton>().As<WidgetContextMenu>();
         builder.RegisterType<SettingProvider>().As<ISettingProvider>();
-        
+
         Locator.CurrentMutable.InitializeSplat();
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
 

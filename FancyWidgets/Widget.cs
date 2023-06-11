@@ -1,22 +1,12 @@
-﻿using System.Reflection;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Input;
-using Avalonia.Media;
-using Avalonia.Platform;
-using Avalonia.ReactiveUI;
-using FancyWidgets.Common.SettingProvider;
+﻿using Avalonia.ReactiveUI;
+using FancyWidgets.Common.Domain;
 using FancyWidgets.Common.System;
 using FancyWidgets.Models;
 using FancyWidgets.Views;
-using ReactiveUI;
-using WinApi.User32;
-using Path = System.IO.Path;
 
 namespace FancyWidgets;
 
-public abstract class Widget : ReactiveWindow<ReactiveObject>
+public abstract class Widget : ReactiveWindow<TrackedReactiveObject>
 {
     private readonly IntPtr _windowHandler;
     private readonly WidgetJsonProvider _widgetJsonProvider = new();
@@ -40,7 +30,6 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
         PositionChanged += OnPositionChanged;
         Closed += OnClosed;
         Initialized += OnStarted;
-        DataContextChanged += OnDataContextChanged;
     }
 
     protected sealed override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -109,14 +98,6 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
         {
             _currentCountStartCallingPositionChanges++;
         }
-    }
-
-    private void OnDataContextChanged(object? sender, EventArgs e)
-    {
-        if (DataContext == null)
-            return;
-        var settingProvider = new SettingProvider(DataContext);
-        settingProvider.LoadSettings();
     }
 
     private void OnStarted(object? sender, EventArgs eventArgs)

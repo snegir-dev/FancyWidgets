@@ -14,8 +14,8 @@ public class DynamicInputControlUi
                 .Background(Brush.Parse("#151515"))
         );
 
-        var resource = AvaloniaXamlLoader.Load(new Uri("avares://FancyWidgets/Resources/BaseResource.axaml"));
-        userControl.Resources((ResourceDictionary)resource);
+        // var resource = AvaloniaXamlLoader.Load(new Uri("avares://FancyWidgets/Resources/BaseResource.axaml"));
+        // userControl.Resources((ResourceDictionary)resource);
 
         StackPanel = stackPanel;
     }

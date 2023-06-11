@@ -10,7 +10,7 @@ using Splat;
 
 namespace FancyWidgets.Controls;
 
-public partial class DynamicInputControl : ReactiveUserControl<ReactiveObject>
+public class DynamicInputControl : ReactiveUserControl<ReactiveObject>
 {
     private readonly DynamicInputControlUi _dynamicInputControlUi = new();
     private readonly StackPanel? _stackPanel;
