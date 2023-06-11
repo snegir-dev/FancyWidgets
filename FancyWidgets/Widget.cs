@@ -1,13 +1,15 @@
 ﻿using Avalonia.ReactiveUI;
-using FancyWidgets.Common.Domain;
+using FancyWidgets.Common.SettingProvider;
 using FancyWidgets.Common.System;
 using FancyWidgets.Models;
 using FancyWidgets.Views;
+using ReactiveUI;
 
 namespace FancyWidgets;
 
-public abstract class Widget : ReactiveWindow<TrackedReactiveObject>
+public abstract class Widget : ReactiveWindow<ReactiveObject>
 {
+    public string Uuid { get; private set; }
     private readonly IntPtr _windowHandler;
     private readonly WidgetJsonProvider _widgetJsonProvider = new();
     private readonly WidgetSetting _widgetSettings;
@@ -19,13 +21,13 @@ public abstract class Widget : ReactiveWindow<TrackedReactiveObject>
 
     protected Widget()
     {
-        WidgetApplication.CreateBuilder();
         ContextMenuWindow = new ContextMenuWindow();
         ContextMenuWindow.SetSenderWidget(this);
         _windowHandler = TryGetPlatformHandle()!.Handle;
         _windowSystemManager = new WindowSystemManager(_windowHandler);
         _widgetSettings = _widgetJsonProvider.GetModel<WidgetSetting>(AppSettings.WidgetSettingsFile);
         _widgetMetadata = _widgetJsonProvider.GetModel<WidgetMetadata>(AppSettings.WidgetMetadataFile);
+        Uuid = _widgetMetadata.Uuid ?? throw new NullReferenceException("Uuid must not be null.");
         LayoutUpdated += OnLayoutUpdated;
         PositionChanged += OnPositionChanged;
         Closed += OnClosed;
