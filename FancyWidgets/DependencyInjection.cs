@@ -1,5 +1,4 @@
-﻿using DryIoc;
-using FancyWidgets.Common.Controls.ContextMenuElements;
+﻿using FancyWidgets.Common.Controls.ContextMenuElements;
 using FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 using FancyWidgets.Common.SettingProvider;
 using FancyWidgets.Common.SettingProvider.Interfaces;

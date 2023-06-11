@@ -7,6 +7,7 @@ namespace FancyWidgets;
 public class WidgetJsonProvider
 {
     private string WorkDirectoryPath => GetWorkDirectoryPath();
+    private const string WidgetStartupClassName = "WidgetProgram";
 
     public void SaveModel(object model, string nameFile)
     {
@@ -48,9 +49,11 @@ public class WidgetJsonProvider
         File.WriteAllText(filePath, "{}");
     }
 
-    private string GetWorkDirectoryPath()
+    private static string GetWorkDirectoryPath()
     {
-        var workDirectoryPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+        var executingAssembly = AppDomain.CurrentDomain.GetAssemblies()
+            .FirstOrDefault(a => a.GetExportedTypes().Any(t => t.Name == WidgetStartupClassName));
+        var workDirectoryPath = Path.GetDirectoryName(executingAssembly?.Location);
         if (workDirectoryPath == null)
             throw new NullReferenceException("Failed to get the path to the widget assembly");
 
