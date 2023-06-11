@@ -1,38 +1,24 @@
 ﻿using System.Reflection;
+using Autofac;
 using FancyWidgets.Common.Convertors;
+using FancyWidgets.Common.Domain;
 using FancyWidgets.Common.SettingProvider.Attributes;
 using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.Common.SettingProvider.Models;
 using FancyWidgets.Models;
-using ReactiveUI;
 using Splat;
+using static FancyWidgets.Common.SettingProvider.ViewModelContainer;
 
 namespace FancyWidgets.Common.SettingProvider;
 
 internal class SettingProvider : ISettingProvider
 {
     private readonly WidgetJsonProvider _widgetJsonProvider = new();
-    private readonly object _editableObject;
     private readonly List<SettingElement> _settingElements;
-
-    public SettingProvider(object editableObject)
-    {
-        _editableObject = editableObject;
-        _settingElements = _widgetJsonProvider.GetModel<List<SettingElement>>(AppSettings.SettingFile);
-    }
 
     public SettingProvider()
     {
-        var editableObject = Locator.Current.GetService<IScreen>();
-        if (editableObject is not null)
-        {
-            _editableObject = editableObject;
-            _settingElements = _widgetJsonProvider.GetModel<List<SettingElement>>(AppSettings.SettingFile);
-        }
-        else
-        {
-            throw new NotImplementedException("To use SettingProvider, the model must implement the IScreen interface");
-        }
+        _settingElements = _widgetJsonProvider.GetModel<List<SettingElement>>(AppSettings.SettingFile);
     }
 
     public void InitializeSettings()
@@ -43,7 +29,10 @@ internal class SettingProvider : ISettingProvider
 
     public void LoadSettings()
     {
-        var propertyInfos = _editableObject.GetType().GetProperties()
+        if (CurrentViewModel is null)
+            throw new NullReferenceException();
+
+        var propertyInfos = CurrentViewModel.GetType().GetProperties()
             .Where(p => p.GetCustomAttribute<ConfigurablePropertyAttribute>() != null).ToList();
 
         foreach (var settingElement in _settingElements)
@@ -55,7 +44,7 @@ internal class SettingProvider : ISettingProvider
                                      && p.DeclaringType?.FullName == settingElement.FullNameClass);
             var destinationType = Type.GetType(settingElement.DataType)!;
             var type = CustomConvert.ChangeType(settingElement.Value, destinationType);
-            property?.SetValue(_editableObject, type);
+            property?.SetValue(CurrentViewModel, type);
         }
     }
 
@@ -110,14 +99,17 @@ internal class SettingProvider : ISettingProvider
 
     private void SetValue(PropertyInfo? property, SettingElement settingElement, object? value)
     {
-        property?.SetValue(_editableObject, value);
+        property?.SetValue(CurrentViewModel, value);
         settingElement.Value = value;
         _widgetJsonProvider.SaveModel(_settingElements, AppSettings.SettingFile);
     }
 
     private PropertyInfo? GetEditableObjectPropertyById(string id)
     {
-        var typeEditableObject = _editableObject.GetType();
+        if (CurrentViewModel is null)
+            return null;
+
+        var typeEditableObject = CurrentViewModel.GetType();
         var editableObjectProperties = typeEditableObject.GetProperties();
 
         return editableObjectProperties.FirstOrDefault(p =>
@@ -129,7 +121,10 @@ internal class SettingProvider : ISettingProvider
 
     private PropertyInfo? GetEditableObjectPropertyByNamespaceAndName(string fullNameClass, string propertyName)
     {
-        var typeEditableObject = _editableObject.GetType();
+        if (CurrentViewModel is null)
+            return null;
+
+        var typeEditableObject = CurrentViewModel.GetType();
         var editableObjectProperties = typeEditableObject.GetProperties();
 
         return editableObjectProperties.FirstOrDefault(p =>
@@ -149,7 +144,9 @@ internal class SettingProvider : ISettingProvider
             if (property.DeclaringType is null)
                 continue;
 
-            var editableObject = Activator.CreateInstance(property.DeclaringType);
+            var editableObject = Locator.Current.GetService(property.DeclaringType)
+                                 ?? Activator.CreateInstance(property.DeclaringType);
+
             var propertyValue = property.GetValue(editableObject);
             var settingElement = new SettingElement
             {
@@ -170,6 +167,6 @@ internal class SettingProvider : ISettingProvider
     {
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         return assemblies.SelectMany(a => a.GetExportedTypes()
-            .Where(c => c.GetCustomAttribute<ConfigurableObjectAttribute>() != null));
+            .Where(c => c.IsAssignableTo<TrackedReactiveObject>()));
     }
 }
