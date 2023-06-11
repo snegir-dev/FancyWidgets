@@ -21,7 +21,6 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
 
     protected Widget()
     {
-        FancyDependency.RegisterDependency();
         ContextMenuWindow = new ContextMenuWindow();
         ContextMenuWindow.SetSenderWidget(this);
         _windowHandler = TryGetPlatformHandle()!.Handle;
@@ -33,7 +32,6 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
         PositionChanged += OnPositionChanged;
         Closed += OnClosed;
         Initialized += OnStarted;
-        DataContextChanged += OnDataContextChanged;
     }
 
     protected sealed override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -102,14 +100,6 @@ public abstract class Widget : ReactiveWindow<ReactiveObject>
         {
             _currentCountStartCallingPositionChanges++;
         }
-    }
-
-    private void OnDataContextChanged(object? sender, EventArgs e)
-    {
-        if (DataContext == null)
-            return;
-        var settingProvider = new SettingProvider(DataContext);
-        settingProvider.LoadSettings();
     }
 
     private void OnStarted(object? sender, EventArgs eventArgs)

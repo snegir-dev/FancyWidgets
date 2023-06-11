@@ -46,7 +46,7 @@ public class WidgetJsonProvider
 
     private void CreateJsonFile(string filePath)
     {
-        File.WriteAllText(filePath, "{}");
+        File.WriteAllText(filePath, "");
     }
 
     private static string GetWorkDirectoryPath()
