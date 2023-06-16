@@ -1,11 +1,10 @@
-﻿using Avalonia.Media;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace FancyWidgets.Common.Convertors;
+namespace FancyWidgets.Common.Convertors.Type;
 
 public static class CustomConvert
 {
-    public static object? ChangeType(object? value, Type conversionType)
+    public static object? ChangeType(object? value, global::System.Type conversionType)
     {
         if (string.IsNullOrWhiteSpace(value?.ToString()))
             return null;

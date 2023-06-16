@@ -2,6 +2,7 @@
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using FancyWidgets.ViewModels;
+using FancyWidgets.ViewModels.SettingPanel;
 using ReactiveUI;
 
 namespace FancyWidgets.Controls.SettingPanel;

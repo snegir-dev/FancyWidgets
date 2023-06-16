@@ -25,7 +25,6 @@
                     <DataTemplate>
                         <Button Content="{Binding Content}"
                                 Command="{Binding ExecuteCommand}"
-                                CommandParameter="{Binding DataContext.SenderWidget, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                 Click="Button_OnClick">
                         </Button>
                     </DataTemplate>
