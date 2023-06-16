@@ -1,33 +1,25 @@
-﻿using Avalonia;
-using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
+﻿using Autofac;
 using Avalonia.ReactiveUI;
+using FancyWidgets.Common.Locator;
 using FancyWidgets.ViewModels;
+using Splat;
 using WinApi.User32;
 
 namespace FancyWidgets.Views;
 
 public partial class ContextMenuWindow : ReactiveWindow<ContextMenuWindowViewModel>
 {
-    public Widget Widget { get; set; }
-
     public ContextMenuWindow()
     {
         InitializeComponent();
-        ViewModel = new ContextMenuWindowViewModel();
-        DataContext = ViewModel;
     }
 
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
+        ViewModel = WidgetLocator.Current.Resolve<ContextMenuWindowViewModel>();
+        DataContext = ViewModel;
         PointerExited += (_, _) => Hide();
-    }
-
-    public void SetSenderWidget(Widget widget)
-    {
-        Widget = widget;
-        if (ViewModel != null) ViewModel.SenderWidget = Widget;
     }
 
     public override void Show()

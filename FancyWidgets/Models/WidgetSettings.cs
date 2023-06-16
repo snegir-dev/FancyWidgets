@@ -1,6 +1,6 @@
 ﻿namespace FancyWidgets.Models;
 
-public class WidgetSetting
+public class WidgetSettings
 {
     public double XPosition { get; set; }
     public double YPosition { get; set; }

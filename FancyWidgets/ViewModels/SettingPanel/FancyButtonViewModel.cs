@@ -1,8 +1,6 @@
-﻿using System.Drawing.Printing;
-using Avalonia.Controls;
-using ReactiveUI;
+﻿using ReactiveUI;
 
-namespace FancyWidgets.ViewModels;
+namespace FancyWidgets.ViewModels.SettingPanel;
 
 public class FancyButtonViewModel : ReactiveObject
 {

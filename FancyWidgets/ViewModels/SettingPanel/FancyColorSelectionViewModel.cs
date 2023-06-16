@@ -1,7 +1,6 @@
-﻿using Avalonia.Controls;
-using ReactiveUI;
+﻿using ReactiveUI;
 
-namespace FancyWidgets.ViewModels;
+namespace FancyWidgets.ViewModels.SettingPanel;
 
 public class FancyColorSelectionViewModel : ReactiveObject
 {

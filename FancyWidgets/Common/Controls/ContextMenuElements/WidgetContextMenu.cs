@@ -6,12 +6,12 @@ namespace FancyWidgets.Common.Controls.ContextMenuElements;
 public abstract class WidgetContextMenu : ReactiveObject
 {
     public abstract string Content { get; set; }
-    public ReactiveCommand<Widget, Unit> ExecuteCommand { get; protected set; }
+    public ReactiveCommand<Unit, Unit> ExecuteCommand { get; protected set; }
 
     protected WidgetContextMenu()
     {
-        ExecuteCommand = ReactiveCommand.Create<Widget>(Execute);
+        ExecuteCommand = ReactiveCommand.Create(Execute);
     }
 
-    protected abstract void Execute(Widget widget);
+    protected abstract void Execute();
 }

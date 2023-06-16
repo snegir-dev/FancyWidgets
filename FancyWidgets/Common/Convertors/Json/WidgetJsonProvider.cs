@@ -2,12 +2,11 @@
 using Newtonsoft.Json;
 using Path = System.IO.Path;
 
-namespace FancyWidgets;
+namespace FancyWidgets.Common.Convertors.Json;
 
-public class WidgetJsonProvider
+public class WidgetJsonProvider : IWidgetJsonProvider
 {
     private string WorkDirectoryPath => GetWorkDirectoryPath();
-    private const string WidgetStartupClassName = "WidgetProgram";
 
     public void SaveModel(object model, string nameFile)
     {
@@ -51,8 +50,7 @@ public class WidgetJsonProvider
 
     private static string GetWorkDirectoryPath()
     {
-        var executingAssembly = AppDomain.CurrentDomain.GetAssemblies()
-            .FirstOrDefault(a => a.GetExportedTypes().Any(t => t.Name == WidgetStartupClassName));
+        var executingAssembly = Assembly.GetAssembly(typeof(WidgetJsonProvider));
         var workDirectoryPath = Path.GetDirectoryName(executingAssembly?.Location);
         if (workDirectoryPath == null)
             throw new NullReferenceException("Failed to get the path to the widget assembly");

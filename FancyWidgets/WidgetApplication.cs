@@ -2,10 +2,12 @@
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.Controls.ContextMenuElements;
 using FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
+using FancyWidgets.Common.Convertors.Json;
+using FancyWidgets.Common.Locator;
 using FancyWidgets.Common.SettingProvider;
 using FancyWidgets.Common.SettingProvider.Interfaces;
+using FancyWidgets.ViewModels;
 using ReactiveUI;
-using Splat;
 using Splat.Autofac;
 
 namespace FancyWidgets;
@@ -15,13 +17,13 @@ public static class WidgetApplication
     public static ContainerBuilder CreateBuilder()
     {
         var builder = new ContainerBuilder();
-        builder.RegisterType<DisableWidgetButton>().As<WidgetContextMenu>();
-        builder.RegisterType<ChangeWindowButton>().As<WidgetContextMenu>();
-        builder.RegisterType<ChangeStylesButton>().As<WidgetContextMenu>();
-        builder.RegisterType<SettingProvider>().As<ISettingProvider>();
-
-        Locator.CurrentMutable.InitializeSplat();
-        RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
+        builder.RegisterType<ContextMenuWindowViewModel>().AsSelf();
+        builder.RegisterType<SettingsWindowViewModel>().AsSelf();
+        builder.RegisterType<WidgetDisablingButton>().As<WidgetContextMenu>();
+        builder.RegisterType<ChangingWindowButton>().As<WidgetContextMenu>();
+        builder.RegisterType<ChangingSettingsButton>().As<WidgetContextMenu>();
+        builder.RegisterType<WidgetJsonProvider>().As<IWidgetJsonProvider>();
+        builder.RegisterType<SettingsProvider>().As<ISettingsProvider>();
 
         return builder;
     }
@@ -30,6 +32,7 @@ public static class WidgetApplication
     {
         var autofacResolver = builder.UseAutofacDependencyResolver();
         builder.RegisterInstance(autofacResolver);
-        autofacResolver.SetLifetimeScope(builder.Build());
+        WidgetLocator.Current = builder.Build();
+        RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
     }
 }

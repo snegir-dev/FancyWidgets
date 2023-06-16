@@ -3,18 +3,20 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Platform;
+using FancyWidgets.Common.Extensions;
+using FancyWidgets.Common.Locator;
 using ReactiveUI;
+using Splat;
 
 namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 
-public class ChangeWindowButton : WidgetContextMenu
+public class ChangingWindowButton : WidgetContextMenu
 {
+    private readonly Window _widget;
     private const string EditContentButton = "Edit";
     private const string DisableEditingContentButton = "Disable editing";
     private bool _isPressed;
     private string _content = EditContentButton;
-    private Point _startPosition;
-    private Widget _widget;
 
     public override string Content
     {
@@ -22,18 +24,23 @@ public class ChangeWindowButton : WidgetContextMenu
         set => this.RaiseAndSetIfChanged(ref _content, value);
     }
 
-    protected override void Execute(Widget widget)
+    public ChangingWindowButton()
     {
-        _widget = widget;
+        _widget = (Window)WidgetLocator
+            .Current.ResolveByCondition(t => t.GetGenericTypeDefinition() == typeof(Widget<>))!;
+    }
+
+    protected override void Execute()
+    {
         if (_isPressed == false)
         {
-            widget.SystemDecorations = SystemDecorations.Full;
+            _widget.SystemDecorations = SystemDecorations.Full;
             Content = DisableEditingContentButton;
             _isPressed = true;
         }
         else
         {
-            widget.SystemDecorations = SystemDecorations.None;
+            _widget.SystemDecorations = SystemDecorations.None;
             Content = EditContentButton;
             _isPressed = false;
         }
