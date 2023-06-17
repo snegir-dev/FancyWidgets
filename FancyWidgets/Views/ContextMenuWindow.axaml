@@ -15,6 +15,10 @@
         Focusable="False"
         ShowInTaskbar="False">
 
+    <Window.Styles>
+        <StyleInclude Source="/Styles/BaseStyle.axaml" />
+    </Window.Styles>
+
     <Border MinWidth="200"
             Padding="6"
             CornerRadius="3"
@@ -50,5 +54,4 @@
             </Style>
         </Border.Styles>
     </Border>
-
 </Window>

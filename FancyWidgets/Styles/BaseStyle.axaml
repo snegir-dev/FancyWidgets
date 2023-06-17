@@ -9,18 +9,17 @@
     <Styles.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="/Resources/ColorResource.axaml" />
+                <ResourceInclude Source="/Resources/FontResource.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Styles.Resources>
-
+    
     <Styles>
-        <Style Selector="TextBox">
-            <Setter Property="Background" Value="{DynamicResource VeryDark}" />
-            <Setter Property="BorderThickness" Value="0" />
+        <Style Selector="Window">
+            <Setter Property="FontFamily" Value="{DynamicResource InterMedium}"></Setter>
         </Style>
-        <Style Selector="TextBox:focus-within /template/ Border#PART_BorderElement">
-            <Setter Property="BorderThickness" Value="0" />
+        <Style Selector="UserControl">
+            <Setter Property="FontFamily" Value="{DynamicResource InterMedium}"></Setter>
         </Style>
     </Styles>
 </Styles>
