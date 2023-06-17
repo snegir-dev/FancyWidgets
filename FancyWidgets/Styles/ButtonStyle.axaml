@@ -10,7 +10,8 @@
     <Styles.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="/Resources/BaseResource.axaml" />
+                <ResourceInclude Source="/Resources/ColorResource.axaml" />
+                <ResourceInclude Source="/Resources/FontResource.axaml" />
             </ResourceDictionary.MergedDictionaries>
             <xamlConverters:DarkenColorConvertor x:Key="DarkenColorConvertor" />
         </ResourceDictionary>
@@ -22,6 +23,7 @@
             <Setter Property="Foreground" Value="{DynamicResource Dark}"></Setter>
             <Setter Property="FontWeight" Value="Medium"></Setter>
             <Setter Property="Padding" Value="15 8 15 8"></Setter>
+            <Setter Property="FontFamily" Value="{DynamicResource InterMedium}"></Setter>
             <Setter Property="FontSize" Value="15"></Setter>
         </Style>
         <Style Selector="Button:pointerover /template/ ContentPresenter">

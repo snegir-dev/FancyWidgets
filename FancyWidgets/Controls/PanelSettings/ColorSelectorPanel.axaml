@@ -9,7 +9,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="/Resources/BaseResource.axaml" />
+                <ResourceInclude Source="/Resources/ColorResource.axaml" />
             </ResourceDictionary.MergedDictionaries>
             <xamlConverters:SubtractionConverter x:Key="SubtractionConverter" />
             <xamlConverters:ColorConvertor x:Key="ColorConvertor" />
