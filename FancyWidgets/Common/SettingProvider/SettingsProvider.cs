@@ -3,7 +3,7 @@ using Autofac;
 using FancyWidgets.Common.Convertors.Json;
 using FancyWidgets.Common.Convertors.Type;
 using FancyWidgets.Common.Domain;
-using FancyWidgets.Common.Locator;
+using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider.Attributes;
 using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.Common.SettingProvider.Models;

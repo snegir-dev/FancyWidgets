@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using FancyWidgets.Common.Locator;
+using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider;
 using FancyWidgets.Common.SettingProvider.Interfaces;
 using ReactiveUI;

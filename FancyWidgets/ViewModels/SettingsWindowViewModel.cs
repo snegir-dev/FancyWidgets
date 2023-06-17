@@ -21,6 +21,6 @@ public class SettingsWindowViewModel : ReactiveObject
         IEnumerable<ISettingsControl> settingsControls)
     {
         SettingElements = widgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile);
-        SettingsControls = settingsControls;
+        SettingsControls = settingsControls.OrderBy(c => c.Order);
     }
 }

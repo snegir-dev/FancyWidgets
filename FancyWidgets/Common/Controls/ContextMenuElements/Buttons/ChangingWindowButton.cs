@@ -4,7 +4,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Platform;
 using FancyWidgets.Common.Extensions;
-using FancyWidgets.Common.Locator;
+using FancyWidgets.Common.Locators;
 using ReactiveUI;
 using Splat;
 
@@ -17,6 +17,8 @@ public class ChangingWindowButton : WidgetContextMenu
     private const string DisableEditingContentButton = "Disable editing";
     private bool _isPressed;
     private string _content = EditContentButton;
+
+    public override int Order { get; protected set; } = 2;
 
     public override string Content
     {

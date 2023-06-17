@@ -1,8 +1,5 @@
-﻿using Avalonia.Controls;
-using FancyWidgets.Common.Controls.ContextMenuElements;
-using FancyWidgets.Common.Domain;
+﻿using FancyWidgets.Common.Controls.ContextMenuElements;
 using ReactiveUI;
-using Splat;
 
 namespace FancyWidgets.ViewModels;
 
@@ -12,6 +9,6 @@ public class ContextMenuWindowViewModel : ReactiveObject
 
     public ContextMenuWindowViewModel(IEnumerable<WidgetContextMenu> widgetContextMenus)
     {
-        ContextMenuButtons = widgetContextMenus;
+        ContextMenuButtons = widgetContextMenus.Order();
     }
 }

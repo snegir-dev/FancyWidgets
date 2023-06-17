@@ -1,7 +1,7 @@
 ﻿using Avalonia.Controls;
 using FancyWidgets.Common.Convertors.Json;
 using FancyWidgets.Common.Extensions;
-using FancyWidgets.Common.Locator;
+using FancyWidgets.Common.Locators;
 using FancyWidgets.Models;
 
 namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
@@ -11,6 +11,7 @@ public class WidgetDisablingButton : WidgetContextMenu
     private readonly Window _window;
     private readonly IWidgetJsonProvider _widgetJsonProvider;
     public override string Content { get; set; } = "Disable";
+    public override int Order { get; protected set; } = 1;
 
     public WidgetDisablingButton(IWidgetJsonProvider widgetJsonProvider)
     {
