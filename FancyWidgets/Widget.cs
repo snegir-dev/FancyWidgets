@@ -1,4 +1,10 @@
 ﻿using Autofac;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.Convertors.Json;
 using FancyWidgets.Common.Locator;
@@ -63,7 +69,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.NoChrome;
         ExtendClientAreaTitleBarHeightHint = -1;
         ShowInTaskbar = false;
-        SystemDecorations = SystemDecorations.Full;
+        SystemDecorations = SystemDecorations.None;
         Topmost = false;
     }
 

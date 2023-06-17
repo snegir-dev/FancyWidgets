@@ -6,7 +6,7 @@ using ReactiveUI;
 
 namespace FancyWidgets.Common.Domain;
 
-public class WidgetReactiveObject : ReactiveObject
+public class WidgetReactiveObject : ReactiveObject, IDisposable
 {
     public WidgetReactiveObject()
     {
@@ -15,7 +15,12 @@ public class WidgetReactiveObject : ReactiveObject
 
     private void InitialTrack()
     {
-        ViewModelContainer.CurrentViewModel = this;
+        ViewModelsContainer.CurrentViewModels.Add(this);
         WidgetLocator.Current.Resolve<ISettingsProvider>().LoadSettings();
+    }
+
+    void IDisposable.Dispose()
+    {
+        ViewModelsContainer.CurrentViewModels.Remove(this);
     }
 }

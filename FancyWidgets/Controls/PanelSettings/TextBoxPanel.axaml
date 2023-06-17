@@ -2,23 +2,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:xamlConverter="clr-namespace:FancyWidgets.Common.XamlConverter"
+             xmlns:xamlConverters="clr-namespace:FancyWidgets.Common.XamlConverters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="FancyWidgets.Controls.SettingPanel.FancyColorSelection">
-
+             x:Class="FancyWidgets.Controls.PanelSettings.TextBoxPanel">
+    
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="/Resources/BaseResource.axaml" />
             </ResourceDictionary.MergedDictionaries>
-            <xamlConverter:SubtractionConverter x:Key="SubtractionConverter" />
-            <xamlConverter:ColorConvertor x:Key="ColorConvertor" />
+            <xamlConverters:SubtractionConverter x:Key="SubtractionConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border Background="{StaticResource PanelColor}"
-            CornerRadius="5"
-            Margin="5">
+    <Border Background="{DynamicResource Dark}"
+            CornerRadius="5">
         <Border HorizontalAlignment="Stretch"
                 Padding="10">
 
@@ -47,18 +45,11 @@
                 <StackPanel Name="StackPanel"
                             Grid.Column="1"
                             Orientation="Horizontal">
-                    <Border Background="{Binding #TextBox.Text, Converter={StaticResource ColorConvertor}}"
-                            VerticalAlignment="Stretch"
-                            CornerRadius="5"
-                            BorderBrush="#1e1f22"
-                            BorderThickness="2"
-                            Width="40"
-                            Margin="0 0 3 0" />
 
                     <TextBox Name="TextBox"
                              HorizontalAlignment="Right"
                              FontSize="15"
-                             Width="150" />
+                             Width="250" />
                 </StackPanel>
             </Grid>
         </Border>
@@ -67,11 +58,8 @@
     <UserControl.Styles>
         <StyleInclude Source="/Styles/TextBoxStyle.axaml" />
         <Style Selector="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource Text}"></Setter>
-        </Style>
-        <Style Selector="TextBox">
-            <Setter Property="Foreground" Value="{StaticResource Text}"></Setter>
+            <Setter Property="Foreground" Value="{DynamicResource Light}"></Setter>
         </Style>
     </UserControl.Styles>
-
+    
 </UserControl>

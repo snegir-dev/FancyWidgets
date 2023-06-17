@@ -37,8 +37,12 @@ public partial class SettingsWindow : ReactiveWindow<SettingsWindowViewModel>
         DataContext = ViewModel;
         BindProperties();
         CreateInputControl();
+
+#if true
+        this.AttachDevTools();
+#endif
     }
-    
+
     private void BindProperties()
     {
         this.WhenActivated(_ =>
@@ -53,7 +57,12 @@ public partial class SettingsWindow : ReactiveWindow<SettingsWindowViewModel>
     {
         foreach (var settingsControl in ViewModel!.SettingsControls)
         {
-            _stackPanel.Children.Add(settingsControl.Control);
+            var border = new Border()
+            {
+                Child = settingsControl.Control,
+                Margin = new Thickness(5, 5)
+            };
+            _stackPanel.Children.Add(border);
         }
     }
 }

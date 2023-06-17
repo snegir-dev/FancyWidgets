@@ -3,7 +3,7 @@ using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 
-namespace FancyWidgets.Common.XamlConverter;
+namespace FancyWidgets.Common.XamlConverters;
 
 public class ColorConvertor : IValueConverter
 {

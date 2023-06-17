@@ -1,6 +1,7 @@
-﻿using ReactiveUI;
+﻿using Avalonia.Controls;
+using ReactiveUI;
 
-namespace FancyWidgets.ViewModels.SettingPanel;
+namespace FancyWidgets.ViewModels.PanelSettings;
 
 public class FancyCheckBoxViewModel : ReactiveObject
 {

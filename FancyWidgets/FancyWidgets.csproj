@@ -26,8 +26,6 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-      <PackageReference Include="NXUI" Version="11.0.0-rc1.1" />
-      <PackageReference Include="NXUI.Desktop" Version="11.0.0-rc1.1" />
       <PackageReference Include="ReactiveUI" Version="19.2.1" />
       <PackageReference Include="Splat.Autofac" Version="14.6.37" />
       <PackageReference Include="WinApi" Version="4.0.0" />

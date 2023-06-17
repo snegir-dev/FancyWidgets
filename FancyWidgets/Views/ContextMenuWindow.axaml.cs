@@ -1,4 +1,7 @@
 ﻿using Autofac;
+using Avalonia;
+using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.Locator;
 using FancyWidgets.ViewModels;

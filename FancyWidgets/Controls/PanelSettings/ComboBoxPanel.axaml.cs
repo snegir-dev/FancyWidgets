@@ -1,29 +1,26 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using FancyWidgets.ViewModels;
-using FancyWidgets.ViewModels.SettingPanel;
+using FancyWidgets.ViewModels.PanelSettings;
 using ReactiveUI;
 
-namespace FancyWidgets.Controls.SettingPanel;
+namespace FancyWidgets.Controls.PanelSettings;
 
-public partial class FancyComboBox : ReactiveUserControl<FancyComboBoxViewModel>
+public partial class ComboBoxPanel : ReactiveUserControl<FancyComboBoxViewModel>
 {
-    public ComboBox CustomComboBox { get; set; }
+    public ComboBox ComboBoxControl { get; set; }
     public string? Title { get; set; } 
     
-    public FancyComboBox()
+    public ComboBoxPanel()
     {
+        InitializeComponent(true);
         InitializeComponent();
         BindProperties();
     }
 
     private void InitializeComponent()
     {
-        AvaloniaXamlLoader.Load(this);
         ViewModel = new FancyComboBoxViewModel();
         DataContext = ViewModel;
-        ComboBox = this.FindControl<ComboBox>("ComboBox");
     }
     
     private void BindProperties()
@@ -33,8 +30,8 @@ public partial class FancyComboBox : ReactiveUserControl<FancyComboBoxViewModel>
             if (ViewModel == null)
                 return;
             this.WhenAnyValue(x => x.Title).BindTo(this, x => x.ViewModel!.Title);
-            this.WhenAnyValue(x => x.ComboBox).BindTo(this, x => x.ViewModel!.ComboBox);
+            this.WhenAnyValue(x => x.ComboBoxControl).BindTo(this, x => x.ViewModel!.ComboBox);
         });
-        CustomComboBox = ComboBox;
+        ComboBoxControl = ComboBox;
     }
 }
