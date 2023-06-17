@@ -2,15 +2,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:panelSettings="clr-namespace:FancyWidgets.Controls.PanelSettings"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="FancyWidgets.Views.SettingsWindow"
-        Background="#151515"
+        Background="{DynamicResource VeryDark}"
         Width="400"
         Height="500"
         ShowInTaskbar="False">
     
-    <StackPanel Name="StackPanelInputControl">
-        <!-- <controls:DynamicInputControl /> -->
-    </StackPanel>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Resources/BaseResource.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <Border Padding="5">
+        <ScrollViewer>
+            <StackPanel Name="StackPanelInputControl" />
+        </ScrollViewer>
+    </Border>
 
 </Window>

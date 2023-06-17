@@ -1,8 +1,7 @@
 ﻿using System.Globalization;
-using Avalonia.Data;
 using Avalonia.Data.Converters;
 
-namespace FancyWidgets.Common.XamlConverter;
+namespace FancyWidgets.Common.XamlConverters;
 
 public class SubtractionConverter : IMultiValueConverter
 {

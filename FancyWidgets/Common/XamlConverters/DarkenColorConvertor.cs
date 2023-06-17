@@ -2,9 +2,8 @@
 using Avalonia;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
-using FancyWidgets.Common.Convertors;
 
-namespace FancyWidgets.Common.XamlConverter;
+namespace FancyWidgets.Common.XamlConverters;
 
 public class DarkenColorConvertor : IValueConverter
 {

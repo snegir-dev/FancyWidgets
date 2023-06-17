@@ -1,8 +1,9 @@
-﻿using WinApi.User32;
+﻿using Avalonia;
+using WinApi.User32;
 
 namespace FancyWidgets.Common.System;
 
-public class WindowSystemManager
+internal class WindowSystemManager
 {
     private readonly IntPtr _windowHandler;
 

@@ -1,7 +1,7 @@
 ﻿using FancyWidgets.Common.SettingProvider.Interfaces;
 using ReactiveUI;
 
-namespace FancyWidgets.ViewModels.SettingPanel;
+namespace FancyWidgets.ViewModels.PanelSettings;
 
 public class DynamicInputControlViewModel : ReactiveObject
 {

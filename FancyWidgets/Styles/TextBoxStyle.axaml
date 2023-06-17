@@ -5,7 +5,7 @@
             <!-- Add Controls for Previewer Here -->
         </Border>
     </Design.PreviewWith>
-    
+
     <Styles.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -16,15 +16,11 @@
 
     <Styles>
         <Style Selector="TextBox">
-            <Setter Property="Background" Value="{StaticResource PanelColor}"></Setter>
-            <Setter Property="BorderBrush" Value="{StaticResource Text}"></Setter>
-        </Style>
-        <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
-            <Setter Property="Background" Value="{StaticResource PanelColor}"></Setter>
+            <Setter Property="Background" Value="{DynamicResource VeryDark}" />
+            <Setter Property="BorderThickness" Value="0" />
         </Style>
         <Style Selector="TextBox:focus-within /template/ Border#PART_BorderElement">
-            <Setter Property="Background" Value="{StaticResource PanelColor}"></Setter>
-            <Setter Property="BorderBrush" Value="{StaticResource ButtonColor}"></Setter>
+            <Setter Property="BorderThickness" Value="0" />
         </Style>
     </Styles>
 </Styles>

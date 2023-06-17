@@ -8,7 +8,7 @@ using FancyWidgets.Common.SettingProvider.Attributes;
 using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.Common.SettingProvider.Models;
 using FancyWidgets.Models;
-using static FancyWidgets.Common.SettingProvider.ViewModelContainer;
+using static FancyWidgets.Common.SettingProvider.ViewModelsContainer;
 
 namespace FancyWidgets.Common.SettingProvider;
 
@@ -31,22 +31,25 @@ public class SettingsProvider : ISettingsProvider
 
     public virtual void LoadSettings()
     {
-        if (CurrentViewModel is null)
-            throw new NullReferenceException();
-
-        var propertyInfos = CurrentViewModel.GetType().GetProperties()
-            .Where(p => p.GetCustomAttribute<ConfigurablePropertyAttribute>() != null).ToList();
-
-        foreach (var settingElement in _settingElements)
+        foreach (var currentViewModel in CurrentViewModels)
         {
-            if (settingElement.Value is null)
-                continue;
-            var property = propertyInfos
-                .FirstOrDefault(p => p.Name == settingElement.Name
-                                     && p.DeclaringType?.FullName == settingElement.FullNameClass);
-            var destinationType = Type.GetType(settingElement.DataType)!;
-            var type = CustomConvert.ChangeType(settingElement.Value, destinationType);
-            property?.SetValue(CurrentViewModel, type);
+            if (currentViewModel is null)
+                throw new NullReferenceException();
+
+            var propertyInfos = currentViewModel.GetType().GetProperties()
+                .Where(p => p.GetCustomAttribute<ConfigurablePropertyAttribute>() != null).ToList();
+
+            foreach (var settingElement in _settingElements)
+            {
+                if (settingElement.Value is null)
+                    continue;
+                var property = propertyInfos
+                    .FirstOrDefault(p => p.Name == settingElement.Name
+                                         && p.DeclaringType?.FullName == settingElement.FullNameClass);
+                var destinationType = Type.GetType(settingElement.DataType)!;
+                var type = CustomConvert.ChangeType(settingElement.Value, destinationType);
+                property?.SetValue(currentViewModel, type);
+            }
         }
     }
 
@@ -68,7 +71,7 @@ public class SettingsProvider : ISettingsProvider
             settingElement.DataType = dataType.AssemblyQualifiedName!;
             settingElement.Value = value;
         }
-        
+
         _widgetJsonProvider.SaveModel(_settingElements, AppSettings.SettingsFile);
     }
 
@@ -111,36 +114,61 @@ public class SettingsProvider : ISettingsProvider
 
     private void SetValue(PropertyInfo? property, SettingsElement settingsElement, object? value)
     {
-        property?.SetValue(CurrentViewModel, value);
-        settingsElement.Value = value;
-        _widgetJsonProvider.SaveModel(_settingElements, AppSettings.SettingsFile);
+        foreach (var currentViewModel in CurrentViewModels)
+        {
+            var t = currentViewModel?.GetType().GetProperties();
+
+            if (currentViewModel is not null
+                && !currentViewModel.GetType().GetProperties().Contains(property))
+                continue;
+
+            property?.SetValue(currentViewModel, value);
+            settingsElement.Value = value;
+            _widgetJsonProvider.SaveModel(_settingElements, AppSettings.SettingsFile);
+        }
     }
 
     private PropertyInfo? GetEditableObjectPropertyById(string? id)
     {
-        if (CurrentViewModel is null || id is null)
-            return null;
-
-        var typeEditableObject = CurrentViewModel.GetType();
-        var editableObjectProperties = typeEditableObject.GetProperties();
-
-        return editableObjectProperties.FirstOrDefault(p =>
+        foreach (var currentViewModel in CurrentViewModels)
         {
-            var attribute = p.GetCustomAttribute<ConfigurablePropertyAttribute>();
-            return attribute?.Id == id;
-        });
+            if (currentViewModel is null || id is null)
+                continue;
+
+            var typeEditableObject = currentViewModel.GetType();
+            var editableObjectProperties = typeEditableObject.GetProperties();
+            var property = editableObjectProperties.FirstOrDefault(p =>
+            {
+                var attribute = p.GetCustomAttribute<ConfigurablePropertyAttribute>();
+                return attribute?.Id == id;
+            });
+
+            if (property == null)
+                continue;
+            return property;
+        }
+
+        return null;
     }
 
     private PropertyInfo? GetEditableObjectPropertyByNamespaceAndName(string? fullNameClass, string? propertyName)
     {
-        if (CurrentViewModel is null || fullNameClass is null || propertyName is null)
-            return null;
+        foreach (var currentViewModel in CurrentViewModels)
+        {
+            if (currentViewModel is null || fullNameClass is null || propertyName is null)
+                continue;
 
-        var typeEditableObject = CurrentViewModel.GetType();
-        var editableObjectProperties = typeEditableObject.GetProperties();
+            var typeEditableObject = currentViewModel.GetType();
+            var editableObjectProperties = typeEditableObject.GetProperties();
+            var property = editableObjectProperties.FirstOrDefault(p =>
+                p.PropertyType.FullName == fullNameClass && p.Name == propertyName);
 
-        return editableObjectProperties.FirstOrDefault(p =>
-            p.PropertyType.FullName == fullNameClass && p.Name == propertyName);
+            if (property == null)
+                continue;
+            return property;
+        }
+
+        return null;
     }
 
     protected virtual IEnumerable<SettingsElement> GenerateSettings()
