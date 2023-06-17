@@ -1,6 +1,6 @@
 ﻿using Autofac;
 
-namespace FancyWidgets.Common.Locator;
+namespace FancyWidgets.Common.Locators;
 
 public static class WidgetLocator
 {

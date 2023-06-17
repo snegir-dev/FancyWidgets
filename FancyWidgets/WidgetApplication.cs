@@ -3,7 +3,7 @@ using Avalonia.ReactiveUI;
 using FancyWidgets.Common.Controls.ContextMenuElements;
 using FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 using FancyWidgets.Common.Convertors.Json;
-using FancyWidgets.Common.Locator;
+using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider;
 using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.ViewModels;

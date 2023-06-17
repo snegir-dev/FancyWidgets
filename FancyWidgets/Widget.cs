@@ -7,7 +7,7 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.Convertors.Json;
-using FancyWidgets.Common.Locator;
+using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.System;
 using FancyWidgets.Models;
 using FancyWidgets.Views;

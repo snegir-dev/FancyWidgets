@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using FancyWidgets.Common.Locator;
+using FancyWidgets.Common.Locators;
 
 namespace FancyWidgets.Common.Extensions;
 

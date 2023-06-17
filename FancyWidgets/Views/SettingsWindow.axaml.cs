@@ -7,7 +7,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using FancyWidgets.Common.Locator;
+using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider.Models;
 using FancyWidgets.Common.System;
 using FancyWidgets.ViewModels;
