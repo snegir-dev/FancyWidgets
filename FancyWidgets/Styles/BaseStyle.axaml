@@ -16,10 +16,12 @@
     
     <Styles>
         <Style Selector="Window">
-            <Setter Property="FontFamily" Value="{DynamicResource InterMedium}"></Setter>
+            <Setter Property="FontFamily" Value="{DynamicResource Inter}"></Setter>
+            <Setter Property="FontWeight" Value="Medium"></Setter>
         </Style>
         <Style Selector="UserControl">
-            <Setter Property="FontFamily" Value="{DynamicResource InterMedium}"></Setter>
+            <Setter Property="FontFamily" Value="{DynamicResource Inter}"></Setter>
+            <Setter Property="FontWeight" Value="Medium"></Setter>
         </Style>
     </Styles>
 </Styles>

@@ -20,29 +20,27 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
 {
     public string Uuid { get; private set; }
 
+    private readonly IntPtr _windowHandler;
     private readonly IWidgetJsonProvider _widgetJsonProvider;
-    private readonly WidgetSettings _widgetSettings;
+    private WidgetSettings _widgetSettings;
+
     private readonly WidgetMetadata _widgetMetadata;
-    private  ContextMenuWindow _contextMenuWindow;
+    private ContextMenuWindow _contextMenuWindow;
     private readonly WindowSystemManager _windowSystemManager;
     private int _currentCountStartCallingPositionChanges;
-    
+
     private const int CountStartCallingPositionChanges = 2;
 
     protected Widget()
     {
-        var windowHandler = TryGetPlatformHandle()!.Handle;
-        _windowSystemManager = new WindowSystemManager(windowHandler);
+        _windowHandler = TryGetPlatformHandle()!.Handle;
+        _windowSystemManager = new WindowSystemManager(_windowHandler);
         _widgetJsonProvider = WidgetLocator.Current.Resolve<IWidgetJsonProvider>();
-        _widgetSettings = _widgetJsonProvider.GetModel<WidgetSettings>(AppSettings.WidgetSettingsFile);
         _widgetMetadata = _widgetJsonProvider.GetModel<WidgetMetadata>(AppSettings.WidgetMetadataFile);
         Uuid = _widgetMetadata.Uuid ?? throw new NullReferenceException("Uuid must not be null.");
-        LayoutUpdated += OnLayoutUpdated;
-        PositionChanged += OnPositionChanged;
-        Initialized += OnStarted;
     }
 
-    protected sealed override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         _contextMenuWindow = new ContextMenuWindow();
         _windowSystemManager.HideFromAltTab();
@@ -50,11 +48,20 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         _windowSystemManager.HideMinimizeAndMaximizeButtons();
         LoadDefaultStyles();
         LoadWidgetData();
+        InitializeEvents();
         base.OnApplyTemplate(e);
     }
 
-    private void LoadWidgetData()
+    private void InitializeEvents()
     {
+        LayoutUpdated += OnLayoutUpdated;
+        PositionChanged += OnPositionChanged;
+        Initialized += OnStarted;
+    }
+
+    public void LoadWidgetData()
+    {
+        _widgetSettings = _widgetJsonProvider.GetModel<WidgetSettings>(AppSettings.WidgetSettingsFile);
         Title = _widgetMetadata.WidgetName;
         Width = _widgetSettings.Width == 0 ? Width : _widgetSettings.Width;
         Height = _widgetSettings.Height == 0 ? Height : _widgetSettings.Height;
@@ -71,6 +78,12 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         ShowInTaskbar = false;
         SystemDecorations = SystemDecorations.None;
         Topmost = false;
+    }
+    
+    protected override void OnLoaded()
+    {
+        _windowSystemManager.SetWindowChildToDesktop();
+        base.OnLoaded();
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)

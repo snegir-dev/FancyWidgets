@@ -27,6 +27,7 @@ public partial class ContextMenuWindow : ReactiveWindow<ContextMenuWindowViewMod
 
     public override void Show()
     {
+        Topmost = true;
         User32Methods.GetCursorPos(out var point);
         Position =
             new PixelPoint(point.X - 5, (int)(point.Y - Height));

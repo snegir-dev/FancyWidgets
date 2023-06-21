@@ -21,9 +21,9 @@
         <Style Selector="Button">
             <Setter Property="Background" Value="{DynamicResource Light}"></Setter>
             <Setter Property="Foreground" Value="{DynamicResource Dark}"></Setter>
-            <Setter Property="FontWeight" Value="Medium"></Setter>
             <Setter Property="Padding" Value="15 8 15 8"></Setter>
-            <Setter Property="FontFamily" Value="{DynamicResource InterMedium}"></Setter>
+            <Setter Property="FontFamily" Value="{DynamicResource Inter}"></Setter>
+            <Setter Property="FontWeight" Value="Medium"></Setter>
             <Setter Property="FontSize" Value="15"></Setter>
         </Style>
         <Style Selector="Button:pointerover /template/ ContentPresenter">

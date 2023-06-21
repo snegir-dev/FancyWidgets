@@ -6,7 +6,7 @@ namespace FancyWidgets.Common.Convertors.Json;
 
 public class WidgetJsonProvider : IWidgetJsonProvider
 {
-    private string WorkDirectoryPath => GetWorkDirectoryPath();
+    public string WorkDirectoryPath => GetWorkDirectoryPath();
 
     public void SaveModel(object model, string nameFile)
     {
