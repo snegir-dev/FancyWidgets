@@ -4,7 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.9-alpha</Version>
+        <Version>0.0.10-alpha</Version>
         <Title>FancyWidgets</Title>
         <Authors>Snegir.null</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -19,6 +19,7 @@
         <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0-rc1.1" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-rc1.1" />
         <PackageReference Include="Avalonia.Svg.Skia" Version="11.0.0-rc1.1" />
+        <PackageReference Include="Avalonia.Win32" Version="11.0.0-rc1.1" />
         <PackageReference Include="Castle.Core" Version="5.1.1" />
         <PackageReference Include="FluentAvaloniaUI" Version="2.0.0-rc1" />
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
@@ -34,6 +35,10 @@
 
     <ItemGroup>
         <Folder Include="Common\Controls\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Assets\Fonts\Logo\logo.ico" />
     </ItemGroup>
 
 </Project>

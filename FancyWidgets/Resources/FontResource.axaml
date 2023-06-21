@@ -1,10 +1,6 @@
 ﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
-    <FontFamily x:Key="InterBold">/Assets/Fonts/Inter-Bold.ttf#Inter</FontFamily>
-    <FontFamily x:Key="InterSemiBold">/Assets/Fonts/Inter-SemiBold.ttf#Inter</FontFamily>
-    <FontFamily x:Key="InterMedium">/Assets/Fonts/Inter-Medium.ttf#Inter</FontFamily>
-    <FontFamily x:Key="InterRegular">/Assets/Fonts/Inter-Regular.ttf#Inter</FontFamily>
-    <FontFamily x:Key="InterLight">/Assets/Fonts/Inter-Light.ttf#Inter</FontFamily>
+    <FontFamily x:Key="Inter">avares://FancyWidgets/Assets/Fonts/Inter</FontFamily>
     
 </ResourceDictionary>

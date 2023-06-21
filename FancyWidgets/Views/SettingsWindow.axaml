@@ -7,13 +7,12 @@
         Background="{DynamicResource VeryDark}"
         Width="400"
         Height="500"
-        Icon="/Assets/logo.ico"
         ShowInTaskbar="False">
-    
+
     <Window.Styles>
         <StyleInclude Source="/Styles/BaseStyle.axaml" />
     </Window.Styles>
-    
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,9 +20,9 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    
+
     <Border Padding="5">
-        <ScrollViewer FontFamily="{DynamicResource InterLight}">
+        <ScrollViewer FontFamily="{DynamicResource Inter}" FontWeight="Regular">
             <StackPanel Name="StackPanelInputControl" />
         </ScrollViewer>
     </Border>

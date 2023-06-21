@@ -1,10 +1,6 @@
 ﻿using Autofac;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Chrome;
-using Avalonia.Controls.Mixins;
-using Avalonia.Controls.Primitives;
-using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.Locators;
@@ -12,8 +8,6 @@ using FancyWidgets.Common.SettingProvider.Models;
 using FancyWidgets.Common.System;
 using FancyWidgets.ViewModels;
 using ReactiveUI;
-using Splat;
-using WinApi.User32;
 
 namespace FancyWidgets.Views;
 
@@ -24,9 +18,12 @@ public partial class SettingsWindow : ReactiveWindow<SettingsWindowViewModel>
 
     public SettingsWindow()
     {
+        var handle = TryGetPlatformHandle()!.Handle;
         InitializeComponent();
-        var windowSystemManager = new WindowSystemManager(TryGetPlatformHandle()!.Handle);
-        windowSystemManager.HideMinimizeAndMaximizeButtons();
+        new WindowSystemManager(handle)
+            .HideMinimizeAndMaximizeButtons();
+        BindProperties();
+        CreateInputControl();
     }
 
     private void InitializeComponent()
@@ -35,10 +32,7 @@ public partial class SettingsWindow : ReactiveWindow<SettingsWindowViewModel>
         _stackPanel = this.FindControl<StackPanel>("StackPanelInputControl")!;
         ViewModel = WidgetLocator.Current.Resolve<SettingsWindowViewModel>();
         DataContext = ViewModel;
-        BindProperties();
-        CreateInputControl();
-
-#if true
+#if DEBUG
         this.AttachDevTools();
 #endif
     }
