@@ -1,27 +1,25 @@
-﻿using System.Reflection;
+﻿using FancyWidgets.Common.System.IO;
 using Newtonsoft.Json;
 using Path = System.IO.Path;
 
 namespace FancyWidgets.Common.Convertors.Json;
 
-public class WidgetJsonProvider : IWidgetJsonProvider
+internal class WidgetJsonProvider : IWidgetJsonProvider
 {
-    public string WorkDirectoryPath => GetWorkDirectoryPath();
-
-    public void SaveModel(object model, string nameFile)
+    public virtual void SaveModel(object model, string nameFile)
     {
-        var filePath = Path.Combine(WorkDirectoryPath, nameFile);
+        var filePath = Path.Combine(WidgetPath.WorkDirectoryPath, nameFile);
         var jsonModel = JsonConvert.SerializeObject(model);
         File.WriteAllText(filePath, jsonModel);
     }
 
-    public T GetModel<T>(string path) where T : new()
+    public virtual T GetModel<T>(string path) where T : new()
     {
         var json = GetStringJson(path);
         return JsonConvert.DeserializeObject<T>(json) ?? new T();
     }
 
-    public void UpdateModel<T>(Action<T> updateAction, string path)
+    public virtual void UpdateModel<T>(Action<T> updateAction, string path)
     {
         var json = GetStringJson(path);
         var model = JsonConvert.DeserializeObject<T>(json);
@@ -34,27 +32,17 @@ public class WidgetJsonProvider : IWidgetJsonProvider
         SaveModel(model, path);
     }
 
-    private string GetStringJson(string path)
+    protected virtual string GetStringJson(string path)
     {
-        var filePath = Path.Combine(WorkDirectoryPath, path);
+        var filePath = Path.Combine(WidgetPath.WorkDirectoryPath, path);
         if (!File.Exists(filePath))
             CreateJsonFile(filePath);
 
         return File.ReadAllText(filePath);
     }
 
-    private void CreateJsonFile(string filePath)
+    protected virtual void CreateJsonFile(string filePath)
     {
-        File.WriteAllText(filePath, "");
-    }
-
-    private static string GetWorkDirectoryPath()
-    {
-        var executingAssembly = Assembly.GetAssembly(typeof(WidgetJsonProvider));
-        var workDirectoryPath = Path.GetDirectoryName(executingAssembly?.Location);
-        if (workDirectoryPath == null)
-            throw new NullReferenceException("Failed to get the path to the widget assembly");
-
-        return workDirectoryPath;
+        File.WriteAllText(filePath, string.Empty);
     }
 }

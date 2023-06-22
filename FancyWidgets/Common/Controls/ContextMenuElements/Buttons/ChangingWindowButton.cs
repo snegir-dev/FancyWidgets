@@ -1,12 +1,7 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Media;
-using Avalonia.Platform;
+﻿using Avalonia.Controls;
 using FancyWidgets.Common.Extensions;
 using FancyWidgets.Common.Locators;
 using ReactiveUI;
-using Splat;
 
 namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 

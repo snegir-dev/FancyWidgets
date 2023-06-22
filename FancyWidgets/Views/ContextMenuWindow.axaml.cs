@@ -5,7 +5,6 @@ using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.Locators;
 using FancyWidgets.ViewModels;
-using Splat;
 using WinApi.User32;
 
 namespace FancyWidgets.Views;
