@@ -1,5 +1,4 @@
-﻿using Avalonia;
-using FancyWidgets.Common.WinApi;
+﻿using FancyWidgets.Common.WinApi;
 using WinApi.User32;
 
 namespace FancyWidgets.Common.System;
@@ -27,10 +26,11 @@ internal class WindowSystemManager
             currentStyle | (int)WindowExStyles.WS_EX_NOACTIVATE);
     }
 
-    public void WidgetToBottom(PixelPoint position, int width, int height)
+    public void WidgetToBottom()
     {
+        User32Methods.GetWindowRect(_windowHandler, out var rect);
         User32Methods.SetWindowPos(_windowHandler,
-            (IntPtr)HwndZOrder.HWND_BOTTOM, position.X, position.Y, width, height,
+            (IntPtr)HwndZOrder.HWND_BOTTOM, rect.Left, rect.Top, rect.Width, rect.Height,
             WindowPositionFlags.SWP_NOACTIVATE);
     }
 

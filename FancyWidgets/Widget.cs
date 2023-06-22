@@ -44,7 +44,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
     {
         _contextMenuWindow = new ContextMenuWindow();
         _windowSystemManager.HideFromAltTab();
-        _windowSystemManager.WidgetToBottom(Position, (int)Width, (int)Height);
+        _windowSystemManager.WidgetToBottom();
         _windowSystemManager.HideMinimizeAndMaximizeButtons();
         LoadDefaultStyles();
         LoadWidgetData();
@@ -59,7 +59,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         Initialized += OnStarted;
     }
 
-    public void LoadWidgetData()
+    private void LoadWidgetData()
     {
         _widgetSettings = _widgetJsonProvider.GetModel<WidgetSettings>(AppSettings.WidgetSettingsFile);
         Title = _widgetMetadata.WidgetName;
@@ -98,7 +98,17 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         base.OnPointerPressed(e);
     }
 
-    private void OnLayoutUpdated(object? sender, EventArgs e)
+    protected virtual void OnLayoutUpdated(object? sender, EventArgs e)
+    {
+        SaveLayoutSize();
+    }
+
+    protected virtual void OnPositionChanged(object? sender, EventArgs e)
+    {
+        SavePosition();
+    }
+
+    private void SaveLayoutSize()
     {
         _widgetJsonProvider.UpdateModel<WidgetSettings>(widgetSettings =>
         {
@@ -107,7 +117,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         }, AppSettings.WidgetSettingsFile);
     }
 
-    private void OnPositionChanged(object? sender, EventArgs e)
+    private void SavePosition()
     {
         if (_currentCountStartCallingPositionChanges >= CountStartCallingPositionChanges)
         {

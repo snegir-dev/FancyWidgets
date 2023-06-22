@@ -14,19 +14,19 @@ namespace FancyWidgets.Common.SettingProvider;
 
 public class SettingsProvider : ISettingsProvider
 {
-    private readonly IWidgetJsonProvider _widgetJsonProvider;
-    private List<SettingsElement> _settingElements;
+    protected readonly IWidgetJsonProvider WidgetJsonProvider;
+    protected List<SettingsElement> SettingElements;
 
     public SettingsProvider(IWidgetJsonProvider widgetJsonProvider1)
     {
-        _widgetJsonProvider = widgetJsonProvider1;
-        _settingElements = _widgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile);
+        WidgetJsonProvider = widgetJsonProvider1;
+        SettingElements = WidgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile);
     }
 
     public virtual void InitializeSettings()
     {
         var settingElements = GenerateSettings();
-        _widgetJsonProvider.SaveModel(settingElements, AppSettings.SettingsFile);
+        WidgetJsonProvider.SaveModel(settingElements, AppSettings.SettingsFile);
     }
 
     public virtual void LoadSettings()
@@ -39,7 +39,7 @@ public class SettingsProvider : ISettingsProvider
             var propertyInfos = currentViewModel.GetType().GetProperties()
                 .Where(p => p.GetCustomAttribute<ConfigurablePropertyAttribute>() != null).ToList();
 
-            foreach (var settingElement in _settingElements)
+            foreach (var settingElement in SettingElements)
             {
                 if (settingElement.Value is null)
                     continue;
@@ -55,7 +55,7 @@ public class SettingsProvider : ISettingsProvider
 
     public virtual void AddValue(string id, Type dataType, object value)
     {
-        var settingElement = _settingElements.FirstOrDefault(e => e.Id == id);
+        var settingElement = SettingElements.FirstOrDefault(e => e.Id == id);
         if (settingElement == null)
         {
             settingElement = new SettingsElement()
@@ -64,7 +64,7 @@ public class SettingsProvider : ISettingsProvider
                 DataType = dataType.AssemblyQualifiedName!,
                 Value = value
             };
-            _settingElements.Add(settingElement);
+            SettingElements.Add(settingElement);
         }
         else
         {
@@ -72,22 +72,22 @@ public class SettingsProvider : ISettingsProvider
             settingElement.Value = value;
         }
 
-        _widgetJsonProvider.SaveModel(_settingElements, AppSettings.SettingsFile);
+        WidgetJsonProvider.SaveModel(SettingElements, AppSettings.SettingsFile);
     }
 
     public virtual void SetValue(string id, object? value)
     {
-        var settingElement = _settingElements.FirstOrDefault(e => e.Id == id);
+        var settingElement = SettingElements.FirstOrDefault(e => e.Id == id);
         if (settingElement is null)
             return;
 
-        var property = GetEditableObjectPropertyById(id);
+        var property = GetObjectPropertyById(id);
         SetValue(property, settingElement, value);
     }
 
     public virtual void SetValue(string fullNameClass, string propertyName, object? value)
     {
-        var settingElements = _widgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile);
+        var settingElements = WidgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile);
         var settingElement =
             settingElements.FirstOrDefault(e => e.FullNameClass == fullNameClass
                                                 && e.Name == propertyName);
@@ -95,24 +95,24 @@ public class SettingsProvider : ISettingsProvider
         if (settingElement is null)
             return;
 
-        var property = GetEditableObjectPropertyByNamespaceAndName(fullNameClass, propertyName);
+        var property = GetObjectPropertyByNamespaceAndName(fullNameClass, propertyName);
         SetValue(property, settingElement, value);
     }
 
     public virtual T? GetValue<T>(string id)
     {
-        var value = _settingElements.First(e => e.Id == id).Value;
+        var value = SettingElements.First(e => e.Id == id).Value;
         return (T?)CustomConvert.ChangeType(value, typeof(T));
     }
 
     public virtual T? GetValue<T>(string fullNameClass, string propertyName)
     {
-        var value = _settingElements.First(e => e.FullNameClass == fullNameClass
+        var value = SettingElements.First(e => e.FullNameClass == fullNameClass
                                                 && e.Name == propertyName).Value;
         return (T?)CustomConvert.ChangeType(value, typeof(T));
     }
 
-    private void SetValue(PropertyInfo? property, SettingsElement settingsElement, object? value)
+    protected virtual void SetValue(PropertyInfo? property, SettingsElement settingsElement, object? value)
     {
         foreach (var currentViewModel in CurrentViewModels)
         {
@@ -124,11 +124,11 @@ public class SettingsProvider : ISettingsProvider
 
             property?.SetValue(currentViewModel, value);
             settingsElement.Value = value;
-            _widgetJsonProvider.SaveModel(_settingElements, AppSettings.SettingsFile);
+            WidgetJsonProvider.SaveModel(SettingElements, AppSettings.SettingsFile);
         }
     }
 
-    private PropertyInfo? GetEditableObjectPropertyById(string? id)
+    protected virtual PropertyInfo? GetObjectPropertyById(string? id)
     {
         foreach (var currentViewModel in CurrentViewModels)
         {
@@ -151,7 +151,7 @@ public class SettingsProvider : ISettingsProvider
         return null;
     }
 
-    private PropertyInfo? GetEditableObjectPropertyByNamespaceAndName(string? fullNameClass, string? propertyName)
+    protected virtual PropertyInfo? GetObjectPropertyByNamespaceAndName(string? fullNameClass, string? propertyName)
     {
         foreach (var currentViewModel in CurrentViewModels)
         {
@@ -183,14 +183,18 @@ public class SettingsProvider : ISettingsProvider
         var currentSettingElements = GetPreviewSettingsElements(properties).ToList();
 
         foreach (var settingsElement in currentSettingElements)
-            UpdateSettingsElement(settingsElement, properties);
+        {
+            var property = GetPropertyInfo(properties, settingsElement);
+            UpdateValueAndTypeSettingsElement(settingsElement, property);
+        }
+
         RemoveObsoleteSettingsElements(currentSettingElements);
 
-        _settingElements = _settingElements
+        SettingElements = SettingElements
             .Union(customSettingsElements)
             .ToList();
 
-        return _settingElements;
+        return SettingElements;
     }
 
     private IEnumerable<SettingsElement> GetPreviewSettingsElements(IEnumerable<PropertyInfo> properties)
@@ -216,10 +220,10 @@ public class SettingsProvider : ISettingsProvider
 
     protected virtual IEnumerable<SettingsElement> GetCustomSettingsElements()
     {
-        return _settingElements.Where(e => e.FullNameClass == null && e.Name == null);
+        return SettingElements.Where(e => e.FullNameClass == null && e.Name == null);
     }
 
-    protected static PropertyInfo? GetPropertyInfo(IEnumerable<PropertyInfo> propertyInfos,
+    protected virtual PropertyInfo? GetPropertyInfo(IEnumerable<PropertyInfo> propertyInfos,
         SettingsElement settingsElement)
     {
         foreach (var propertyInfo in propertyInfos)
@@ -240,36 +244,35 @@ public class SettingsProvider : ISettingsProvider
         return null;
     }
 
-    protected virtual void UpdateSettingsElement(SettingsElement settingsElements,
-        IList<PropertyInfo> properties)
+    protected virtual void UpdateValueAndTypeSettingsElement(SettingsElement settingsElements,
+        PropertyInfo? propertyInfo)
     {
-        if (!_settingElements.Exists(e => e.Id == settingsElements.Id
+        if (!SettingElements.Exists(e => e.Id == settingsElements.Id
                                           && e.FullNameClass == settingsElements.FullNameClass
                                           && e.Name == settingsElements.Name))
         {
-            var property = GetPropertyInfo(properties, settingsElements);
-            if (property == null)
+            if (propertyInfo == null)
                 return;
 
-            var newSettingElement = AddValue(property, settingsElements);
-            _settingElements.Add(newSettingElement);
+            var newSettingElement = AddValue(propertyInfo, settingsElements);
+            SettingElements.Add(newSettingElement);
         }
     }
 
     protected virtual void RemoveObsoleteSettingsElements(List<SettingsElement> settingsElements)
     {
-        for (var i = 0; i < _settingElements.Count; i++)
+        for (var i = 0; i < SettingElements.Count; i++)
         {
-            if (!settingsElements.Exists(e => e.Id == _settingElements[i].Id
-                                              && e.FullNameClass == _settingElements[i].FullNameClass
-                                              && e.Name == _settingElements[i].Name))
+            if (!settingsElements.Exists(e => e.Id == SettingElements[i].Id
+                                              && e.FullNameClass == SettingElements[i].FullNameClass
+                                              && e.Name == SettingElements[i].Name))
             {
-                _settingElements.Remove(_settingElements[i]);
+                SettingElements.Remove(SettingElements[i]);
             }
         }
     }
 
-    protected static SettingsElement AddValue(PropertyInfo property, SettingsElement settingsElement)
+    protected virtual SettingsElement AddValue(PropertyInfo property, SettingsElement settingsElement)
     {
         var declaringType = property.DeclaringType;
         if (declaringType == null)

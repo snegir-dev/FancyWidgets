@@ -1,6 +1,4 @@
-﻿using ReactiveUI;
-
-namespace FancyWidgets.Common.SettingProvider.Interfaces;
+﻿namespace FancyWidgets.Common.SettingProvider.Interfaces;
 
 public interface ISettingsLoader
 {
