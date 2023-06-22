@@ -13,19 +13,25 @@ internal class WidgetJsonProvider : IWidgetJsonProvider
         File.WriteAllText(filePath, jsonModel);
     }
 
-    public virtual T GetModel<T>(string path) where T : new()
+    public virtual T? GetModel<T>(string path)
     {
         var json = GetStringJson(path);
-        return JsonConvert.DeserializeObject<T>(json) ?? new T();
+        return JsonConvert.DeserializeObject<T>(json);
     }
 
-    public virtual void UpdateModel<T>(Action<T> updateAction, string path)
+    public virtual void UpdateModel<T>(Action<T> updateAction, string path, bool createIfMissing = false)
+        where T : new()
     {
         var json = GetStringJson(path);
         var model = JsonConvert.DeserializeObject<T>(json);
 
         if (model is null)
-            return;
+        {
+            if (!createIfMissing)
+                throw new FileNotFoundException(path);
+
+            model = new T();
+        }
 
         updateAction(model);
 
@@ -36,13 +42,13 @@ internal class WidgetJsonProvider : IWidgetJsonProvider
     {
         var filePath = Path.Combine(WidgetPath.WorkDirectoryPath, path);
         if (!File.Exists(filePath))
-            CreateJsonFile(filePath);
+            CreateJsonFile(filePath, "");
 
         return File.ReadAllText(filePath);
     }
 
-    protected virtual void CreateJsonFile(string filePath)
+    protected virtual void CreateJsonFile(string filePath, string defaultValue)
     {
-        File.WriteAllText(filePath, string.Empty);
+        File.WriteAllText(filePath, defaultValue);
     }
 }
