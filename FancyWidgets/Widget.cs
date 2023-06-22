@@ -22,7 +22,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
 
     private readonly IntPtr _windowHandler;
     private readonly IWidgetJsonProvider _widgetJsonProvider;
-    private WidgetSettings _widgetSettings;
+    private WidgetSettings? _widgetSettings;
 
     private readonly WidgetMetadata _widgetMetadata;
     private ContextMenuWindow _contextMenuWindow;
@@ -36,8 +36,11 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         _windowHandler = TryGetPlatformHandle()!.Handle;
         _windowSystemManager = new WindowSystemManager(_windowHandler);
         _widgetJsonProvider = WidgetLocator.Current.Resolve<IWidgetJsonProvider>();
-        _widgetMetadata = _widgetJsonProvider.GetModel<WidgetMetadata>(AppSettings.WidgetMetadataFile);
+        _widgetMetadata = _widgetJsonProvider.GetModel<WidgetMetadata>(AppSettings.WidgetMetadataFile)
+                          ?? new WidgetMetadata();
+#if !DEBUG
         Uuid = _widgetMetadata.Uuid ?? throw new NullReferenceException("Uuid must not be null.");
+#endif
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -62,10 +65,13 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
     private void LoadWidgetData()
     {
         _widgetSettings = _widgetJsonProvider.GetModel<WidgetSettings>(AppSettings.WidgetSettingsFile);
+        if (_widgetSettings == null)
+            return;
         Title = _widgetMetadata.WidgetName;
         Width = _widgetSettings.Width == 0 ? Width : _widgetSettings.Width;
         Height = _widgetSettings.Height == 0 ? Height : _widgetSettings.Height;
-        Position = new PixelPoint((int)_widgetSettings.XPosition, (int)_widgetSettings.YPosition);
+        if (_widgetSettings is not { XPosition: 0, YPosition: 0 })
+            Position = new PixelPoint((int)_widgetSettings.XPosition, (int)_widgetSettings.YPosition);
     }
 
     private void LoadDefaultStyles()
@@ -79,7 +85,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         SystemDecorations = SystemDecorations.None;
         Topmost = false;
     }
-    
+
     protected override void OnLoaded()
     {
         _windowSystemManager.SetWindowChildToDesktop();
@@ -114,7 +120,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         {
             widgetSettings.Width = Width;
             widgetSettings.Height = Height;
-        }, AppSettings.WidgetSettingsFile);
+        }, AppSettings.WidgetSettingsFile, true);
     }
 
     private void SavePosition()
@@ -125,7 +131,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
             {
                 widgetSettings.XPosition = Position.X;
                 widgetSettings.YPosition = Position.Y;
-            }, AppSettings.WidgetSettingsFile);
+            }, AppSettings.WidgetSettingsFile, true);
         }
         else
         {
@@ -136,6 +142,6 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
     private void OnStarted(object? sender, EventArgs eventArgs)
     {
         _widgetJsonProvider.UpdateModel<WidgetSettings>(widgetSettings => { widgetSettings.IsEnable = true; },
-            AppSettings.WidgetSettingsFile);
+            AppSettings.WidgetSettingsFile, true);
     }
 }

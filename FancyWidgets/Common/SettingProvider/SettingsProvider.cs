@@ -20,7 +20,8 @@ public class SettingsProvider : ISettingsProvider
     public SettingsProvider(IWidgetJsonProvider widgetJsonProvider1)
     {
         WidgetJsonProvider = widgetJsonProvider1;
-        SettingElements = WidgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile);
+        SettingElements = WidgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile)
+                          ?? new List<SettingsElement>();
     }
 
     public virtual void InitializeSettings()
@@ -89,7 +90,7 @@ public class SettingsProvider : ISettingsProvider
     {
         var settingElements = WidgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile);
         var settingElement =
-            settingElements.FirstOrDefault(e => e.FullNameClass == fullNameClass
+            settingElements?.FirstOrDefault(e => e.FullNameClass == fullNameClass
                                                 && e.Name == propertyName);
 
         if (settingElement is null)
@@ -108,7 +109,7 @@ public class SettingsProvider : ISettingsProvider
     public virtual T? GetValue<T>(string fullNameClass, string propertyName)
     {
         var value = SettingElements.First(e => e.FullNameClass == fullNameClass
-                                                && e.Name == propertyName).Value;
+                                               && e.Name == propertyName).Value;
         return (T?)CustomConvert.ChangeType(value, typeof(T));
     }
 
@@ -223,7 +224,7 @@ public class SettingsProvider : ISettingsProvider
         return SettingElements.Where(e => e.FullNameClass == null && e.Name == null);
     }
 
-    protected virtual PropertyInfo? GetPropertyInfo(IEnumerable<PropertyInfo> propertyInfos,
+    protected PropertyInfo? GetPropertyInfo(IEnumerable<PropertyInfo> propertyInfos,
         SettingsElement settingsElement)
     {
         foreach (var propertyInfo in propertyInfos)
@@ -248,8 +249,8 @@ public class SettingsProvider : ISettingsProvider
         PropertyInfo? propertyInfo)
     {
         if (!SettingElements.Exists(e => e.Id == settingsElements.Id
-                                          && e.FullNameClass == settingsElements.FullNameClass
-                                          && e.Name == settingsElements.Name))
+                                         && e.FullNameClass == settingsElements.FullNameClass
+                                         && e.Name == settingsElements.Name))
         {
             if (propertyInfo == null)
                 return;

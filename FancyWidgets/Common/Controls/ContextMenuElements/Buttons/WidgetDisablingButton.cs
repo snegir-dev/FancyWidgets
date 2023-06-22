@@ -23,7 +23,7 @@ public class WidgetDisablingButton : WidgetContextMenu
     protected override void Execute()
     {
         _widgetJsonProvider.UpdateModel<WidgetSettings>(widgetSettings => { widgetSettings.IsEnable = false; },
-            AppSettings.WidgetSettingsFile);
+            AppSettings.WidgetSettingsFile, true);
         _window.Close();
     }
 }
