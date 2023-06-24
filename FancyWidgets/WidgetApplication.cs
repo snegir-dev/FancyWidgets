@@ -19,9 +19,9 @@ public static class WidgetApplication
         var builder = new ContainerBuilder();
         builder.RegisterType<ContextMenuWindowViewModel>().AsSelf();
         builder.RegisterType<SettingsWindowViewModel>().AsSelf();
-        builder.RegisterType<WidgetDisablingButton>().As<WidgetContextMenu>();
-        builder.RegisterType<ChangingWindowButton>().As<WidgetContextMenu>();
-        builder.RegisterType<ChangingSettingsButton>().As<WidgetContextMenu>();
+        builder.RegisterType<WidgetDisablingButton>().As<WidgetContextMenuButton>();
+        builder.RegisterType<ChangingWindowButton>().As<WidgetContextMenuButton>();
+        builder.RegisterType<ChangingSettingsButton>().As<WidgetContextMenuButton>();
         builder.RegisterType<WidgetJsonProvider>().As<IWidgetJsonProvider>();
         builder.RegisterType<SettingsProvider>().As<ISettingsProvider>();
 
