@@ -6,7 +6,7 @@ using FancyWidgets.Models;
 
 namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 
-public class WidgetDisablingButton : WidgetContextMenu
+public class WidgetDisablingButton : WidgetContextMenuButton
 {
     private readonly Window _window;
     private readonly IWidgetJsonProvider _widgetJsonProvider;
@@ -17,7 +17,8 @@ public class WidgetDisablingButton : WidgetContextMenu
     {
         _widgetJsonProvider = widgetJsonProvider;
         _window = (Window)WidgetLocator.Current
-            .ResolveByCondition(t => t.GetGenericTypeDefinition() == typeof(Widget<>))!;
+            .ResolveByCondition(t => t.IsGenericType &&
+                                     t.GetGenericTypeDefinition() == typeof(Widget<>))!;
     }
 
     protected override void Execute()

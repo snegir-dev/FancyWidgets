@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 
-public class ChangingWindowButton : WidgetContextMenu
+public class ChangingWindowButton : WidgetContextMenuButton
 {
     private readonly Window _widget;
     private const string EditContentButton = "Edit";
@@ -24,7 +24,8 @@ public class ChangingWindowButton : WidgetContextMenu
     public ChangingWindowButton()
     {
         _widget = (Window)WidgetLocator
-            .Current.ResolveByCondition(t => t.GetGenericTypeDefinition() == typeof(Widget<>))!;
+            .Current.ResolveByCondition(t => t.IsGenericType &&
+                                             t.GetGenericTypeDefinition() == typeof(Widget<>))!;
     }
 
     protected override void Execute()

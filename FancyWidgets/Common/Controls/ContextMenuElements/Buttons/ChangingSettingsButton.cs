@@ -2,7 +2,7 @@
 
 namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 
-public class ChangingSettingsButton : WidgetContextMenu
+public class ChangingSettingsButton : WidgetContextMenuButton
 {
     public override int Order { get; protected set; } = 3;
     public override string Content { get; set; } = "Settings";

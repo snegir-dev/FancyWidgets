@@ -14,6 +14,8 @@ namespace FancyWidgets.Common.SettingProvider;
 
 public class SettingsProvider : ISettingsProvider
 {
+    private readonly BindingFlags _propertyBindingFlags 
+        = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
     protected readonly IWidgetJsonProvider WidgetJsonProvider;
     protected List<SettingsElement> SettingElements;
 
@@ -37,7 +39,8 @@ public class SettingsProvider : ISettingsProvider
             if (currentViewModel is null)
                 throw new NullReferenceException();
 
-            var propertyInfos = currentViewModel.GetType().GetProperties()
+            var propertyInfos = currentViewModel.GetType()
+                .GetProperties(_propertyBindingFlags)
                 .Where(p => p.GetCustomAttribute<ConfigurablePropertyAttribute>() != null).ToList();
 
             foreach (var settingElement in SettingElements)
@@ -48,8 +51,8 @@ public class SettingsProvider : ISettingsProvider
                     .FirstOrDefault(p => p.Name == settingElement.Name
                                          && p.DeclaringType?.FullName == settingElement.FullNameClass);
                 var destinationType = Type.GetType(settingElement.DataType)!;
-                var type = CustomConvert.ChangeType(settingElement.Value, destinationType);
-                property?.SetValue(currentViewModel, type);
+                var value = CustomConvert.ChangeType(settingElement.Value, destinationType);
+                property?.SetValue(currentViewModel, value);
             }
         }
     }
@@ -91,7 +94,7 @@ public class SettingsProvider : ISettingsProvider
         var settingElements = WidgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile);
         var settingElement =
             settingElements?.FirstOrDefault(e => e.FullNameClass == fullNameClass
-                                                && e.Name == propertyName);
+                                                 && e.Name == propertyName);
 
         if (settingElement is null)
             return;
@@ -117,13 +120,12 @@ public class SettingsProvider : ISettingsProvider
     {
         foreach (var currentViewModel in CurrentViewModels)
         {
-            var t = currentViewModel?.GetType().GetProperties();
-
             if (currentViewModel is not null
-                && !currentViewModel.GetType().GetProperties().Contains(property))
+                && !currentViewModel.GetType().GetProperties(_propertyBindingFlags).Contains(property))
                 continue;
 
             property?.SetValue(currentViewModel, value);
+            settingsElement.DataType = property?.PropertyType.AssemblyQualifiedName!;
             settingsElement.Value = value;
             WidgetJsonProvider.SaveModel(SettingElements, AppSettings.SettingsFile);
         }
@@ -137,7 +139,7 @@ public class SettingsProvider : ISettingsProvider
                 continue;
 
             var typeEditableObject = currentViewModel.GetType();
-            var editableObjectProperties = typeEditableObject.GetProperties();
+            var editableObjectProperties = typeEditableObject.GetProperties(_propertyBindingFlags);
             var property = editableObjectProperties.FirstOrDefault(p =>
             {
                 var attribute = p.GetCustomAttribute<ConfigurablePropertyAttribute>();
@@ -160,7 +162,7 @@ public class SettingsProvider : ISettingsProvider
                 continue;
 
             var typeEditableObject = currentViewModel.GetType();
-            var editableObjectProperties = typeEditableObject.GetProperties();
+            var editableObjectProperties = typeEditableObject.GetProperties(_propertyBindingFlags);
             var property = editableObjectProperties.FirstOrDefault(p =>
                 p.PropertyType.FullName == fullNameClass && p.Name == propertyName);
 
@@ -176,7 +178,7 @@ public class SettingsProvider : ISettingsProvider
     {
         var classes = GetChangeableClasses();
         var properties = classes
-            .SelectMany(c => c.GetProperties())
+            .SelectMany(c => c.GetProperties(_propertyBindingFlags))
             .Where(p => p.GetCustomAttribute<ConfigurablePropertyAttribute>() != null)
             .ToList();
 
@@ -282,8 +284,7 @@ public class SettingsProvider : ISettingsProvider
         var editableObject = WidgetLocator.Current.ResolveOptional(declaringType)
                              ?? Activator.CreateInstance(declaringType);
         var propertyValue = property.GetValue(editableObject);
-        settingsElement.DataType = $"{propertyValue?.GetType().FullName}, " +
-                                   $"{propertyValue?.GetType().Assembly.FullName}";
+        settingsElement.DataType = propertyValue?.GetType().AssemblyQualifiedName!;
         settingsElement.Value = propertyValue;
 
         return settingsElement;

@@ -4,10 +4,11 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.13-alpha</Version>
-        <Title>FancyWidgets</Title>
+        <Version>1.0.0</Version>
+        <Title>Library for creating widgets for Windows</Title>
         <Authors>Snegir.null</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageIcon>logo.ico</PackageIcon>
     </PropertyGroup>
 
     <ItemGroup>
