@@ -22,9 +22,8 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
 
     private readonly IntPtr _windowHandler;
     private readonly IWidgetJsonProvider _widgetJsonProvider;
-    private WidgetSettings? _widgetSettings;
-
-    private readonly WidgetMetadata _widgetMetadata;
+    public WidgetSettings? WidgetSettings;
+    public readonly WidgetMetadata WidgetMetadata;
     private ContextMenuWindow _contextMenuWindow;
     private readonly WindowSystemManager _windowSystemManager;
     private int _currentCountStartCallingPositionChanges;
@@ -36,11 +35,9 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         _windowHandler = TryGetPlatformHandle()!.Handle;
         _windowSystemManager = new WindowSystemManager(_windowHandler);
         _widgetJsonProvider = WidgetLocator.Current.Resolve<IWidgetJsonProvider>();
-        _widgetMetadata = _widgetJsonProvider.GetModel<WidgetMetadata>(AppSettings.WidgetMetadataFile)
-                          ?? new WidgetMetadata();
-#if !DEBUG
-        Uuid = _widgetMetadata.Uuid ?? throw new NullReferenceException("Uuid must not be null.");
-#endif
+        WidgetMetadata = _widgetJsonProvider.GetModel<WidgetMetadata>(AppSettings.WidgetMetadataFile)
+                         ?? new WidgetMetadata();
+        Uuid = WidgetMetadata.Uuid ?? throw new NullReferenceException("Uuid must not be null.");
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -64,14 +61,14 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
 
     private void LoadWidgetData()
     {
-        _widgetSettings = _widgetJsonProvider.GetModel<WidgetSettings>(AppSettings.WidgetSettingsFile);
-        if (_widgetSettings == null)
+        WidgetSettings = _widgetJsonProvider.GetModel<WidgetSettings>(AppSettings.WidgetSettingsFile);
+        if (WidgetSettings == null)
             return;
-        Title = _widgetMetadata.WidgetName;
-        Width = _widgetSettings.Width == 0 ? Width : _widgetSettings.Width;
-        Height = _widgetSettings.Height == 0 ? Height : _widgetSettings.Height;
-        if (_widgetSettings is not { XPosition: 0, YPosition: 0 })
-            Position = new PixelPoint((int)_widgetSettings.XPosition, (int)_widgetSettings.YPosition);
+        Title = WidgetMetadata.WidgetName;
+        Width = WidgetSettings.Width == 0 ? Width : WidgetSettings.Width;
+        Height = WidgetSettings.Height == 0 ? Height : WidgetSettings.Height;
+        if (WidgetSettings is not { XPosition: 0, YPosition: 0 })
+            Position = new PixelPoint((int)WidgetSettings.XPosition, (int)WidgetSettings.YPosition);
     }
 
     private void LoadDefaultStyles()

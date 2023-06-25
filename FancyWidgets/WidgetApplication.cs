@@ -23,7 +23,7 @@ public static class WidgetApplication
         builder.RegisterType<ChangingWindowButton>().As<WidgetContextMenuButton>();
         builder.RegisterType<ChangingSettingsButton>().As<WidgetContextMenuButton>();
         builder.RegisterType<WidgetJsonProvider>().As<IWidgetJsonProvider>();
-        builder.RegisterType<SettingsProvider>().As<ISettingsProvider>();
+        builder.AddSettingsProvider();
 
         return builder;
     }
