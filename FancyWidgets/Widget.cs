@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -46,10 +47,15 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         _windowSystemManager.HideFromAltTab();
         _windowSystemManager.WidgetToBottom();
         _windowSystemManager.HideMinimizeAndMaximizeButtons();
-        LoadDefaultStyles();
-        LoadWidgetData();
         InitializeEvents();
         base.OnApplyTemplate(e);
+    }
+
+    protected override void OnInitialized()
+    {
+        LoadDefaultStyles();
+        LoadWidgetData();
+        base.OnInitialized();
     }
 
     private void InitializeEvents()
