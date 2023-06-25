@@ -8,12 +8,13 @@
         <Title>Library for creating widgets for Windows</Title>
         <Authors>Snegir.null</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageIcon>logo.ico</PackageIcon>
+        <PackageIcon>Assets\logo.png</PackageIcon>
     </PropertyGroup>
 
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
         <None Remove=".gitignore" />
+        <None Include="Assets\logo.png" Pack="true" Visible="false" PackagePath="Assets\logo.png" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.0.0-rc1.1" />
@@ -36,10 +37,6 @@
 
     <ItemGroup>
         <Folder Include="Common\Controls\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <UpToDateCheckInput Remove="Assets\Fonts\Logo\logo.ico" />
     </ItemGroup>
 
 </Project>
