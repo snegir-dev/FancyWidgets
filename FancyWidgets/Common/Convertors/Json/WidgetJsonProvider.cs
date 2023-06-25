@@ -1,4 +1,5 @@
-﻿using FancyWidgets.Common.System.IO;
+﻿using FancyWidgets.Common.SettingProvider.Models;
+using FancyWidgets.Common.System.IO;
 using Newtonsoft.Json;
 using Path = System.IO.Path;
 

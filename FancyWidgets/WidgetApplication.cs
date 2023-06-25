@@ -3,6 +3,7 @@ using Avalonia.ReactiveUI;
 using FancyWidgets.Common.Controls.ContextMenuElements;
 using FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 using FancyWidgets.Common.Convertors.Json;
+using FancyWidgets.Common.Convertors.NewtonsoftJson;
 using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider;
 using FancyWidgets.Common.SettingProvider.Interfaces;
@@ -24,6 +25,7 @@ public static class WidgetApplication
         builder.RegisterType<ChangingSettingsButton>().As<WidgetContextMenuButton>();
         builder.RegisterType<WidgetJsonProvider>().As<IWidgetJsonProvider>();
         builder.AddSettingsProvider();
+        NewtonsoftConfigurationInitializer.Initialize();
 
         return builder;
     }
