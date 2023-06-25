@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using Autofac;
 using FancyWidgets.Common.Convertors.Json;
-using FancyWidgets.Common.Convertors.Type;
 using FancyWidgets.Common.Domain;
 using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider.Attributes;
 using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.Common.SettingProvider.Models;
 using FancyWidgets.Models;
+using Newtonsoft.Json;
 using static FancyWidgets.Common.SettingProvider.ViewModelsContainer;
 
 namespace FancyWidgets.Common.SettingProvider;
@@ -47,13 +47,13 @@ public class SettingsProvider : ISettingsProvider
 
             foreach (var settingElement in SettingElements)
             {
-                if (settingElement.Value is null)
+                if (settingElement.JValue is null)
                     continue;
                 var property = propertyInfos
                     .FirstOrDefault(p => p.Name == settingElement.Name
                                          && p.DeclaringType?.FullName == settingElement.FullNameClass);
                 var destinationType = Type.GetType(settingElement.DataType)!;
-                var value = CustomConvert.ChangeType(settingElement.Value, destinationType);
+                var value = JsonConvert.DeserializeObject(settingElement.JValue, destinationType);
                 property?.SetValue(currentViewModel, value);
             }
         }
@@ -68,14 +68,14 @@ public class SettingsProvider : ISettingsProvider
             {
                 Id = id,
                 DataType = value.GetType().AssemblyQualifiedName!,
-                Value = value
+                JValue = JsonConvert.SerializeObject(value)
             };
             SettingElements.Add(settingElement);
         }
         else
         {
             settingElement.DataType = value.GetType().AssemblyQualifiedName!;
-            settingElement.Value = value;
+            settingElement.JValue = JsonConvert.SerializeObject(value);
         }
 
         WidgetJsonProvider.SaveModel(SettingElements, AppSettings.SettingsFile);
@@ -93,10 +93,11 @@ public class SettingsProvider : ISettingsProvider
 
     public virtual void SetValue(string fullNameClass, string propertyName, object? value)
     {
-        var settingElements = WidgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile);
+        SettingElements = WidgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile)
+                          ?? new List<SettingsElement>();
         var settingElement =
-            settingElements?.FirstOrDefault(e => e.FullNameClass == fullNameClass
-                                                 && e.Name == propertyName);
+            SettingElements.FirstOrDefault(e => e.FullNameClass == fullNameClass
+                                                && e.Name == propertyName);
 
         if (settingElement is null)
             return;
@@ -107,15 +108,15 @@ public class SettingsProvider : ISettingsProvider
 
     public virtual T? GetValue<T>(string id)
     {
-        var value = SettingElements.First(e => e.Id == id).Value;
-        return (T?)CustomConvert.ChangeType(value, typeof(T));
+        var value = SettingElements.First(e => e.Id == id).JValue;
+        return JsonConvert.DeserializeObject<T>(value ?? string.Empty);
     }
 
     public virtual T? GetValue<T>(string fullNameClass, string propertyName)
     {
         var value = SettingElements.First(e => e.FullNameClass == fullNameClass
-                                               && e.Name == propertyName).Value;
-        return (T?)CustomConvert.ChangeType(value, typeof(T));
+                                               && e.Name == propertyName).JValue;
+        return JsonConvert.DeserializeObject<T?>(value ?? string.Empty);
     }
 
     protected virtual void SetValue(PropertyInfo? property, SettingsElement settingsElement, object? value)
@@ -128,7 +129,7 @@ public class SettingsProvider : ISettingsProvider
 
             property?.SetValue(currentViewModel, value);
             settingsElement.DataType = property?.PropertyType.AssemblyQualifiedName!;
-            settingsElement.Value = value;
+            settingsElement.JValue = JsonConvert.SerializeObject(value);
             WidgetJsonProvider.SaveModel(SettingElements, AppSettings.SettingsFile);
         }
     }
@@ -166,7 +167,7 @@ public class SettingsProvider : ISettingsProvider
             var typeEditableObject = currentViewModel.GetType();
             var editableObjectProperties = typeEditableObject.GetProperties(PropertyBindingFlags);
             var property = editableObjectProperties.FirstOrDefault(p =>
-                p.PropertyType.FullName == fullNameClass && p.Name == propertyName);
+                p.DeclaringType?.FullName == fullNameClass && p.Name == propertyName);
 
             if (property == null)
                 continue;
@@ -234,7 +235,7 @@ public class SettingsProvider : ISettingsProvider
         foreach (var propertyInfo in propertyInfos)
         {
             var attribute = propertyInfo.GetCustomAttribute<ConfigurablePropertyAttribute>();
-            if (attribute?.Id == settingsElement.Id)
+            if (attribute?.Id != null && attribute.Id == settingsElement.Id)
             {
                 return propertyInfo;
             }
@@ -287,7 +288,7 @@ public class SettingsProvider : ISettingsProvider
                              ?? Activator.CreateInstance(declaringType);
         var propertyValue = property.GetValue(editableObject);
         settingsElement.DataType = propertyValue?.GetType().AssemblyQualifiedName!;
-        settingsElement.Value = propertyValue;
+        settingsElement.JValue = JsonConvert.SerializeObject(propertyValue);
 
         return settingsElement;
     }

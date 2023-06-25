@@ -16,6 +16,6 @@ public class SettingsElement
     [JsonProperty(nameof(DataType))] 
     public string DataType { get; set; }
 
-    [JsonProperty(nameof(Value))] 
-    public object? Value { get; set; }
+    [JsonProperty(nameof(JValue))] 
+    public string? JValue { get; set; }
 }
