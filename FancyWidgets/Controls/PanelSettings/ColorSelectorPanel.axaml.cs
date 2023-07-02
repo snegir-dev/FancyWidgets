@@ -1,39 +1,30 @@
-﻿using Avalonia.Controls;
-using Avalonia.ReactiveUI;
-using FancyWidgets.ViewModels.PanelSettings;
-using ReactiveUI;
+﻿using Avalonia;
+using Avalonia.Controls;
 
 namespace FancyWidgets.Controls.PanelSettings;
 
-public partial class ColorSelectorPanel : ReactiveUserControl<FancyColorSelectionViewModel>
+public partial class ColorSelectorPanel : UserControl
 {
-    public string? Title { get; set; }
-    public TextBox TextBoxControl { get; set; }
-    
-    public ColorSelectorPanel()
+    public static readonly DirectProperty<ColorSelectorPanel, string> TitleProperty =
+        AvaloniaProperty.RegisterDirect<ColorSelectorPanel, string>(
+            nameof(Title),
+            o => o.Title,
+            (o, v) => o.Title = v);
+
+    private string _title = string.Empty;
+
+    public string Title
     {
-        InitializeComponent(true);
-        InitializeComponent();
-        BindProperties();
+        get => _title;
+        set => SetAndRaise(TitleProperty, ref _title, value);
     }
 
-    private void InitializeComponent()
+    public TextBox TextBoxControl { get; set; }
+
+    public ColorSelectorPanel()
     {
-        ViewModel = new FancyColorSelectionViewModel();
-        DataContext = ViewModel;
-    }
-    
-    private void BindProperties()
-    {
-        this.WhenActivated(_ =>
-        {
-            if (ViewModel == null)
-                return;
-            this.WhenAnyValue(x => x.Title).BindTo(this, x => x.ViewModel!.Title);
-            this.WhenAnyValue(x => x.TextBoxControl).BindTo(this, x => x.ViewModel!.TextBox);
-        });
+        InitializeComponent();
+        DataContext = this;
         TextBoxControl = TextBox;
     }
-    
-    protected override Type StyleKeyOverride => typeof(ColorSelectorPanel);
 }

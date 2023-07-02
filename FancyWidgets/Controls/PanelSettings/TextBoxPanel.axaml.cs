@@ -1,39 +1,30 @@
-﻿using Avalonia.Controls;
-using Avalonia.ReactiveUI;
-using FancyWidgets.ViewModels.PanelSettings;
-using ReactiveUI;
+﻿using Avalonia;
+using Avalonia.Controls;
 
 namespace FancyWidgets.Controls.PanelSettings;
 
-public partial class TextBoxPanel : ReactiveUserControl<FancyTextBoxViewModel>
+public partial class TextBoxPanel : UserControl
 {
-    public string? Title { get; set; }
-    public TextBox TextBoxControl { get; set; }
+    public static readonly DirectProperty<TextBoxPanel, string> TitleProperty =
+        AvaloniaProperty.RegisterDirect<TextBoxPanel, string>(
+            nameof(Title),
+            o => o.Title,
+            (o, v) => o.Title = v);
+
+    private string _title = string.Empty;
+
+    public string Title
+    {
+        get => _title;
+        set => SetAndRaise(TitleProperty, ref _title, value);
+    }
+
+    public TextBox TextBoxControl { get; private set; }
 
     public TextBoxPanel()
     {
-        InitializeComponent(true);
         InitializeComponent();
-        BindProperties();
-    }
-
-    private void InitializeComponent()
-    {
-        ViewModel = new FancyTextBoxViewModel();
-        DataContext = ViewModel;
-    }
-
-    private void BindProperties()
-    {
-        this.WhenActivated(_ =>
-        {
-            if (ViewModel == null)
-                return;
-            this.WhenAnyValue(x => x.Title).BindTo(this, x => x.ViewModel!.Title);
-            this.WhenAnyValue(x => x.TextBoxControl).BindTo(this, x => x.ViewModel!.TextBox);
-        });
+        DataContext = this;
         TextBoxControl = TextBox;
     }
-    
-    protected override Type StyleKeyOverride => typeof(TextBoxPanel);
 }

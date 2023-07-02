@@ -18,33 +18,26 @@
         <StyleInclude Source="/Styles/CheckBoxStyles.axaml" />
     </UserControl.Styles>
 
-    <Border Background="{DynamicResource Dark}"
-            CornerRadius="5">
-        <Border Name="Border"
-                HorizontalAlignment="Stretch"
-                Padding="10">
+    <DockPanel>
+        <TextBlock Name="TitleText"
+                   Text="{Binding Title}"
+                   VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   TextTrimming="CharacterEllipsis"
+                   FontSize="15">
 
-            <DockPanel>
-                <TextBlock Text="{Binding Title}"
-                           VerticalAlignment="Center"
-                           TextWrapping="Wrap"
-                           TextTrimming="CharacterEllipsis"
-                           FontSize="15">
+            <TextBlock.Width>
+                <MultiBinding Converter="{StaticResource SubtractionConverter}">
+                    <Binding ElementName="Border" Path="Width" />
+                    <Binding ElementName="CheckBox" Path="Width" />
+                </MultiBinding>
+            </TextBlock.Width>
+        </TextBlock>
 
-                    <TextBlock.Width>
-                        <MultiBinding Converter="{StaticResource SubtractionConverter}">
-                            <Binding ElementName="Border" Path="Width" />
-                            <Binding ElementName="CheckBox" Path="Width" />
-                        </MultiBinding>
-                    </TextBlock.Width>
-                </TextBlock>
+        <CheckBox Name="CheckBox"
+                  HorizontalAlignment="Right" />
+    </DockPanel>
 
-                <CheckBox Name="CheckBox"
-                          HorizontalAlignment="Right" />
-            </DockPanel>
-
-        </Border>
-    </Border>
     <UserControl.Styles>
         <Styles>
             <Style Selector="TextBlock">
