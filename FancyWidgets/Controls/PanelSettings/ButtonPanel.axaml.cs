@@ -1,39 +1,47 @@
-﻿using Avalonia.Controls;
-using Avalonia.ReactiveUI;
-using FancyWidgets.ViewModels.PanelSettings;
-using ReactiveUI;
+﻿using Avalonia;
+using Avalonia.Controls;
 
 namespace FancyWidgets.Controls.PanelSettings;
 
-public partial class ButtonPanel : ReactiveUserControl<FancyButtonViewModel>
+public partial class ButtonPanel : UserControl
 {
-    public Button ButtonControl { get; set; }
-    public string? Title { get; set; }
+    public static readonly DirectProperty<ButtonPanel, string> TitleProperty =
+        AvaloniaProperty.RegisterDirect<ButtonPanel, string>(
+            nameof(Title),
+            o => o.Title,
+            (o, v) => o.Title = v);
+
+    public static readonly DirectProperty<ButtonPanel, string> ButtonContentProperty =
+        AvaloniaProperty.RegisterDirect<ButtonPanel, string>(
+            nameof(ButtonContent),
+            o => o.ButtonContent,
+            (o, v) => o.ButtonContent = v);
+
+    private string _title = string.Empty;
+    private string _buttonContent = string.Empty;
+
+    public string Title
+    {
+        get => _title;
+        set => SetAndRaise(TitleProperty, ref _title, value);
+    }
+
+    public string ButtonContent
+    {
+        get => _buttonContent;
+        set
+        {
+            SetAndRaise(ButtonContentProperty, ref _buttonContent, value);
+            Button.Content = value;
+        }
+    }
+
+    public Button ButtonControl { get; private set; }
 
     public ButtonPanel()
     {
-        InitializeComponent(true);
         InitializeComponent();
-        BindProperties();
-    }
-
-    private void InitializeComponent()
-    {
-        ViewModel = new FancyButtonViewModel();
-        DataContext = ViewModel;
-    }
-
-    private void BindProperties()
-    {
-        this.WhenActivated(_ =>
-        {
-            if (ViewModel == null)
-                return;
-            this.WhenAnyValue(x => x.Title).BindTo(this, x => x.ViewModel!.Title);
-            this.WhenAnyValue(x => x.ButtonControl).BindTo(this, x => x.ViewModel!.Button);
-        });
+        DataContext = this;
         ButtonControl = Button;
     }
-
-    protected override Type StyleKeyOverride => typeof(ButtonPanel);
 }

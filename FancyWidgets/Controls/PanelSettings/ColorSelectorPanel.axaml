@@ -16,52 +16,48 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border Background="{DynamicResource Dark}"
-            CornerRadius="5">
-        <Border HorizontalAlignment="Stretch"
-                Padding="10">
+    <Grid Name="Grid"
+          VerticalAlignment="Center"
+          HorizontalAlignment="Stretch"
+          ColumnDefinitions="Auto,Auto">
 
-            <Grid Name="Grid"
-                  VerticalAlignment="Center"
-                  HorizontalAlignment="Stretch"
-                  ColumnDefinitions="Auto,Auto">
+        <TextBlock Name="TitleText"
+                   Text="{Binding Title}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   TextWrapping="Wrap"
+                   TextTrimming="CharacterEllipsis"
+                   FontSize="15"
+                   Padding="0 0 5 0"
+                   Grid.Column="0">
 
-                <TextBlock Text="{Binding Title}"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"
-                           TextWrapping="Wrap"
-                           TextTrimming="CharacterEllipsis"
-                           FontSize="15"
-                           Padding="0 0 5 0"
-                           Grid.Column="0">
+            <TextBlock.Width>
+                <MultiBinding Converter="{StaticResource SubtractionConverter}">
+                    <Binding ElementName="StackPanel" Path="Bounds.Width" />
+                    <Binding ElementName="Grid" Path="Bounds.Width" />
+                </MultiBinding>
+            </TextBlock.Width>
+        </TextBlock>
 
-                    <TextBlock.Width>
-                        <MultiBinding Converter="{StaticResource SubtractionConverter}">
-                            <Binding ElementName="StackPanel" Path="Bounds.Width" />
-                            <Binding ElementName="Grid" Path="Bounds.Width" />
-                        </MultiBinding>
-                    </TextBlock.Width>
-                </TextBlock>
+        <StackPanel Name="StackPanel"
+                    Grid.Column="1"
+                    Orientation="Horizontal">
 
-                <StackPanel Name="StackPanel"
-                            Grid.Column="1"
-                            Orientation="Horizontal">
-                    <Border Background="{Binding #TextBox.Text, Converter={StaticResource ColorConvertor}}"
-                            VerticalAlignment="Stretch"
-                            CornerRadius="5"
-                            BorderBrush="#1e1f22"
-                            BorderThickness="2"
-                            Width="40"
-                            Margin="0 0 3 0" />
+            <Border Name="ColorDisplay"
+                    Background="{Binding #TextBox.Text, Converter={StaticResource ColorConvertor}}"
+                    VerticalAlignment="Stretch"
+                    CornerRadius="5"
+                    BorderBrush="#1e1f22"
+                    BorderThickness="2"
+                    Width="40"
+                    Margin="0 0 3 0" />
 
-                    <TextBox Name="TextBox"
-                             HorizontalAlignment="Right"
-                             FontSize="15"
-                             Width="150" />
-                </StackPanel>
-            </Grid>
-        </Border>
-    </Border>
+            <TextBox Name="TextBox"
+                     HorizontalAlignment="Right"
+                     FontSize="15"
+                     Width="150" />
+        </StackPanel>
+    </Grid>
 
     <UserControl.Styles>
         <StyleInclude Source="/Styles/TextBoxStyle.axaml" />

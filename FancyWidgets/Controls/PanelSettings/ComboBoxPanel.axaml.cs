@@ -1,37 +1,26 @@
-﻿using Avalonia.Controls;
-using Avalonia.ReactiveUI;
-using FancyWidgets.ViewModels.PanelSettings;
-using ReactiveUI;
+﻿using Avalonia;
+using Avalonia.Controls;
 
 namespace FancyWidgets.Controls.PanelSettings;
 
-public partial class ComboBoxPanel : ReactiveUserControl<FancyComboBoxViewModel>
+public partial class ComboBoxPanel : UserControl
 {
+    public static readonly DirectProperty<ComboBoxPanel, string> TitleProperty =
+        AvaloniaProperty.RegisterDirect<ComboBoxPanel, string>(
+            nameof(Title), o => o.Title, (o, v) => o.Title = v);
+    
+    private string _title = string.Empty;
+    public string Title
+    {
+        get => _title;
+        set => SetAndRaise(TitleProperty, ref _title, value);
+    }
     public ComboBox ComboBoxControl { get; set; }
-    public string? Title { get; set; } 
     
     public ComboBoxPanel()
     {
-        InitializeComponent(true);
         InitializeComponent();
-        BindProperties();
-    }
-
-    private void InitializeComponent()
-    {
-        ViewModel = new FancyComboBoxViewModel();
-        DataContext = ViewModel;
-    }
-    
-    private void BindProperties()
-    {
-        this.WhenActivated(_ =>
-        {
-            if (ViewModel == null)
-                return;
-            this.WhenAnyValue(x => x.Title).BindTo(this, x => x.ViewModel!.Title);
-            this.WhenAnyValue(x => x.ComboBoxControl).BindTo(this, x => x.ViewModel!.ComboBox);
-        });
+        DataContext = this;
         ComboBoxControl = ComboBox;
     }
 }
