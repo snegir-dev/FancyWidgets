@@ -52,8 +52,14 @@ public class SettingsProvider : ISettingsProvider
                 var property = propertyInfos
                     .FirstOrDefault(p => p.Name == settingElement.Name
                                          && p.DeclaringType?.FullName == settingElement.FullNameClass);
-                var destinationType = Type.GetType(settingElement.DataType)!;
-                var value = JsonConvert.DeserializeObject(settingElement.JValue, destinationType);
+                object? value = null;
+                if (settingElement.DataType != null)
+                {
+                    var destinationType = Type.GetType(settingElement.DataType);
+                    if (destinationType != null)
+                        value = JsonConvert.DeserializeObject(settingElement.JValue, destinationType);
+                }
+
                 property?.SetValue(currentViewModel, value);
             }
         }
@@ -108,15 +114,19 @@ public class SettingsProvider : ISettingsProvider
 
     public virtual T? GetValue<T>(string id)
     {
-        var value = SettingElements.First(e => e.Id == id).JValue;
-        return JsonConvert.DeserializeObject<T>(value ?? string.Empty);
+        var value = SettingElements.FirstOrDefault(e => e.Id == id)?.JValue;
+        if (string.IsNullOrWhiteSpace(value))
+            return default;
+        return JsonConvert.DeserializeObject<T>(value);
     }
 
     public virtual T? GetValue<T>(string fullNameClass, string propertyName)
     {
-        var value = SettingElements.First(e => e.FullNameClass == fullNameClass
-                                               && e.Name == propertyName).JValue;
-        return JsonConvert.DeserializeObject<T?>(value ?? string.Empty);
+        var value = SettingElements.FirstOrDefault(e => e.FullNameClass == fullNameClass
+                                                        && e.Name == propertyName)?.JValue;
+        if (string.IsNullOrWhiteSpace(value))
+            return default;
+        return JsonConvert.DeserializeObject<T>(value);
     }
 
     protected virtual void SetValue(PropertyInfo? property, SettingsElement settingsElement, object? value)

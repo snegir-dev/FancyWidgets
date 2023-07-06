@@ -22,6 +22,7 @@
           ColumnDefinitions="Auto,Auto">
 
         <TextBlock Name="TitleText"
+                   Classes="TitleText"
                    Text="{Binding Title}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
@@ -44,6 +45,7 @@
                     Orientation="Horizontal">
 
             <Border Name="ColorDisplay"
+                    Classes="ColorDisplay"
                     Background="{Binding #TextBox.Text, Converter={StaticResource ColorConvertor}}"
                     VerticalAlignment="Stretch"
                     CornerRadius="5"
@@ -53,7 +55,9 @@
                     Margin="0 0 3 0" />
 
             <TextBox Name="TextBox"
+                     Classes="TextBox"
                      HorizontalAlignment="Right"
+                     VerticalAlignment="Center"
                      FontSize="15"
                      Width="150" />
         </StackPanel>
@@ -61,7 +65,7 @@
 
     <UserControl.Styles>
         <StyleInclude Source="/Styles/TextBoxStyle.axaml" />
-        <Style Selector="TextBlock">
+        <Style Selector="TextBlock.TitleText">
             <Setter Property="Foreground" Value="{DynamicResource Light}"></Setter>
         </Style>
     </UserControl.Styles>

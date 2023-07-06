@@ -15,11 +15,11 @@
     </Styles.Resources>
 
     <Styles>
-        <Style Selector="TextBox">
+        <Style Selector="TextBox.TextBox">
             <Setter Property="Background" Value="{DynamicResource VeryDark}" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
-        <Style Selector="TextBox:focus-within /template/ Border#PART_BorderElement">
+        <Style Selector="TextBox.TextBox:focus-within /template/ Border#PART_BorderElement">
             <Setter Property="BorderThickness" Value="0" />
         </Style>
     </Styles>

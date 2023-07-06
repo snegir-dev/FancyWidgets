@@ -33,12 +33,14 @@
                                     Padding="5,0,5,0"
                                     Margin="5,0,0,0">
                                 <TextBlock Name="Header"
+                                           Classes="Header"
                                            FontFamily="{DynamicResource InterBold}"
                                            FontSize="15"
                                            Text="{TemplateBinding Header}" />
                             </Border>
 
                             <Border Name="ContentContainer"
+                                    Classes="ContentContainer"
                                     Grid.Row="0"
                                     Grid.RowSpan="2"
                                     Grid.ColumnSpan="2"

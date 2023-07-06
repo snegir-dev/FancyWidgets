@@ -1,4 +1,4 @@
-﻿namespace FancyWidgets.Common.SettingProvider.Attributes;
+namespace FancyWidgets.Common.SettingProvider.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class ConfigurablePropertyAttribute : Attribute

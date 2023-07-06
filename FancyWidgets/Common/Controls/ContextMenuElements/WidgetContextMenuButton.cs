@@ -1,4 +1,4 @@
-﻿using System.Reactive;
+using System.Reactive;
 using ReactiveUI;
 
 namespace FancyWidgets.Common.Controls.ContextMenuElements;

@@ -1,4 +1,4 @@
-﻿namespace FancyWidgets.Models;
+namespace FancyWidgets.Models;
 
 public class WidgetSettings
 {

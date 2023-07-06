@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using FancyWidgets.Common.Extensions;
 using FancyWidgets.Common.Locators;
 using ReactiveUI;

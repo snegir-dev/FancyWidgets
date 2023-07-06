@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.Controls.ContextMenuElements;
 using FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
@@ -6,9 +7,9 @@ using FancyWidgets.Common.Convertors.Json;
 using FancyWidgets.Common.Convertors.NewtonsoftJson;
 using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider;
-using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.ViewModels;
 using ReactiveUI;
+using Splat;
 using Splat.Autofac;
 
 namespace FancyWidgets;
@@ -26,7 +27,7 @@ public static class WidgetApplication
         builder.RegisterType<WidgetJsonProvider>().As<IWidgetJsonProvider>();
         builder.AddSettingsProvider();
         NewtonsoftConfigurationInitializer.Initialize();
-
+        
         return builder;
     }
 

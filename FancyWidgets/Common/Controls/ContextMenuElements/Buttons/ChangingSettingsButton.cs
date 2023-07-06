@@ -1,4 +1,4 @@
-﻿using FancyWidgets.Views;
+using FancyWidgets.Views;
 
 namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
 

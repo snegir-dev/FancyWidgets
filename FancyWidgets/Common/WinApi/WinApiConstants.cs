@@ -1,4 +1,4 @@
-﻿namespace FancyWidgets.Common.WinApi;
+namespace FancyWidgets.Common.WinApi;
 
 internal static class WinApiConstants
 {

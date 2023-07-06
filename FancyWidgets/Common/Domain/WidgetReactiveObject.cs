@@ -8,7 +8,7 @@ namespace FancyWidgets.Common.Domain;
 
 public class WidgetReactiveObject : ReactiveObject, IDisposable
 {
-    public WidgetReactiveObject()
+    protected WidgetReactiveObject()
     {
         InitialTrack();
     }

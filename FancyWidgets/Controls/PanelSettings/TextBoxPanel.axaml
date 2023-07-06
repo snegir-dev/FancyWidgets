@@ -21,6 +21,7 @@
           ColumnDefinitions="Auto,Auto">
 
         <TextBlock Name="TitleText"
+                   Classes="TitleText"
                    Text="{Binding Title}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
@@ -43,7 +44,7 @@
                     Orientation="Horizontal">
 
             <TextBox Name="TextBox"
-                     Background="Gray"
+                     Classes="TextBox"
                      HorizontalAlignment="Right"
                      FontSize="15"
                      Width="250" />
@@ -52,7 +53,7 @@
 
     <UserControl.Styles>
         <StyleInclude Source="/Styles/TextBoxStyle.axaml" />
-        <Style Selector="TextBlock">
+        <Style Selector="TextBlock.TitleText">
             <Setter Property="Foreground" Value="{DynamicResource Light}"></Setter>
         </Style>
     </UserControl.Styles>

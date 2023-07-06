@@ -17,24 +17,24 @@
     </Styles.Resources>
 
     <Styles>
-        <Style Selector="ToggleSwitch">
+        <Style Selector="ToggleSwitch.ToggleSwitch">
             <Setter Property="Foreground" Value="{DynamicResource Light}" />
         </Style>
 
-        <Style Selector="ToggleSwitch:checked /template/ Border#SwitchKnobBounds">
+        <Style Selector="ToggleSwitch.ToggleSwitch:checked /template/ Border#SwitchKnobBounds">
             <Setter Property="Background" Value="{DynamicResource VeryDark}" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
-        <Style Selector="ToggleSwitch:unchecked /template/ Border#OuterBorder">
+        <Style Selector="ToggleSwitch.ToggleSwitch:unchecked /template/ Border#OuterBorder">
             <Setter Property="Background" Value="{DynamicResource VeryDark}" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
 
-        <Style Selector="ToggleSwitch:checked /template/ Ellipse#SwitchKnobOn">
+        <Style Selector="ToggleSwitch.ToggleSwitch:checked /template/ Ellipse#SwitchKnobOn">
             <Setter Property="Fill"
                     Value="{DynamicResource Light}" />
         </Style>
-        <Style Selector="ToggleSwitch:unchecked /template/ Ellipse#SwitchKnobOff">
+        <Style Selector="ToggleSwitch.ToggleSwitch:unchecked /template/ Ellipse#SwitchKnobOff">
             <Setter Property="Fill"
                     Value="{Binding Source={StaticResource Light}, Converter={StaticResource DarkenColorConvertor}, ConverterParameter=0.5}" />
         </Style>

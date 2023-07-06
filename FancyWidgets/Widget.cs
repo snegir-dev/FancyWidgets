@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
@@ -89,10 +90,10 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         Topmost = false;
     }
 
-    protected override void OnLoaded()
+    protected override void OnLoaded(RoutedEventArgs e)
     {
         _windowSystemManager.SetWindowChildToDesktop();
-        base.OnLoaded();
+        base.OnLoaded(e);
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
