@@ -24,6 +24,7 @@
           ColumnDefinitions="Auto,Auto">
 
         <TextBlock Name="TitleText"
+                   Classes="TitleText"
                    Text="{Binding Title}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
@@ -42,6 +43,7 @@
         </TextBlock>
 
         <ToggleSwitch Name="ToggleSwitch"
+                      Classes="ToggleSwitch"
                       HorizontalAlignment="Right"
                       FontSize="15"
                       Padding="15 6 15 6"
@@ -49,7 +51,7 @@
     </Grid>
 
     <UserControl.Styles>
-        <Style Selector="TextBlock">
+        <Style Selector="TextBlock.TitleText">
             <Setter Property="Foreground" Value="{DynamicResource Light}"></Setter>
         </Style>
     </UserControl.Styles>

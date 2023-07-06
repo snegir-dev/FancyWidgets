@@ -7,22 +7,22 @@
     </Design.PreviewWith>
 
     <Styles>
-        <Style Selector="CheckBox">
+        <Style Selector="CheckBox.CheckBox">
             <Setter Property="MinWidth" Value="32" />
             <Setter Property="Padding" Value="0" />
         </Style>
-        <Style Selector="CheckBox /template/ Grid#RootGrid">
+        <Style Selector="CheckBox.CheckBox /template/ Grid#RootGrid">
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
-        <Style Selector="CheckBox /template/ Border#NormalRectangle">
+        <Style Selector="CheckBox.CheckBox /template/ Border#NormalRectangle">
             <Setter Property="MinWidth" Value="30" />
             <Setter Property="MinHeight" Value="30" />
         </Style>
-        <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+        <Style Selector="CheckBox.CheckBox:checked /template/ Border#NormalRectangle">
             <Setter Property="BorderBrush" Value="{DynamicResource Light}" />
             <Setter Property="Background" Value="Transparent" />
         </Style>
-        <Style Selector="CheckBox /template/ Path#CheckGlyph">
+        <Style Selector="CheckBox.CheckBox /template/ Path#CheckGlyph">
             <Setter Property="MinWidth" Value="13"></Setter>
         </Style>
     </Styles>

@@ -24,6 +24,7 @@
           ColumnDefinitions="Auto,Auto">
 
         <TextBlock Name="TitleText"
+                   Classes="TitleText"
                    Text="{Binding Title}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
@@ -42,6 +43,8 @@
         </TextBlock>
 
         <ComboBox Name="ComboBox"
+                  SelectedIndex="0"
+                  Classes="ComboBox"
                   VerticalAlignment="Center"
                   HorizontalAlignment="Right"
                   Grid.Column="1" />

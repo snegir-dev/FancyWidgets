@@ -20,6 +20,7 @@
 
     <DockPanel>
         <TextBlock Name="TitleText"
+                   Classes="TitleText"
                    Text="{Binding Title}"
                    VerticalAlignment="Center"
                    TextWrapping="Wrap"
@@ -35,12 +36,13 @@
         </TextBlock>
 
         <CheckBox Name="CheckBox"
+                  Classes="CheckBox"
                   HorizontalAlignment="Right" />
     </DockPanel>
 
     <UserControl.Styles>
         <Styles>
-            <Style Selector="TextBlock">
+            <Style Selector="TextBlock.TitleText">
                 <Setter Property="Foreground" Value="{StaticResource Light}"></Setter>
             </Style>
         </Styles>

@@ -18,7 +18,7 @@
     </Styles.Resources>
 
     <Styles>
-        <Style Selector="Button">
+        <Style Selector="Button.Button">
             <Setter Property="Background" Value="{DynamicResource Light}"></Setter>
             <Setter Property="Foreground" Value="{DynamicResource Dark}"></Setter>
             <Setter Property="Padding" Value="15 8 15 8"></Setter>
@@ -26,7 +26,7 @@
             <Setter Property="FontWeight" Value="Medium"></Setter>
             <Setter Property="FontSize" Value="15"></Setter>
         </Style>
-        <Style Selector="Button:pointerover /template/ ContentPresenter">
+        <Style Selector="Button.Button:pointerover /template/ ContentPresenter">
             <Setter Property="Background"
                     Value="{Binding Source={StaticResource Light}, Converter={StaticResource DarkenColorConvertor}, ConverterParameter=0.2}">
             </Setter>

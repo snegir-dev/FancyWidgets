@@ -24,6 +24,7 @@
           ColumnDefinitions="Auto,Auto">
 
         <TextBlock Name="TitleText"
+                   Classes="TitleText"
                    Text="{Binding Title}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
@@ -42,12 +43,13 @@
         </TextBlock>
 
         <Button Name="Button"
+                Classes="Button"
                 HorizontalAlignment="Right"
                 Grid.Column="1" />
     </Grid>
 
     <UserControl.Styles>
-        <Style Selector="TextBlock">
+        <Style Selector="TextBlock.TitleText">
             <Setter Property="Foreground" Value="{DynamicResource Light}"></Setter>
         </Style>
     </UserControl.Styles>
