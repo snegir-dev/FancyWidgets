@@ -51,7 +51,7 @@ public class SettingsProvider : ISettingsProvider
                     continue;
                 var property = propertyInfos
                     .FirstOrDefault(p => p.Name == settingElement.Name
-                                         && p.DeclaringType?.FullName == settingElement.FullNameClass);
+                                         && p.DeclaringType?.FullName == settingElement.FullClassName);
                 object? value = null;
                 if (settingElement.DataType != null)
                 {
@@ -65,12 +65,12 @@ public class SettingsProvider : ISettingsProvider
         }
     }
 
-    public virtual void AddValue(string id, object value)
+    public virtual void AddOrUpdateValue(string id, object value)
     {
         var settingElement = SettingElements.FirstOrDefault(e => e.Id == id);
         if (settingElement == null)
         {
-            settingElement = new SettingsElement()
+            settingElement = new SettingsElement
             {
                 Id = id,
                 DataType = value.GetType().AssemblyQualifiedName!,
@@ -102,7 +102,7 @@ public class SettingsProvider : ISettingsProvider
         SettingElements = WidgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile)
                           ?? new List<SettingsElement>();
         var settingElement =
-            SettingElements.FirstOrDefault(e => e.FullNameClass == fullNameClass
+            SettingElements.FirstOrDefault(e => e.FullClassName == fullNameClass
                                                 && e.Name == propertyName);
 
         if (settingElement is null)
@@ -122,7 +122,7 @@ public class SettingsProvider : ISettingsProvider
 
     public virtual T? GetValue<T>(string fullNameClass, string propertyName)
     {
-        var value = SettingElements.FirstOrDefault(e => e.FullNameClass == fullNameClass
+        var value = SettingElements.FirstOrDefault(e => e.FullClassName == fullNameClass
                                                         && e.Name == propertyName)?.JValue;
         if (string.IsNullOrWhiteSpace(value))
             return default;
@@ -224,7 +224,7 @@ public class SettingsProvider : ISettingsProvider
             var settingElement = new SettingsElement
             {
                 Id = property.GetCustomAttribute<ConfigurablePropertyAttribute>()?.Id,
-                FullNameClass = property.DeclaringType?.FullName,
+                FullClassName = property.DeclaringType?.FullName,
                 Name = property.Name
             };
 
@@ -236,7 +236,7 @@ public class SettingsProvider : ISettingsProvider
 
     protected virtual IEnumerable<SettingsElement> GetCustomSettingsElements()
     {
-        return SettingElements.Where(e => e.FullNameClass == null && e.Name == null);
+        return SettingElements.Where(e => e.Name == null && e.FullClassName == null);
     }
 
     protected PropertyInfo? GetPropertyInfo(IEnumerable<PropertyInfo> propertyInfos,
@@ -250,7 +250,7 @@ public class SettingsProvider : ISettingsProvider
                 return propertyInfo;
             }
 
-            if (propertyInfo.DeclaringType?.FullName == settingsElement.FullNameClass
+            if (propertyInfo.DeclaringType?.FullName == settingsElement.FullClassName
                 && propertyInfo.Name == settingsElement.Name)
             {
                 return propertyInfo;
@@ -264,13 +264,13 @@ public class SettingsProvider : ISettingsProvider
         PropertyInfo? propertyInfo)
     {
         if (!SettingElements.Exists(e => e.Id == settingsElements.Id
-                                         && e.FullNameClass == settingsElements.FullNameClass
+                                         && e.FullClassName == settingsElements.FullClassName
                                          && e.Name == settingsElements.Name))
         {
             if (propertyInfo == null)
                 return;
 
-            var newSettingElement = AddValue(propertyInfo, settingsElements);
+            var newSettingElement = AddOrUpdateValue(propertyInfo, settingsElements);
             SettingElements.Add(newSettingElement);
         }
     }
@@ -280,7 +280,7 @@ public class SettingsProvider : ISettingsProvider
         for (var i = 0; i < SettingElements.Count; i++)
         {
             if (!settingsElements.Exists(e => e.Id == SettingElements[i].Id
-                                              && e.FullNameClass == SettingElements[i].FullNameClass
+                                              && e.FullClassName == SettingElements[i].FullClassName
                                               && e.Name == SettingElements[i].Name))
             {
                 SettingElements.Remove(SettingElements[i]);
@@ -288,7 +288,7 @@ public class SettingsProvider : ISettingsProvider
         }
     }
 
-    protected virtual SettingsElement AddValue(PropertyInfo property, SettingsElement settingsElement)
+    protected virtual SettingsElement AddOrUpdateValue(PropertyInfo property, SettingsElement settingsElement)
     {
         var declaringType = property.DeclaringType;
         if (declaringType == null)
