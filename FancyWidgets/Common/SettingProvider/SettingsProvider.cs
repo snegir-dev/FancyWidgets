@@ -2,6 +2,7 @@
 using Autofac;
 using FancyWidgets.Common.Convertors.Json;
 using FancyWidgets.Common.Domain;
+using FancyWidgets.Common.Exceptions;
 using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider.Attributes;
 using FancyWidgets.Common.SettingProvider.Interfaces;
@@ -36,10 +37,10 @@ public class SettingsProvider : ISettingsProvider
     {
         foreach (var currentViewModel in CurrentViewModels)
         {
-            if (currentViewModel is null)
-                throw new NullReferenceException();
+            if (currentViewModel is null || currentViewModel.IsDataLoaded)
+                continue;
 
-            var propertyInfos = currentViewModel.GetType()
+            var propertyInfos = currentViewModel.WidgetReactiveObject.GetType()
                 .GetProperties(SettingElementOperations.PropertyBindingFlags)
                 .Where(p => p.GetCustomAttribute<ConfigurablePropertyAttribute>() != null).ToList();
 
@@ -58,12 +59,13 @@ public class SettingsProvider : ISettingsProvider
                         value = JsonConvert.DeserializeObject(settingElement.JValue, destinationType);
                 }
 
-                property?.SetValue(currentViewModel, value);
+                property?.SetValue(currentViewModel.WidgetReactiveObject, value);
+                currentViewModel.IsDataLoaded = true;
             }
         }
     }
 
-    public virtual void AddOrUpdateValue(string id, object value)
+    public virtual void Add(string id, object value)
     {
         var settingElement = SettingElements.FirstOrDefault(e => e.Id == id);
         if (settingElement == null)
@@ -78,11 +80,48 @@ public class SettingsProvider : ISettingsProvider
         }
         else
         {
-            settingElement.DataType = value.GetType().AssemblyQualifiedName!;
-            settingElement.JValue = JsonConvert.SerializeObject(value);
+            throw new InvalidOperationException($"A record with this id - {id} already exists");
+        }
+    }
+
+    public virtual void AddOrUpdateValue(string id, object value)
+    {
+        try
+        {
+            Add(id, value);
+        }
+        catch (InvalidOperationException)
+        {
+            SetValue(id, value);
+        }
+    }
+
+    public virtual void Remove(string id)
+    {
+        var settingElement = SettingElements.FirstOrDefault(e => e.Id == id);
+        if (settingElement != null)
+        {
+            SettingElements.Remove(settingElement);
+            WidgetJsonProvider.SaveModel(SettingElements, AppSettings.SettingsFile);
+            return;
         }
 
-        WidgetJsonProvider.SaveModel(SettingElements, AppSettings.SettingsFile);
+        throw new NotFoundException($"Element with id - {id} not found.");
+    }
+
+    public virtual void Remove(string fullNameClass, string propertyName)
+    {
+        var settingElement = SettingElements.FirstOrDefault(e => e.FullClassName == fullNameClass
+                                                                 && e.Name == propertyName);
+        if (settingElement != null)
+        {
+            SettingElements.Remove(settingElement);
+            WidgetJsonProvider.SaveModel(SettingElements, AppSettings.SettingsFile);
+            return;
+        }
+
+        throw new NotFoundException($"Element with FullClassName - " +
+                                    $"{fullNameClass} and PropertyName - {propertyName} not found.");
     }
 
     public virtual void SetValue(string id, object? value)
