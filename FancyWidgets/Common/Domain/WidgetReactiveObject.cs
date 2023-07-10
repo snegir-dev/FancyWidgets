@@ -2,25 +2,24 @@
 using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider;
 using FancyWidgets.Common.SettingProvider.Interfaces;
+using FancyWidgets.Common.SettingProvider.Models;
 using ReactiveUI;
 
 namespace FancyWidgets.Common.Domain;
 
 public class WidgetReactiveObject : ReactiveObject, IDisposable
 {
-    protected WidgetReactiveObject()
-    {
-        InitialTrack();
-    }
+    private ObjectWithDataStatus _objectWithDataStatus;
+
+    protected WidgetReactiveObject() => InitialTrack();
 
     private void InitialTrack()
     {
-        ViewModelsContainer.CurrentViewModels.Add(this);
+        _objectWithDataStatus = new ObjectWithDataStatus(this, false);
+        ViewModelsContainer.CurrentViewModels.Add(_objectWithDataStatus);
         WidgetLocator.Current.Resolve<ISettingsProvider>().LoadSettings();
     }
 
-    void IDisposable.Dispose()
-    {
-        ViewModelsContainer.CurrentViewModels.Remove(this);
-    }
+    void IDisposable.Dispose() => 
+        ViewModelsContainer.CurrentViewModels.Remove(_objectWithDataStatus);
 }
