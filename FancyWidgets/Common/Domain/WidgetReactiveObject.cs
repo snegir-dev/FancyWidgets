@@ -9,17 +9,17 @@ namespace FancyWidgets.Common.Domain;
 
 public class WidgetReactiveObject : ReactiveObject, IDisposable
 {
-    private ObjectWithDataStatus _objectWithDataStatus;
+    private ReactiveObjectDataStatus _reactiveObjectDataStatus;
 
     protected WidgetReactiveObject() => InitialTrack();
 
     private void InitialTrack()
     {
-        _objectWithDataStatus = new ObjectWithDataStatus(this, false);
-        ViewModelsContainer.CurrentViewModels.Add(_objectWithDataStatus);
+        _reactiveObjectDataStatus = new ReactiveObjectDataStatus(this, false);
+        ReactiveObjectDataStatusContainer.CurrentObjectDataStatuses.Add(_reactiveObjectDataStatus);
         WidgetLocator.Current.Resolve<ISettingsProvider>().LoadSettings();
     }
 
     void IDisposable.Dispose() => 
-        ViewModelsContainer.CurrentViewModels.Remove(_objectWithDataStatus);
+        ReactiveObjectDataStatusContainer.CurrentObjectDataStatuses.Remove(_reactiveObjectDataStatus);
 }

@@ -1,15 +1,12 @@
 ﻿using System.Reflection;
-using Autofac;
 using FancyWidgets.Common.Convertors.Json;
-using FancyWidgets.Common.Domain;
 using FancyWidgets.Common.Exceptions;
-using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider.Attributes;
 using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.Common.SettingProvider.Models;
 using FancyWidgets.Models;
 using Newtonsoft.Json;
-using static FancyWidgets.Common.SettingProvider.ViewModelsContainer;
+using static FancyWidgets.Common.SettingProvider.ReactiveObjectDataStatusContainer;
 
 namespace FancyWidgets.Common.SettingProvider;
 
@@ -35,12 +32,12 @@ public class SettingsProvider : ISettingsProvider
 
     public virtual void LoadSettings()
     {
-        foreach (var currentViewModel in CurrentViewModels)
+        foreach (var currentObjectDataStatus in CurrentObjectDataStatuses)
         {
-            if (currentViewModel is null || currentViewModel.IsDataLoaded)
+            if (currentObjectDataStatus is null || currentObjectDataStatus.IsDataLoaded)
                 continue;
 
-            var propertyInfos = currentViewModel.WidgetReactiveObject.GetType()
+            var propertyInfos = currentObjectDataStatus.WidgetReactiveObject.GetType()
                 .GetProperties(SettingElementOperations.PropertyBindingFlags)
                 .Where(p => p.GetCustomAttribute<ConfigurablePropertyAttribute>() != null).ToList();
 
@@ -59,8 +56,8 @@ public class SettingsProvider : ISettingsProvider
                         value = JsonConvert.DeserializeObject(settingElement.JValue, destinationType);
                 }
 
-                property?.SetValue(currentViewModel.WidgetReactiveObject, value);
-                currentViewModel.IsDataLoaded = true;
+                property?.SetValue(currentObjectDataStatus.WidgetReactiveObject, value);
+                currentObjectDataStatus.IsDataLoaded = true;
             }
         }
     }
@@ -168,14 +165,14 @@ public class SettingsProvider : ISettingsProvider
 
     protected virtual void SetValue(PropertyInfo? property, SettingsElement settingsElement, object? value)
     {
-        foreach (var currentViewModel in CurrentViewModels)
+        foreach (var currentObjectDataStatus in CurrentObjectDataStatuses)
         {
-            if (currentViewModel is not null
-                && !currentViewModel.GetType()
+            if (currentObjectDataStatus is null
+                || !currentObjectDataStatus.WidgetReactiveObject.GetType()
                     .GetProperties(SettingElementOperations.PropertyBindingFlags).Contains(property))
                 continue;
 
-            property?.SetValue(currentViewModel, value);
+            property?.SetValue(currentObjectDataStatus.WidgetReactiveObject, value);
             settingsElement.DataType = property?.PropertyType.AssemblyQualifiedName!;
             settingsElement.JValue = JsonConvert.SerializeObject(value);
             WidgetJsonProvider.SaveModel(SettingElements, AppSettings.SettingsFile);
@@ -184,12 +181,12 @@ public class SettingsProvider : ISettingsProvider
 
     protected virtual PropertyInfo? GetObjectPropertyById(string? id)
     {
-        foreach (var currentViewModel in CurrentViewModels)
+        foreach (var currentObjectDataStatus in CurrentObjectDataStatuses)
         {
-            if (currentViewModel is null || id is null)
+            if (currentObjectDataStatus is null || id is null)
                 continue;
 
-            var typeEditableObject = currentViewModel.GetType();
+            var typeEditableObject = currentObjectDataStatus.WidgetReactiveObject.GetType();
             var editableObjectProperties
                 = typeEditableObject.GetProperties(SettingElementOperations.PropertyBindingFlags);
             var property = editableObjectProperties.FirstOrDefault(p =>
@@ -208,12 +205,12 @@ public class SettingsProvider : ISettingsProvider
 
     protected virtual PropertyInfo? GetObjectPropertyByNamespaceAndName(string? fullNameClass, string? propertyName)
     {
-        foreach (var currentViewModel in CurrentViewModels)
+        foreach (var currentObjectDataStatus in CurrentObjectDataStatuses)
         {
-            if (currentViewModel is null || fullNameClass is null || propertyName is null)
+            if (currentObjectDataStatus is null || fullNameClass is null || propertyName is null)
                 continue;
 
-            var typeEditableObject = currentViewModel.GetType();
+            var typeEditableObject = currentObjectDataStatus.WidgetReactiveObject.GetType();
             var editableObjectProperties =
                 typeEditableObject.GetProperties(SettingElementOperations.PropertyBindingFlags);
             var property = editableObjectProperties.FirstOrDefault(p =>
