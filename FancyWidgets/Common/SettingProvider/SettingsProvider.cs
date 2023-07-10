@@ -103,7 +103,7 @@ public class SettingsProvider : ISettingsProvider
             return;
         }
 
-        throw new NotFoundException($"Element with id - {id} not found.");
+        throw NotFoundException.ThrowNotFoundException(id);
     }
 
     public virtual void Remove(string fullNameClass, string propertyName)
@@ -117,8 +117,7 @@ public class SettingsProvider : ISettingsProvider
             return;
         }
 
-        throw new NotFoundException($"Element with FullClassName - " +
-                                    $"{fullNameClass} and PropertyName - {propertyName} not found.");
+        throw NotFoundException.ThrowNotFoundException(fullNameClass, propertyName);
     }
 
     public virtual void SetValue(string id, object? value)
@@ -150,7 +149,7 @@ public class SettingsProvider : ISettingsProvider
     {
         var value = SettingElements.FirstOrDefault(e => e.Id == id)?.JValue;
         if (string.IsNullOrWhiteSpace(value))
-            return default;
+            throw NotFoundException.ThrowNotFoundException(id);
         return JsonConvert.DeserializeObject<T>(value);
     }
 
@@ -159,8 +158,35 @@ public class SettingsProvider : ISettingsProvider
         var value = SettingElements.FirstOrDefault(e => e.FullClassName == fullNameClass
                                                         && e.Name == propertyName)?.JValue;
         if (string.IsNullOrWhiteSpace(value))
-            return default;
+            throw NotFoundException.ThrowNotFoundException(fullNameClass, propertyName);
         return JsonConvert.DeserializeObject<T>(value);
+    }
+
+    public virtual bool TryGetValue<T>(string id, out T? result)
+    {
+        var value = SettingElements.FirstOrDefault(e => e.Id == id)?.JValue;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            result = default;
+            return false;
+        }
+
+        result = JsonConvert.DeserializeObject<T>(value);
+        return true;
+    }
+
+    public virtual bool TryGetValue<T>(string fullNameClass, string propertyName, out T? result)
+    {
+        var value = SettingElements.FirstOrDefault(e => e.FullClassName == fullNameClass
+                                                        && e.Name == propertyName)?.JValue;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            result = default;
+            return false;
+        }
+
+        result = JsonConvert.DeserializeObject<T>(value);
+        return true;
     }
 
     protected virtual void SetValue(PropertyInfo? property, SettingsElement settingsElement, object? value)
