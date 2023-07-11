@@ -74,6 +74,7 @@ public class SettingsProvider : ISettingsProvider
                 JValue = JsonConvert.SerializeObject(value)
             };
             SettingElements.Add(settingElement);
+            WidgetJsonProvider.SaveModel(SettingElements, AppSettings.SettingsFile);
         }
         else
         {
