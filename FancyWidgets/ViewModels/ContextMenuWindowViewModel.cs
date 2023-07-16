@@ -1,4 +1,4 @@
-﻿using FancyWidgets.Common.Controls.ContextMenuElements;
+﻿using FancyWidgets.Common.Controls.WidgetContextMenu;
 using ReactiveUI;
 
 namespace FancyWidgets.ViewModels;

@@ -1,0 +1,28 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+             x:Class="FancyWidgets.Controls.DefaultWidgetDragger">
+
+    <Grid Name="DraggerContainer" x:FieldModifier="public">
+        <Border Name="Dragger"
+                CornerRadius="10"
+                Background="#121212"
+                Padding="20"
+                Opacity="0.6">
+            <Svg Path="../Assets/Svg/move-alt-svgrepo-com.svg"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center" />
+        </Border>
+
+        <Border CornerRadius="10"
+                Background="#121212"
+                Opacity="0.5" />
+
+        <Border CornerRadius="10"
+                BorderThickness="2"
+                BorderBrush="Crimson" />
+    </Grid>
+
+</UserControl>
