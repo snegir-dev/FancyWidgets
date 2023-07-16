@@ -62,4 +62,11 @@ internal class WindowSystemManager
 
         return desktopHandler;
     }
+
+    public static int GetTitleBarHeight()
+    {
+        var captionHeight = User32Methods.GetSystemMetrics(SystemMetrics.SM_CYCAPTION);
+        var frameHeight = User32Methods.GetSystemMetrics(SystemMetrics.SM_CYSIZEFRAME);
+        return captionHeight + frameHeight;
+    }
 }

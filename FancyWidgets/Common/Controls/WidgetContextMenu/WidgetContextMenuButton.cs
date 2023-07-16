@@ -1,7 +1,7 @@
 using System.Reactive;
 using ReactiveUI;
 
-namespace FancyWidgets.Common.Controls.ContextMenuElements;
+namespace FancyWidgets.Common.Controls.WidgetContextMenu;
 
 public abstract class WidgetContextMenuButton : ReactiveObject, IComparable<WidgetContextMenuButton>
 {

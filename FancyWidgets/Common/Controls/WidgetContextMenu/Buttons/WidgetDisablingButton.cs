@@ -4,7 +4,7 @@ using FancyWidgets.Common.Extensions;
 using FancyWidgets.Common.Locators;
 using FancyWidgets.Models;
 
-namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
+namespace FancyWidgets.Common.Controls.WidgetContextMenu.Buttons;
 
 public class WidgetDisablingButton : WidgetContextMenuButton
 {

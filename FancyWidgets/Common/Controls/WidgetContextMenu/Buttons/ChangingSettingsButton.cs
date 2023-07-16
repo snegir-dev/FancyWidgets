@@ -1,6 +1,6 @@
 using FancyWidgets.Views;
 
-namespace FancyWidgets.Common.Controls.ContextMenuElements.Buttons;
+namespace FancyWidgets.Common.Controls.WidgetContextMenu.Buttons;
 
 public class ChangingSettingsButton : WidgetContextMenuButton
 {
