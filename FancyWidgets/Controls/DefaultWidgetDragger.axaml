@@ -10,7 +10,8 @@
                 CornerRadius="10"
                 Background="#121212"
                 Padding="20"
-                Opacity="0.6">
+                Opacity="0.6"
+                ClipToBounds="True">
             <Svg Path="../Assets/Svg/move-alt-svgrepo-com.svg"
                  HorizontalAlignment="Center"
                  VerticalAlignment="Center" />
@@ -18,11 +19,13 @@
 
         <Border CornerRadius="10"
                 Background="#121212"
-                Opacity="0.5" />
+                Opacity="0.5"
+                ClipToBounds="True" />
 
         <Border CornerRadius="10"
                 BorderThickness="2"
-                BorderBrush="Crimson" />
+                BorderBrush="Crimson"
+                ClipToBounds="True" />
     </Grid>
 
 </UserControl>

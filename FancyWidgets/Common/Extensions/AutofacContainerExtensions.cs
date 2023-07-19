@@ -3,7 +3,7 @@ using FancyWidgets.Common.Locators;
 
 namespace FancyWidgets.Common.Extensions;
 
-public static class AutofacContainerExtension
+public static class AutofacContainerExtensions
 {
     internal static object? ResolveByCondition(this IContainer container,
         Func<Type, bool> selector)

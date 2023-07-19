@@ -6,10 +6,12 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
-using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
+using FancyWidgets.Common.Constants;
+using FancyWidgets.Common.Controls.WidgetDragger;
 using FancyWidgets.Common.Convertors.Json;
 using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.System;
@@ -46,6 +48,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
+        LoadWidgetDragger();
         _contextMenuWindow = new ContextMenuWindow();
         _windowSystemManager.HideFromAltTab();
         _windowSystemManager.WidgetToBottom();
@@ -68,7 +71,20 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         Initialized += OnStarted;
     }
 
-    private void LoadWidgetData()
+    protected virtual void LoadWidgetDragger()
+    {
+        if (VisualChildren[0] is Panel panel)
+        {
+            panel.Children.Add(new Border
+            {
+                Name = UiElementNames.DraggerContainer,
+                Child = (UserControl)WidgetLocator.Current.Resolve<IWidgetDragger>(),
+                IsVisible = false
+            });
+        }
+    }
+
+    protected virtual void LoadWidgetData()
     {
         WidgetSettings = _widgetJsonProvider.GetModel<WidgetSettings>(AppSettings.WidgetSettingsFile);
         if (WidgetSettings == null)
@@ -80,7 +96,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
             Position = new PixelPoint((int)WidgetSettings.XPosition, (int)WidgetSettings.YPosition);
     }
 
-    private void LoadDefaultStyles()
+    protected virtual void LoadDefaultStyles()
     {
         TransparencyLevelHint = new[] { WindowTransparencyLevel.Transparent };
         Background = Brushes.Transparent;
@@ -120,7 +136,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         SavePosition();
     }
 
-    private void SaveLayoutSize()
+    protected virtual void SaveLayoutSize()
     {
         _widgetJsonProvider.UpdateModel<WidgetSettings>(widgetSettings =>
         {
@@ -129,7 +145,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         }, AppSettings.WidgetSettingsFile, true);
     }
 
-    private void SavePosition()
+    protected virtual void SavePosition()
     {
         if (_currentCountStartCallingPositionChanges >= CountStartCallingPositionChanges)
         {
