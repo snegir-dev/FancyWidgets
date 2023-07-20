@@ -1,12 +1,9 @@
 ﻿using Autofac;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.LogicalTree;
-using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
@@ -32,6 +29,8 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
     public readonly WidgetMetadata WidgetMetadata;
     private ContextMenuWindow _contextMenuWindow;
     private readonly WindowSystemManager _windowSystemManager;
+
+    private readonly WidgetApplicationOptions _applicationOptions;
     private int _currentCountStartCallingPositionChanges;
 
     private const int CountStartCallingPositionChanges = 2;
@@ -39,11 +38,14 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
     protected Widget()
     {
         _windowHandler = TryGetPlatformHandle()!.Handle;
+        _applicationOptions = WidgetLocator.Current.Resolve<WidgetApplicationOptions>();
         _windowSystemManager = new WindowSystemManager(_windowHandler);
         _widgetJsonProvider = WidgetLocator.Current.Resolve<IWidgetJsonProvider>();
         WidgetMetadata = _widgetJsonProvider.GetModel<WidgetMetadata>(AppSettings.WidgetMetadataFile)
                          ?? new WidgetMetadata();
-        Uuid = WidgetMetadata.Uuid ?? throw new NullReferenceException("Uuid must not be null.");
+
+        if (!_applicationOptions.IsDebug)
+            Uuid = WidgetMetadata.Uuid ?? throw new NullReferenceException("Uuid must not be null.");
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)

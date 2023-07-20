@@ -27,8 +27,8 @@ public class ChangingWindowButton : WidgetContextMenuButton
     public ChangingWindowButton()
     {
         _widget = (Window)WidgetLocator
-            .Current.ResolveByCondition(t => t.IsGenericType &&
-                                             t.GetGenericTypeDefinition() == typeof(Widget<>))!;
+            .Current.ResolveByCondition(t => t.Activator.LimitType.BaseType?.IsGenericType == true &&
+                                             t.Activator.LimitType.BaseType.GetGenericTypeDefinition() == typeof(Widget<>))!;
 
         _draggerContainer = GetDraggerContainer();
     }
@@ -57,6 +57,7 @@ public class ChangingWindowButton : WidgetContextMenuButton
 
     private Control GetDraggerContainer()
     {
+        var t = _widget.GetVisualChildren();
         var draggerContainer = ((Panel)_widget.GetVisualChildren()
                 .ToList()[0]).Children
             .FirstOrDefault(v => v.Name == UiElementNames.DraggerContainer);
