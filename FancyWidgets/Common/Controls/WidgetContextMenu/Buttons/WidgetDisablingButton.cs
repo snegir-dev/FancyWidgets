@@ -17,8 +17,8 @@ public class WidgetDisablingButton : WidgetContextMenuButton
     {
         _widgetJsonProvider = widgetJsonProvider;
         _window = (Window)WidgetLocator.Current
-            .ResolveByCondition(t => t.IsGenericType &&
-                                     t.GetGenericTypeDefinition() == typeof(Widget<>))!;
+            .ResolveByCondition(t => t.Activator.LimitType.IsGenericType &&
+                                     t.Activator.LimitType.GetGenericTypeDefinition() == typeof(Widget<>))!;
     }
 
     protected override void Execute()
