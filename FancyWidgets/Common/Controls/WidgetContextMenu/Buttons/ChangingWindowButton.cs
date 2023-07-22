@@ -26,9 +26,9 @@ public class ChangingWindowButton : WidgetContextMenuButton
 
     public ChangingWindowButton()
     {
-        _widget = (Window)WidgetLocator
-            .Current.ResolveByCondition(t => t.Activator.LimitType.BaseType?.IsGenericType == true &&
-                                             t.Activator.LimitType.BaseType.GetGenericTypeDefinition() == typeof(Widget<>))!;
+        _widget = (Window)WidgetLocator.Context.ResolveByCondition(t =>
+            t.Activator.LimitType.BaseType?.IsGenericType == true &&
+            t.Activator.LimitType.BaseType.GetGenericTypeDefinition() == typeof(Widget<>))!;
 
         _draggerContainer = GetDraggerContainer();
     }

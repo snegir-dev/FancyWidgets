@@ -8,10 +8,9 @@ using FancyWidgets.Common.Convertors.NewtonsoftJson;
 using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider;
 using FancyWidgets.Common.SettingProvider.Interfaces;
-using FancyWidgets.Common.System.IO;
 using FancyWidgets.Controls;
-using FancyWidgets.Models;
 using FancyWidgets.ViewModels;
+using FancyWidgets.Views;
 using Microsoft.Extensions.Configuration;
 using ReactiveUI;
 using Splat.Autofac;
@@ -37,6 +36,7 @@ public sealed class WidgetApplication
         _container.RegisterType<ChangingSettingsButton>().As<WidgetContextMenuButton>();
         _container.RegisterType<DefaultWidgetDragger>().As<IWidgetDragger>().PreserveExistingDefaults();
         _container.RegisterType<WidgetJsonProvider>().As<IWidgetJsonProvider>();
+        _container.RegisterType<SettingElementOperations>().As<ISettingElementOperations>();
         _container.AddSettingsProvider();
         NewtonsoftConfigurationInitializer.Initialize();
     }
@@ -57,9 +57,8 @@ public sealed class WidgetApplication
 
     public WidgetApplication InitializeSettings()
     {
-        using var container = _container.Build();
-        var settingsInitializer = container.Resolve<ISettingsInitializer>();
-        settingsInitializer.InitializeSettings();
+        _container.RegisterBuildCallback(scope =>
+            scope.Resolve<ISettingsInitializer>().InitializeSettings());
         return this;
     }
 
@@ -83,14 +82,14 @@ public sealed class WidgetApplication
     {
         var autofacResolver = _container.UseAutofacDependencyResolver();
         _container.RegisterInstance(autofacResolver);
-        WidgetLocator.Current = _container.Build();
+        WidgetLocator.Context = _container.Build();
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
 
         if (_widgetImplementationType == null)
             throw new InvalidOperationException("You must call UseWidget before calling Build.");
 
-        var t = WidgetLocator.Current.Resolve(_widgetImplementationType);
-        if (t is not TWidget widget)
+        var widgetObj = WidgetLocator.Context.Resolve(_widgetImplementationType);
+        if (widgetObj is not TWidget widget)
             throw new NullReferenceException("Widget not found.");
 
         return widget;

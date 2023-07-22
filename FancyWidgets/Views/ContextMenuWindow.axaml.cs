@@ -19,7 +19,7 @@ public partial class ContextMenuWindow : ReactiveWindow<ContextMenuWindowViewMod
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
-        ViewModel = WidgetLocator.Current.Resolve<ContextMenuWindowViewModel>();
+        ViewModel = WidgetLocator.Context.Resolve<ContextMenuWindowViewModel>();
         DataContext = ViewModel;
         PointerExited += (_, _) => Hide();
     }

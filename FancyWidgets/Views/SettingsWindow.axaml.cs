@@ -30,7 +30,7 @@ public partial class SettingsWindow : ReactiveWindow<SettingsWindowViewModel>
     {
         AvaloniaXamlLoader.Load(this);
         _stackPanel = this.FindControl<StackPanel>("StackPanelInputControl")!;
-        ViewModel = WidgetLocator.Current.Resolve<SettingsWindowViewModel>();
+        ViewModel = WidgetLocator.Context.Resolve<SettingsWindowViewModel>();
         DataContext = ViewModel;
 #if DEBUG
         this.AttachDevTools();
