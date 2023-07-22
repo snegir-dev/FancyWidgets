@@ -12,6 +12,7 @@ using FancyWidgets.Common.Controls.WidgetDragger;
 using FancyWidgets.Common.Convertors.Json;
 using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.System;
+using FancyWidgets.Common.WidgetAppConfigurations;
 using FancyWidgets.Models;
 using FancyWidgets.Views;
 using ReactiveUI;
@@ -29,7 +30,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
     private readonly WindowSystemManager _windowSystemManager;
     private int _currentCountStartCallingPositionChanges;
     private const int CountStartCallingPositionChanges = 2;
-    public string Uuid { get; private set; }
+    public string? Uuid { get; private set; }
 
     protected Widget()
     {
@@ -40,10 +41,10 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         WidgetMetadata = _widgetJsonProvider.GetModel<WidgetMetadata>(AppSettings.WidgetMetadataFile)
                          ?? new WidgetMetadata();
 
-        if (!applicationOptions.IsDebug)
-            Uuid = WidgetMetadata.Uuid ?? throw new NullReferenceException("Uuid must not be null.");
-        else
+        if (applicationOptions.IsDebug)
             this.AttachDevTools();
+        else
+            Uuid = WidgetMetadata.Uuid ?? throw new NullReferenceException("Uuid must not be null.");
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)

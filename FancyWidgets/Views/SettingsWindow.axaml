@@ -6,8 +6,7 @@
         x:Class="FancyWidgets.Views.SettingsWindow"
         Background="{DynamicResource VeryDark}"
         Width="400"
-        Height="500"
-        ShowInTaskbar="False">
+        Height="500">
 
     <Window.Styles>
         <StyleInclude Source="/Styles/BaseStyle.axaml" />
