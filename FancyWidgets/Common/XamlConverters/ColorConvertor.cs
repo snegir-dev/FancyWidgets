@@ -14,7 +14,10 @@ public class ColorConvertor : IValueConverter
 
         try
         {
-            return Brush.Parse(value?.ToString());
+            if (value != null)
+                return Brush.Parse(value.ToString()!);
+
+            return null;
         }
         catch (Exception e)
         {

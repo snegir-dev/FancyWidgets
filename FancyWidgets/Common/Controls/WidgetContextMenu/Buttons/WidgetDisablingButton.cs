@@ -16,7 +16,7 @@ public class WidgetDisablingButton : WidgetContextMenuButton
     public WidgetDisablingButton(IWidgetJsonProvider widgetJsonProvider)
     {
         _widgetJsonProvider = widgetJsonProvider;
-        _window = (Window)WidgetLocator.Current
+        _window = (Window)WidgetLocator.Context
             .ResolveByCondition(t => t.Activator.LimitType.IsGenericType &&
                                      t.Activator.LimitType.GetGenericTypeDefinition() == typeof(Widget<>))!;
     }

@@ -14,14 +14,15 @@ public class SettingsProvider : ISettingsProvider
 {
     protected readonly IWidgetJsonProvider WidgetJsonProvider;
     protected List<SettingsElement> SettingElements;
-    private readonly SettingElementOperations _operations;
+    private readonly ISettingElementOperations _operations;
 
-    public SettingsProvider(IWidgetJsonProvider widgetJsonProvider1)
+    public SettingsProvider(IWidgetJsonProvider widgetJsonProvider,
+        ISettingElementOperations settingElementOperations,
+        List<SettingsElement> settingsElements)
     {
-        WidgetJsonProvider = widgetJsonProvider1;
-        SettingElements = WidgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile)
-                          ?? new List<SettingsElement>();
-        _operations = new SettingElementOperations(SettingElements);
+        WidgetJsonProvider = widgetJsonProvider;
+        SettingElements = settingsElements;
+        _operations = settingElementOperations;
     }
 
     public virtual void InitializeSettings()

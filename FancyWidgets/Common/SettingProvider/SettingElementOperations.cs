@@ -1,24 +1,28 @@
 ﻿using System.Reflection;
 using Autofac;
 using FancyWidgets.Common.Domain;
-using FancyWidgets.Common.Locators;
+using FancyWidgets.Common.Extensions;
 using FancyWidgets.Common.SettingProvider.Attributes;
+using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.Common.SettingProvider.Models;
 using Newtonsoft.Json;
 
 namespace FancyWidgets.Common.SettingProvider;
 
-public class SettingElementOperations
+public class SettingElementOperations : ISettingElementOperations
 {
+    private readonly IComponentContext _context;
+
     public const BindingFlags PropertyBindingFlags = BindingFlags.Instance
                                                      | BindingFlags.Public
                                                      | BindingFlags.NonPublic;
 
     protected List<SettingsElement> SettingElements;
 
-    public SettingElementOperations(List<SettingsElement> settingElements)
+    public SettingElementOperations(List<SettingsElement> settingElements, IComponentContext context)
     {
         SettingElements = settingElements;
+        _context = context;
     }
 
     public virtual IEnumerable<SettingsElement> GenerateSettings()
@@ -68,12 +72,12 @@ public class SettingElementOperations
         return currentSettingElements;
     }
 
-    protected virtual IEnumerable<SettingsElement> GetCustomSettingsElements()
+    public virtual IEnumerable<SettingsElement> GetCustomSettingsElements()
     {
         return SettingElements.Where(e => e.Name == null && e.FullClassName == null);
     }
 
-    protected PropertyInfo? GetPropertyInfo(IEnumerable<PropertyInfo> propertyInfos,
+    public PropertyInfo? GetPropertyInfo(IEnumerable<PropertyInfo> propertyInfos,
         SettingsElement settingsElement)
     {
         foreach (var propertyInfo in propertyInfos)
@@ -94,7 +98,7 @@ public class SettingElementOperations
         return null;
     }
 
-    protected virtual void UpdateValueAndTypeSettingsElement(SettingsElement settingsElements,
+    public virtual void UpdateValueAndTypeSettingsElement(SettingsElement settingsElements,
         PropertyInfo? propertyInfo)
     {
         if (!SettingElements.Exists(e => e.Id == settingsElements.Id
@@ -109,7 +113,7 @@ public class SettingElementOperations
         }
     }
 
-    protected virtual void RemoveObsoleteSettingsElements(List<SettingsElement> settingsElements)
+    public virtual void RemoveObsoleteSettingsElements(List<SettingsElement> settingsElements)
     {
         for (var i = 0; i < SettingElements.Count; i++)
         {
@@ -122,13 +126,13 @@ public class SettingElementOperations
         }
     }
 
-    protected virtual SettingsElement AddOrUpdateValue(PropertyInfo property, SettingsElement settingsElement)
+    public virtual SettingsElement AddOrUpdateValue(PropertyInfo property, SettingsElement settingsElement)
     {
         var declaringType = property.DeclaringType;
         if (declaringType == null)
             return settingsElement;
 
-        var editableObject = WidgetLocator.Current.ResolveOptional(declaringType)
+        var editableObject = _context.ResolveByCondition(r => r.Activator.LimitType == declaringType)
                              ?? Activator.CreateInstance(declaringType);
         var propertyValue = property.GetValue(editableObject);
         settingsElement.DataType = propertyValue?.GetType().AssemblyQualifiedName!;

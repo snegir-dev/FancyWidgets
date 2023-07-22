@@ -11,15 +11,18 @@ public class WidgetReactiveObject : ReactiveObject, IDisposable
 {
     private ReactiveObjectDataStatus _reactiveObjectDataStatus;
 
-    protected WidgetReactiveObject() => InitialTrack();
+    protected WidgetReactiveObject()
+    {
+        InitialTrack();
+    }
 
     private void InitialTrack()
     {
         _reactiveObjectDataStatus = new ReactiveObjectDataStatus(this, false);
         ReactiveObjectDataStatusContainer.CurrentObjectDataStatuses.Add(_reactiveObjectDataStatus);
-        WidgetLocator.Current.Resolve<ISettingsProvider>().LoadSettings();
+        WidgetLocator.Context.Resolve<ISettingsProvider>().LoadSettings();
     }
 
-    void IDisposable.Dispose() => 
+    void IDisposable.Dispose() =>
         ReactiveObjectDataStatusContainer.CurrentObjectDataStatuses.Remove(_reactiveObjectDataStatus);
 }

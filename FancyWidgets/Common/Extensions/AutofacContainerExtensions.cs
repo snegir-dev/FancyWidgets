@@ -5,15 +5,15 @@ namespace FancyWidgets.Common.Extensions;
 
 public static class AutofacContainerExtensions
 {
-    internal static object? ResolveByCondition(this IContainer container,
+    internal static object? ResolveByCondition(this IComponentContext context,
         Func<IComponentRegistration, bool> selector)
     {
-        var registrations = container.ComponentRegistry.Registrations;
+        var registrations = context.ComponentRegistry.Registrations;
         var type = registrations
             .FirstOrDefault(selector);
-        
+
         return type is null
             ? null
-            : container.ResolveService(type.Services.ElementAt(0));
+            : context.ResolveService(type.Services.ElementAt(0));
     }
 }

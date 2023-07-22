@@ -21,31 +21,29 @@ namespace FancyWidgets;
 public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
     where TViewModel : ReactiveObject
 {
-    public string Uuid { get; private set; }
-
     private readonly IntPtr _windowHandler;
     private readonly IWidgetJsonProvider _widgetJsonProvider;
     public WidgetSettings? WidgetSettings;
     public readonly WidgetMetadata WidgetMetadata;
     private ContextMenuWindow _contextMenuWindow;
     private readonly WindowSystemManager _windowSystemManager;
-
-    private readonly WidgetApplicationOptions _applicationOptions;
     private int _currentCountStartCallingPositionChanges;
-
     private const int CountStartCallingPositionChanges = 2;
+    public string Uuid { get; private set; }
 
     protected Widget()
     {
         _windowHandler = TryGetPlatformHandle()!.Handle;
-        _applicationOptions = WidgetLocator.Current.Resolve<WidgetApplicationOptions>();
+        var applicationOptions = WidgetLocator.Context.Resolve<WidgetApplicationOptions>();
         _windowSystemManager = new WindowSystemManager(_windowHandler);
-        _widgetJsonProvider = WidgetLocator.Current.Resolve<IWidgetJsonProvider>();
+        _widgetJsonProvider = WidgetLocator.Context.Resolve<IWidgetJsonProvider>();
         WidgetMetadata = _widgetJsonProvider.GetModel<WidgetMetadata>(AppSettings.WidgetMetadataFile)
                          ?? new WidgetMetadata();
 
-        if (!_applicationOptions.IsDebug)
+        if (!applicationOptions.IsDebug)
             Uuid = WidgetMetadata.Uuid ?? throw new NullReferenceException("Uuid must not be null.");
+        else
+            this.AttachDevTools();
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -80,7 +78,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
             panel.Children.Add(new Border
             {
                 Name = UiElementNames.DraggerContainer,
-                Child = (UserControl)WidgetLocator.Current.Resolve<IWidgetDragger>(),
+                Child = (UserControl)WidgetLocator.Context.Resolve<IWidgetDragger>(),
                 IsVisible = false
             });
         }
