@@ -14,7 +14,7 @@ public class SettingsProvider : ISettingsProvider
 {
     protected readonly IWidgetJsonProvider WidgetJsonProvider;
     protected List<SettingsElement> SettingElements;
-    private readonly ISettingElementOperations _operations;
+    protected readonly ISettingElementOperations Operations;
 
     public SettingsProvider(IWidgetJsonProvider widgetJsonProvider,
         ISettingElementOperations settingElementOperations,
@@ -22,12 +22,12 @@ public class SettingsProvider : ISettingsProvider
     {
         WidgetJsonProvider = widgetJsonProvider;
         SettingElements = settingsElements;
-        _operations = settingElementOperations;
+        Operations = settingElementOperations;
     }
 
     public virtual void InitializeSettings()
     {
-        var settingElements = _operations.GenerateSettings();
+        var settingElements = Operations.GenerateSettings();
         WidgetJsonProvider.SaveModel(settingElements, AppSettings.SettingsFile);
     }
 

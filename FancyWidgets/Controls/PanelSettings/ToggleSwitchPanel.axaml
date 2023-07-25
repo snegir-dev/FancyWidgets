@@ -23,7 +23,7 @@
           HorizontalAlignment="Stretch"
           ColumnDefinitions="Auto,Auto">
 
-        <TextBlock Name="TitleText"
+        <TextBlock Name="TitleControl" x:FieldModifier="public"
                    Classes="TitleText"
                    Text="{Binding Title}"
                    VerticalAlignment="Center"
@@ -42,7 +42,7 @@
             </TextBlock.Width>
         </TextBlock>
 
-        <ToggleSwitch Name="ToggleSwitch"
+        <ToggleSwitch Name="ToggleSwitchControl" x:FieldModifier="public"
                       Classes="ToggleSwitch"
                       HorizontalAlignment="Right"
                       FontSize="15"

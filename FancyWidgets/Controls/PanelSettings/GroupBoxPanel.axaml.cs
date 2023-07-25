@@ -31,7 +31,7 @@ public partial class GroupBoxPanel : UserControl
         set
         {
             SetAndRaise(HeaderProperty, ref _header, value);
-            GroupBox.Header = value;
+            GroupBoxControl.Header = value;
         }
     }
 
@@ -47,15 +47,10 @@ public partial class GroupBoxPanel : UserControl
         set => SetAndRaise(SeparatorColorProperty, ref _separatorColor, value);
     }
 
-    public HeaderedContentControl GroupBoxControl { get; set; }
-    public StackPanel StackPanelContainer { get; set; }
-
     public GroupBoxPanel()
     {
         InitializeComponent();
-        GroupBoxControl = GroupBox;
-        StackPanelContainer = StackPanel;
-        StackPanel.Initialized += AddControlSeparators;
+        GroupBoxContent.Initialized += AddControlSeparators;
     }
 
     private void AddControlSeparators(object? sender, EventArgs eventArgs)
@@ -64,9 +59,9 @@ public partial class GroupBoxPanel : UserControl
             return;
 
         var controls = new List<Control>();
-        for (var i = 0; i < StackPanel.Children.Count - 1; i++)
+        for (var i = 0; i < GroupBoxContent.Children.Count - 1; i++)
         {
-            controls.Add(StackPanel.Children[i]);
+            controls.Add(GroupBoxContent.Children[i]);
             controls.Add(new Separator
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -77,8 +72,8 @@ public partial class GroupBoxPanel : UserControl
             });
         }
 
-        controls.Add(StackPanel.Children[^1]);
-        StackPanel.Children.Clear();
-        StackPanel.Children.AddRange(controls);
+        controls.Add(GroupBoxContent.Children[^1]);
+        GroupBoxContent.Children.Clear();
+        GroupBoxContent.Children.AddRange(controls);
     }
 }
