@@ -12,6 +12,7 @@ namespace FancyWidgets.Common.WidgetAppConfigurations;
 public class WidgetApplicationBuilder
 {
     private Type? _widgetImplementationType;
+    private Action _onBuildContainerCompleted;
     public ContainerBuilder Services { get; }
     public ConfigurationManager Configuration { get; }
 
@@ -20,7 +21,7 @@ public class WidgetApplicationBuilder
     {
         Services = servicesBuilder;
         Configuration = appConfiguration.Configuration;
-        
+
         servicesConfiguration.Configure();
         appConfiguration.LoadConfig();
     }
@@ -45,8 +46,8 @@ public class WidgetApplicationBuilder
 
     public void InitializeSettings()
     {
-        Services.RegisterBuildCallback(scope =>
-            scope.Resolve<ISettingsInitializer>().InitializeSettings());
+        _onBuildContainerCompleted += () =>
+            WidgetLocator.Context.Resolve<ISettingsInitializer>().InitializeSettings();
     }
 
     public void UseWidget<TService, TImplementation>()
@@ -66,9 +67,12 @@ public class WidgetApplicationBuilder
         where TWidget : class
     {
         Services.RegisterInstance(Configuration).As<IConfiguration>();
+        
         var autofacResolver = Services.UseAutofacDependencyResolver();
         Services.RegisterInstance(autofacResolver);
         WidgetLocator.Context = Services.Build();
+        _onBuildContainerCompleted.Invoke();
+        
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
 
         if (_widgetImplementationType == null)

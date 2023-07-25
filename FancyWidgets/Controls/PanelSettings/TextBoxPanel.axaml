@@ -3,8 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:xamlConverters="clr-namespace:FancyWidgets.Common.XamlConverters"
+             xmlns:panelSettings="clr-namespace:FancyWidgets.Controls.PanelSettings"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="FancyWidgets.Controls.PanelSettings.TextBoxPanel">
+
+    <Design.DataContext>
+        <panelSettings:TextBoxPanel />
+    </Design.DataContext>
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -20,8 +25,8 @@
           HorizontalAlignment="Stretch"
           ColumnDefinitions="Auto,Auto">
 
-        <TextBlock Name="TitleText"
-                   Classes="TitleText"
+        <TextBlock Name="TitleControl" x:FieldModifier="public"
+                   Classes="TitleTextControl"
                    Text="{Binding Title}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
@@ -43,7 +48,7 @@
                     Grid.Column="1"
                     Orientation="Horizontal">
 
-            <TextBox Name="TextBox"
+            <TextBox Name="TextBoxControl" x:FieldModifier="public"
                      Classes="TextBox"
                      HorizontalAlignment="Right"
                      FontSize="15"
@@ -53,7 +58,7 @@
 
     <UserControl.Styles>
         <StyleInclude Source="/Styles/TextBoxStyle.axaml" />
-        <Style Selector="TextBlock.TitleText">
+        <Style Selector="TextBlock.TitleTextControl">
             <Setter Property="Foreground" Value="{DynamicResource Light}"></Setter>
         </Style>
     </UserControl.Styles>

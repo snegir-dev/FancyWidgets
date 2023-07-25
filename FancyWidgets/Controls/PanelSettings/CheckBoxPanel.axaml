@@ -19,7 +19,7 @@
     </UserControl.Styles>
 
     <DockPanel>
-        <TextBlock Name="TitleText"
+        <TextBlock Name="TitleControl"
                    Classes="TitleText"
                    Text="{Binding Title}"
                    VerticalAlignment="Center"

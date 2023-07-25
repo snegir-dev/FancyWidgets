@@ -21,7 +21,7 @@
           HorizontalAlignment="Stretch"
           ColumnDefinitions="Auto,Auto">
 
-        <TextBlock Name="TitleText"
+        <TextBlock Name="TitleControl" x:FieldModifier="public"
                    Classes="TitleText"
                    Text="{Binding Title}"
                    VerticalAlignment="Center"
@@ -40,11 +40,11 @@
             </TextBlock.Width>
         </TextBlock>
 
-        <StackPanel Name="StackPanel"
+        <StackPanel Name="StackPanelControl"
                     Grid.Column="1"
                     Orientation="Horizontal">
 
-            <Border Name="ColorDisplay"
+            <Border Name="ColorDisplayControl" x:FieldModifier="public"
                     Classes="ColorDisplay"
                     Background="{Binding #TextBox.Text, Converter={StaticResource ColorConvertor}}"
                     VerticalAlignment="Stretch"
@@ -54,7 +54,7 @@
                     Width="40"
                     Margin="0 0 3 0" />
 
-            <TextBox Name="TextBox"
+            <TextBox Name="TextBoxControl" x:FieldModifier="public"
                      Classes="TextBox"
                      HorizontalAlignment="Right"
                      VerticalAlignment="Center"

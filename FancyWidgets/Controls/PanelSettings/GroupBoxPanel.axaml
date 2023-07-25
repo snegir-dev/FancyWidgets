@@ -16,8 +16,8 @@
         <StyleInclude Source="/Styles/BaseStyle.axaml" />
     </UserControl.Styles>
 
-    <HeaderedContentControl Name="GroupBox">
-        <StackPanel Name="StackPanel" />
+    <HeaderedContentControl Name="GroupBoxControl" x:FieldModifier="public">
+        <StackPanel Name="GroupBoxContent" x:FieldModifier="public" />
     </HeaderedContentControl>
 
     <UserControl.Styles>

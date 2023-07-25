@@ -23,6 +23,7 @@ public class WidgetAppServicesConfiguration : IWidgetAppServicesConfiguration
 
     public void Configure()
     {
+        _container.AddSettingsProvider();
         _container.RegisterType<WidgetApplicationOptions>().AsSelf();
         _container.RegisterType<ContextMenuWindowViewModel>().AsSelf();
         _container.RegisterType<SettingsWindowViewModel>().AsSelf();
@@ -32,7 +33,6 @@ public class WidgetAppServicesConfiguration : IWidgetAppServicesConfiguration
         _container.RegisterType<DefaultWidgetDragger>().As<IWidgetDragger>().PreserveExistingDefaults();
         _container.RegisterType<WidgetJsonProvider>().As<IWidgetJsonProvider>();
         _container.RegisterType<SettingElementOperations>().As<ISettingElementOperations>();
-        _container.AddSettingsProvider();
         NewtonsoftConfigurationInitializer.Initialize();
     }
 }
