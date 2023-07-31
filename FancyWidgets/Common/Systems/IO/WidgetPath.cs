@@ -9,7 +9,7 @@ public static class WidgetPath
     
     private static string GetWorkDirectoryPath()
     {
-        var executingAssembly = Assembly.GetAssembly(typeof(IWidgetJsonProvider));
+        var executingAssembly = Assembly.GetCallingAssembly();
         var workDirectoryPath = Path.GetDirectoryName(executingAssembly?.Location);
         if (workDirectoryPath == null)
             throw new NullReferenceException("Failed to get the path to the widget assembly.");
