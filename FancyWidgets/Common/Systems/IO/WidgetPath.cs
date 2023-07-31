@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using FancyWidgets.Common.Convertors.Json;
 
-namespace FancyWidgets.Common.System.IO;
+namespace FancyWidgets.Common.Systems.IO;
 
 public static class WidgetPath
 {

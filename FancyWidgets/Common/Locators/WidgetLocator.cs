@@ -4,5 +4,10 @@ namespace FancyWidgets.Common.Locators;
 
 public static class WidgetLocator
 {
-    public static IComponentContext Context { get; internal set; }
+    internal static IContainer Context { get; set; }
+
+    public static ILifetimeScope BeginLifetimeScope()
+    {
+        return Context.BeginLifetimeScope();
+    }
 }

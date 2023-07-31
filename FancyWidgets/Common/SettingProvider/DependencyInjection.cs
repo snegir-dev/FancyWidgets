@@ -16,7 +16,8 @@ internal static class DependencyInjection
             .As<ISettingsInitializer>()
             .As<ISettingsLoader>()
             .As<ISettingsModifier>()
-            .As<ISettingsReader>();
+            .As<ISettingsReader>()
+            .InstancePerDependency();
         builder.AddSettingsElements();
     }
 
@@ -25,11 +26,8 @@ internal static class DependencyInjection
         builder.Register(context =>
         {
             var widgetJsonProvider = context.Resolve<IWidgetJsonProvider>();
-            var settingsElementFactory = () =>
-                widgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile)
-                ?? new List<SettingsElement>();
-            var settingsElements = settingsElementFactory.Invoke();
-            return settingsElements;
+            return widgetJsonProvider.GetModel<List<SettingsElement>>(AppSettings.SettingsFile)
+                   ?? new List<SettingsElement>();
         }).AsSelf().InstancePerDependency();
     }
 }

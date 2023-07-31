@@ -1,10 +1,8 @@
-﻿using FancyWidgets.Common.Domain;
+﻿namespace FancyWidgets.Common.Models.WidgetReactiveObject;
 
-namespace FancyWidgets.Common.SettingProvider.Models;
-
-public class ReactiveObjectDataStatus
+internal class ReactiveObjectDataStatus
 {
-    public WidgetReactiveObject WidgetReactiveObject { get; set; }
+    public WidgetReactiveObject WidgetReactiveObject { get; }
     public bool IsDataLoaded { get; set; }
 
     public ReactiveObjectDataStatus(WidgetReactiveObject widgetReactiveObject, bool isDataLoaded)
