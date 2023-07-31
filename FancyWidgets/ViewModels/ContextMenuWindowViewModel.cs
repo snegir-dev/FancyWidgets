@@ -5,10 +5,10 @@ namespace FancyWidgets.ViewModels;
 
 public class ContextMenuWindowViewModel : ReactiveObject
 {
-    public IEnumerable<WidgetContextMenuButton> ContextMenuButtons { get; }
-
     public ContextMenuWindowViewModel(IEnumerable<WidgetContextMenuButton> widgetContextMenus)
     {
         ContextMenuButtons = widgetContextMenus.Order();
     }
+
+    public IEnumerable<WidgetContextMenuButton> ContextMenuButtons { get; }
 }

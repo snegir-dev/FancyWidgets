@@ -1,10 +1,13 @@
 ﻿using System.Reflection;
 using Autofac;
-using FancyWidgets.Common.Domain;
+using FancyWidgets.Common.Convertors.Json;
 using FancyWidgets.Common.Extensions;
+using FancyWidgets.Common.Locators;
+using FancyWidgets.Common.Models.WidgetReactiveObject;
 using FancyWidgets.Common.SettingProvider.Attributes;
 using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.Common.SettingProvider.Models;
+using FancyWidgets.Models;
 using Newtonsoft.Json;
 
 namespace FancyWidgets.Common.SettingProvider;
@@ -19,9 +22,9 @@ public class SettingElementOperations : ISettingElementOperations
 
     protected List<SettingsElement> SettingElements;
 
-    public SettingElementOperations(List<SettingsElement> settingElements, IComponentContext context)
+    public SettingElementOperations(IComponentContext context, List<SettingsElement> settingsElements)
     {
-        SettingElements = settingElements;
+        SettingElements = settingsElements;
         _context = context;
     }
 
@@ -135,7 +138,7 @@ public class SettingElementOperations : ISettingElementOperations
         var editableObject = _context.ResolveByCondition(r => r.Activator.LimitType == declaringType)
                              ?? Activator.CreateInstance(declaringType);
         var propertyValue = property.GetValue(editableObject);
-        settingsElement.DataType = propertyValue?.GetType().AssemblyQualifiedName!;
+        settingsElement.DataType = propertyValue?.GetType().FullName!;
         settingsElement.JValue = JsonConvert.SerializeObject(propertyValue);
 
         return settingsElement;

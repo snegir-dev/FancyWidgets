@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Avalonia;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
@@ -20,8 +21,12 @@ public partial class ContextMenuWindow : ReactiveWindow<ContextMenuWindowViewMod
     {
         AvaloniaXamlLoader.Load(this);
         ViewModel = WidgetLocator.Context.Resolve<ContextMenuWindowViewModel>();
-        DataContext = ViewModel;
-        PointerExited += (_, _) => Hide();
+        PointerExited += Hide;
+    }
+
+    private void Hide(object? sender, PointerEventArgs e)
+    {
+        base.Hide();
     }
 
     public override void Show()

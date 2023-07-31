@@ -1,7 +1,7 @@
 ﻿using FancyWidgets.Common.WinApi;
 using WinApi.User32;
 
-namespace FancyWidgets.Common.System;
+namespace FancyWidgets.Common.Systems;
 
 internal class WindowSystemManager
 {

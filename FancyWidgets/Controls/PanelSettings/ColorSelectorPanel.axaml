@@ -19,7 +19,7 @@
     <Grid Name="Grid"
           VerticalAlignment="Center"
           HorizontalAlignment="Stretch"
-          ColumnDefinitions="Auto,Auto">
+          ColumnDefinitions="Auto,*">
 
         <TextBlock Name="TitleControl" x:FieldModifier="public"
                    Classes="TitleText"
@@ -42,7 +42,8 @@
 
         <StackPanel Name="StackPanelControl"
                     Grid.Column="1"
-                    Orientation="Horizontal">
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
 
             <Border Name="ColorDisplayControl" x:FieldModifier="public"
                     Classes="ColorDisplay"
@@ -59,7 +60,9 @@
                      HorizontalAlignment="Right"
                      VerticalAlignment="Center"
                      FontSize="15"
-                     Width="150" />
+                     Width="150"
+                     KeyUp="TextBoxControl_OnKeyUp"
+                     TextChanged="TextBoxControl_OnTextChanged"/>
         </StackPanel>
     </Grid>
 

@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using FancyWidgets.Common.Locators;
 using FancyWidgets.Common.SettingProvider.Interfaces;
@@ -12,7 +13,6 @@ namespace FancyWidgets.Common.WidgetAppConfigurations;
 public class WidgetApplicationBuilder
 {
     private Type? _widgetImplementationType;
-    private Action _onBuildContainerCompleted;
     public ContainerBuilder Services { get; }
     public ConfigurationManager Configuration { get; }
 
@@ -44,12 +44,6 @@ public class WidgetApplicationBuilder
         return this;
     }
 
-    public void InitializeSettings()
-    {
-        _onBuildContainerCompleted += () =>
-            WidgetLocator.Context.Resolve<ISettingsInitializer>().InitializeSettings();
-    }
-
     public void UseWidget<TService, TImplementation>()
         where TService : notnull
         where TImplementation : notnull
@@ -63,25 +57,31 @@ public class WidgetApplicationBuilder
             .SingleInstance();
     }
 
-    public TWidget Build<TWidget>()
-        where TWidget : class
+    public Window Build()
     {
         Services.RegisterInstance(Configuration).As<IConfiguration>();
-        
+
         var autofacResolver = Services.UseAutofacDependencyResolver();
         Services.RegisterInstance(autofacResolver);
         WidgetLocator.Context = Services.Build();
-        _onBuildContainerCompleted.Invoke();
-        
+        InitializeSettings();
+
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
 
         if (_widgetImplementationType == null)
             throw new InvalidOperationException("You must call UseWidget before calling Build.");
 
-        var widgetObj = WidgetLocator.Context.Resolve(_widgetImplementationType);
-        if (widgetObj is not TWidget widget)
+        using var locator = WidgetLocator.BeginLifetimeScope();
+        var widgetObj = locator.Resolve(_widgetImplementationType);
+        if (widgetObj is not Window widget)
             throw new NullReferenceException("Widget not found.");
 
         return widget;
+    }
+    
+    private void InitializeSettings()
+    {
+        using var container = WidgetLocator.BeginLifetimeScope();
+        container.Resolve<ISettingsInitializer>().InitializeSettings();
     }
 }

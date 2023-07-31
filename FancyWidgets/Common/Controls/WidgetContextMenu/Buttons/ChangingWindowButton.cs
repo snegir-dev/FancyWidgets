@@ -26,7 +26,7 @@ public class ChangingWindowButton : WidgetContextMenuButton
 
     public ChangingWindowButton()
     {
-        _widget = (Window)WidgetLocator.Context.ResolveByCondition(t =>
+        _widget = (Window)WidgetLocator.BeginLifetimeScope().ResolveByCondition(t =>
             t.Activator.LimitType.BaseType?.IsGenericType == true &&
             t.Activator.LimitType.BaseType.GetGenericTypeDefinition() == typeof(Widget<>))!;
 

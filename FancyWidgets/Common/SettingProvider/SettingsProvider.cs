@@ -6,7 +6,7 @@ using FancyWidgets.Common.SettingProvider.Interfaces;
 using FancyWidgets.Common.SettingProvider.Models;
 using FancyWidgets.Models;
 using Newtonsoft.Json;
-using static FancyWidgets.Common.SettingProvider.ReactiveObjectDataStatusContainer;
+using static FancyWidgets.Common.Models.WidgetReactiveObject.ReactiveObjectDataStatusContainer;
 
 namespace FancyWidgets.Common.SettingProvider;
 
@@ -33,9 +33,9 @@ public class SettingsProvider : ISettingsProvider
 
     public virtual void LoadSettings()
     {
-        foreach (var currentObjectDataStatus in CurrentObjectDataStatuses)
+        foreach (var currentObjectDataStatus in GetDataStatus())
         {
-            if (currentObjectDataStatus is null || currentObjectDataStatus.IsDataLoaded)
+            if (currentObjectDataStatus == null || currentObjectDataStatus.IsDataLoaded)
                 continue;
 
             var propertyInfos = currentObjectDataStatus.WidgetReactiveObject.GetType()
@@ -52,7 +52,9 @@ public class SettingsProvider : ISettingsProvider
                 object? value = null;
                 if (settingElement.DataType != null)
                 {
-                    var destinationType = Type.GetType(settingElement.DataType);
+                    var destinationType = AppDomain.CurrentDomain.GetAssemblies()
+                        .Select(a => a.GetType(settingElement.DataType))
+                        .FirstOrDefault(t => t != null);
                     if (destinationType != null)
                         value = JsonConvert.DeserializeObject(settingElement.JValue, destinationType);
                 }
@@ -71,7 +73,7 @@ public class SettingsProvider : ISettingsProvider
             settingElement = new SettingsElement
             {
                 Id = id,
-                DataType = value.GetType().AssemblyQualifiedName!,
+                DataType = value.GetType().FullName!,
                 JValue = JsonConvert.SerializeObject(value)
             };
             SettingElements.Add(settingElement);
@@ -193,7 +195,7 @@ public class SettingsProvider : ISettingsProvider
 
     protected virtual void SetValue(PropertyInfo? property, SettingsElement settingsElement, object? value)
     {
-        foreach (var currentObjectDataStatus in CurrentObjectDataStatuses)
+        foreach (var currentObjectDataStatus in GetDataStatus())
         {
             if (currentObjectDataStatus is null
                 || !currentObjectDataStatus.WidgetReactiveObject.GetType()
@@ -201,7 +203,7 @@ public class SettingsProvider : ISettingsProvider
                 continue;
 
             property?.SetValue(currentObjectDataStatus.WidgetReactiveObject, value);
-            settingsElement.DataType = property?.PropertyType.AssemblyQualifiedName!;
+            settingsElement.DataType = property?.PropertyType.FullName!;
             settingsElement.JValue = JsonConvert.SerializeObject(value);
             WidgetJsonProvider.SaveModel(SettingElements, AppSettings.SettingsFile);
         }
@@ -209,7 +211,7 @@ public class SettingsProvider : ISettingsProvider
 
     protected virtual PropertyInfo? GetObjectPropertyById(string? id)
     {
-        foreach (var currentObjectDataStatus in CurrentObjectDataStatuses)
+        foreach (var currentObjectDataStatus in GetDataStatus())
         {
             if (currentObjectDataStatus is null || id is null)
                 continue;
@@ -233,7 +235,7 @@ public class SettingsProvider : ISettingsProvider
 
     protected virtual PropertyInfo? GetObjectPropertyByNamespaceAndName(string? fullNameClass, string? propertyName)
     {
-        foreach (var currentObjectDataStatus in CurrentObjectDataStatuses)
+        foreach (var currentObjectDataStatus in GetDataStatus())
         {
             if (currentObjectDataStatus is null || fullNameClass is null || propertyName is null)
                 continue;

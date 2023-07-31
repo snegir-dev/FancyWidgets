@@ -11,7 +11,7 @@ using FancyWidgets.Common.Constants;
 using FancyWidgets.Common.Controls.WidgetDragger;
 using FancyWidgets.Common.Convertors.Json;
 using FancyWidgets.Common.Locators;
-using FancyWidgets.Common.System;
+using FancyWidgets.Common.Systems;
 using FancyWidgets.Common.WidgetAppConfigurations;
 using FancyWidgets.Models;
 using FancyWidgets.Views;
@@ -44,7 +44,8 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         if (applicationOptions.IsDebug)
             this.AttachDevTools();
         else
-            Uuid = WidgetMetadata.Uuid ?? throw new NullReferenceException("Uuid must not be null.");
+            Uuid = WidgetMetadata.WidgetInfo.Uuid
+                   ?? throw new NullReferenceException("Uuid must not be null.");
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -90,7 +91,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
         WidgetSettings = _widgetJsonProvider.GetModel<WidgetSettings>(AppSettings.WidgetSettingsFile);
         if (WidgetSettings == null)
             return;
-        Title = WidgetMetadata.WidgetName;
+        Title = WidgetMetadata.WidgetInfo.WidgetName;
         Width = WidgetSettings.Width == 0 ? Width : WidgetSettings.Width;
         Height = WidgetSettings.Height == 0 ? Height : WidgetSettings.Height;
         if (WidgetSettings is not { XPosition: 0, YPosition: 0 })
@@ -122,7 +123,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
 
         if (e.KeyModifiers != KeyModifiers.Control)
             return;
-
+        
         _contextMenuWindow.Show();
         base.OnPointerPressed(e);
     }

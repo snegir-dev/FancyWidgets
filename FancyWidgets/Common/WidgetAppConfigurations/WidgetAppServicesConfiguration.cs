@@ -24,15 +24,15 @@ public class WidgetAppServicesConfiguration : IWidgetAppServicesConfiguration
     public void Configure()
     {
         _container.AddSettingsProvider();
-        _container.RegisterType<WidgetApplicationOptions>().AsSelf();
-        _container.RegisterType<ContextMenuWindowViewModel>().AsSelf();
-        _container.RegisterType<SettingsWindowViewModel>().AsSelf();
-        _container.RegisterType<WidgetDisablingButton>().As<WidgetContextMenuButton>();
-        _container.RegisterType<ChangingWindowButton>().As<WidgetContextMenuButton>();
-        _container.RegisterType<ChangingSettingsButton>().As<WidgetContextMenuButton>();
-        _container.RegisterType<DefaultWidgetDragger>().As<IWidgetDragger>().PreserveExistingDefaults();
-        _container.RegisterType<WidgetJsonProvider>().As<IWidgetJsonProvider>();
-        _container.RegisterType<SettingElementOperations>().As<ISettingElementOperations>();
+        _container.RegisterType<WidgetApplicationOptions>().AsSelf().SingleInstance();
+        _container.RegisterType<ContextMenuWindowViewModel>().AsSelf().SingleInstance();
+        _container.RegisterType<SettingsWindowViewModel>().AsSelf().InstancePerDependency();
+        _container.RegisterType<WidgetDisablingButton>().As<WidgetContextMenuButton>().InstancePerDependency();
+        _container.RegisterType<ChangingWindowButton>().As<WidgetContextMenuButton>().InstancePerDependency();
+        _container.RegisterType<ChangingSettingsButton>().As<WidgetContextMenuButton>().InstancePerDependency();
+        _container.RegisterType<DefaultWidgetDragger>().As<IWidgetDragger>().InstancePerDependency();
+        _container.RegisterType<WidgetJsonProvider>().As<IWidgetJsonProvider>().InstancePerDependency();
+        _container.RegisterType<SettingElementOperations>().As<ISettingElementOperations>().InstancePerDependency();
         NewtonsoftConfigurationInitializer.Initialize();
     }
 }

@@ -7,13 +7,6 @@ public abstract class WidgetContextMenuButton : ReactiveObject, IComparable<Widg
 {
     public abstract int Order { get; protected set; }
     public abstract string Content { get; set; }
-    public ReactiveCommand<Unit, Unit> ExecuteCommand { get; protected set; }
-
-    protected WidgetContextMenuButton()
-    {
-        ExecuteCommand = ReactiveCommand.Create(Execute);
-    }
-
     protected abstract void Execute();
 
     public int CompareTo(WidgetContextMenuButton? other)
