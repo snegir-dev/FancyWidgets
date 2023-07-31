@@ -52,8 +52,6 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
     {
         LoadWidgetDragger();
         _contextMenuWindow = new ContextMenuWindow();
-        _windowSystemManager.HideFromAltTab();
-        _windowSystemManager.WidgetToBottom();
         _windowSystemManager.HideMinimizeAndMaximizeButtons();
         InitializeEvents();
         base.OnApplyTemplate(e);
@@ -112,6 +110,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
 
     protected override void OnLoaded(RoutedEventArgs e)
     {
+        _windowSystemManager.WidgetToBottom();
         _windowSystemManager.SetWindowChildToDesktop();
         base.OnLoaded(e);
     }
@@ -123,7 +122,7 @@ public abstract class Widget<TViewModel> : ReactiveWindow<TViewModel>
 
         if (e.KeyModifiers != KeyModifiers.Control)
             return;
-        
+
         _contextMenuWindow.Show();
         base.OnPointerPressed(e);
     }
