@@ -1,0 +1,29 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Styles>
+        <Style Selector="CheckBox.CheckBox">
+            <Setter Property="MinWidth" Value="32" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="CheckBox.CheckBox /template/ Grid#RootGrid">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="CheckBox.CheckBox /template/ Border#NormalRectangle">
+            <Setter Property="MinWidth" Value="30" />
+            <Setter Property="MinHeight" Value="30" />
+        </Style>
+        <Style Selector="CheckBox.CheckBox:checked /template/ Border#NormalRectangle">
+            <Setter Property="BorderBrush" Value="{DynamicResource Light}" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="CheckBox.CheckBox /template/ Path#CheckGlyph">
+            <Setter Property="MinWidth" Value="13"></Setter>
+        </Style>
+    </Styles>
+</Styles>

@@ -1,0 +1,42 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xamlConverters="clr-namespace:FancyWidgets.Common.XamlConverters">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Resources/ColorResource.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <xamlConverters:DarkenColorConvertor x:Key="DarkenColorConvertor" />
+        </ResourceDictionary>
+    </Styles.Resources>
+
+    <Styles>
+        <Style Selector="ToggleSwitch.ToggleSwitch">
+            <Setter Property="Foreground" Value="{DynamicResource Light}" />
+        </Style>
+
+        <Style Selector="ToggleSwitch.ToggleSwitch:checked /template/ Border#SwitchKnobBounds">
+            <Setter Property="Background" Value="{DynamicResource VeryDark}" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="ToggleSwitch.ToggleSwitch:unchecked /template/ Border#OuterBorder">
+            <Setter Property="Background" Value="{DynamicResource VeryDark}" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <Style Selector="ToggleSwitch.ToggleSwitch:checked /template/ Ellipse#SwitchKnobOn">
+            <Setter Property="Fill"
+                    Value="{DynamicResource Light}" />
+        </Style>
+        <Style Selector="ToggleSwitch.ToggleSwitch:unchecked /template/ Ellipse#SwitchKnobOff">
+            <Setter Property="Fill"
+                    Value="{Binding Source={StaticResource Light}, Converter={StaticResource DarkenColorConvertor}, ConverterParameter=0.5}" />
+        </Style>
+    </Styles>
+</Styles>

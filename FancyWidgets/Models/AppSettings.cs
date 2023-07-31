@@ -2,6 +2,7 @@
 
 public class AppSettings
 {
-    public const string WidgetMetadataFile = "metadata.json";
-    public const string WidgetSettingsFile = "widgetSettings.json";
+    public const string WidgetMetadataFile = "Metadata.json";
+    public const string WidgetSettingsFile = "WidgetSettings.json";
+    public const string SettingsFile = "Settings.json";
 }

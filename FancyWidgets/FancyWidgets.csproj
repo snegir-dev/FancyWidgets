@@ -4,15 +4,36 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.1-alpha</Version>
-        <Title>FancyWidgets</Title>
+        <Version>1.0.1-Preview17</Version>
+        <Title>Library for creating widgets for Windows</Title>
         <Authors>Snegir.null</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageIcon>Assets\logo.png</PackageIcon>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Avalonia" Version="0.10.19" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-      <PackageReference Include="WinApi" Version="4.0.0" />
+        <AvaloniaResource Include="Assets\**"/>
+        <None Remove=".gitignore"/>
+        <None Include="Assets\logo.png" Pack="true" Visible="false" PackagePath="Assets\logo.png"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.1" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.1" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="11.0.1"/>
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.1"/>
+        <PackageReference Include="Avalonia.Svg.Skia" Version="11.0.0"/>
+        <PackageReference Include="Avalonia.Win32" Version="11.0.1"/>
+        <PackageReference Include="Castle.Core" Version="5.1.1"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="Splat.Autofac" Version="14.7.1" />
+        <PackageReference Include="WinApi" Version="4.0.0"/>
+        <PackageReference Include="WinApi.Utils" Version="4.0.0"/>
     </ItemGroup>
 </Project>

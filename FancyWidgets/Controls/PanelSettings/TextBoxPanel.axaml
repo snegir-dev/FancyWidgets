@@ -1,0 +1,66 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:xamlConverters="clr-namespace:FancyWidgets.Common.XamlConverters"
+             xmlns:panelSettings="clr-namespace:FancyWidgets.Controls.PanelSettings"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="FancyWidgets.Controls.PanelSettings.TextBoxPanel">
+
+    <Design.DataContext>
+        <panelSettings:TextBoxPanel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Resources/ColorResource.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <xamlConverters:SubtractionConverter x:Key="SubtractionConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Name="Grid"
+          VerticalAlignment="Center"
+          HorizontalAlignment="Stretch"
+          ColumnDefinitions="Auto,Auto">
+
+        <TextBlock Name="TitleControl" x:FieldModifier="public"
+                   Classes="TitleTextControl"
+                   Text="{Binding Title}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   TextWrapping="Wrap"
+                   TextTrimming="CharacterEllipsis"
+                   FontSize="15"
+                   Padding="0 0 5 0"
+                   Grid.Column="0">
+
+            <TextBlock.Width>
+                <MultiBinding Converter="{StaticResource SubtractionConverter}">
+                    <Binding ElementName="StackPanel" Path="Bounds.Width" />
+                    <Binding ElementName="Grid" Path="Bounds.Width" />
+                </MultiBinding>
+            </TextBlock.Width>
+        </TextBlock>
+
+        <StackPanel Name="StackPanel"
+                    Grid.Column="1"
+                    Orientation="Horizontal">
+
+            <TextBox Name="TextBoxControl" x:FieldModifier="public"
+                     Classes="TextBox"
+                     HorizontalAlignment="Right"
+                     FontSize="15"
+                     Width="250" />
+        </StackPanel>
+    </Grid>
+
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/TextBoxStyle.axaml" />
+        <Style Selector="TextBlock.TitleTextControl">
+            <Setter Property="Foreground" Value="{DynamicResource Light}"></Setter>
+        </Style>
+    </UserControl.Styles>
+
+</UserControl>

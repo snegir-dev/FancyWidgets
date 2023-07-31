@@ -1,0 +1,62 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:FancyWidgets.ViewModels"
+        mc:Ignorable="d"
+        x:Class="FancyWidgets.Views.ContextMenuWindow"
+        SizeToContent="WidthAndHeight"
+        Width="100"
+        Height="200"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        Topmost="True"
+        SystemDecorations="None"
+        CanResize="False"
+        Focusable="False"
+        ShowInTaskbar="False">
+
+    <Design.DataContext>
+        <viewModels:ContextMenuWindowViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <StyleInclude Source="/Styles/BaseStyle.axaml" />
+    </Window.Styles>
+
+    <Border MinWidth="200"
+            Padding="6"
+            CornerRadius="3"
+            Background="#202020">
+        <StackPanel>
+            <ItemsControl ItemsSource="{Binding ContextMenuButtons}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding Content}"
+                                Command="{Binding Execute}"
+                                Click="Button_OnClick">
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <Border.Styles>
+            <Style Selector="StackPanel Button">
+                <Setter Property="FontSize" Value="14"></Setter>
+                <Setter Property="Background" Value="#202020"></Setter>
+                <Setter Property="Foreground" Value="White"></Setter>
+                <Setter Property="Margin" Value="0 3 0 3"></Setter>
+                <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+                <Setter Property="Padding" Value="8"></Setter>
+            </Style>
+            <Style Selector="StackPanel Button /template/ ContentPresenter">
+                <Setter Property="Background" Value="#202020"></Setter>
+            </Style>
+            <Style Selector="StackPanel Button:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="#383838"></Setter>
+                <Setter Property="TextBlock.Foreground" Value="White"></Setter>
+            </Style>
+        </Border.Styles>
+    </Border>
+</Window>

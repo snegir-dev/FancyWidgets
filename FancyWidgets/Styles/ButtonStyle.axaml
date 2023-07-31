@@ -1,0 +1,36 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xamlConverters="clr-namespace:FancyWidgets.Common.XamlConverters">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Resources/ColorResource.axaml" />
+                <ResourceInclude Source="/Resources/FontResource.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <xamlConverters:DarkenColorConvertor x:Key="DarkenColorConvertor" />
+        </ResourceDictionary>
+    </Styles.Resources>
+
+    <Styles>
+        <Style Selector="Button.Button">
+            <Setter Property="Background" Value="{DynamicResource Light}"></Setter>
+            <Setter Property="Foreground" Value="{DynamicResource Dark}"></Setter>
+            <Setter Property="Padding" Value="15 8 15 8"></Setter>
+            <Setter Property="FontFamily" Value="{DynamicResource Inter}"></Setter>
+            <Setter Property="FontWeight" Value="Medium"></Setter>
+            <Setter Property="FontSize" Value="15"></Setter>
+        </Style>
+        <Style Selector="Button.Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background"
+                    Value="{Binding Source={StaticResource Light}, Converter={StaticResource DarkenColorConvertor}, ConverterParameter=0.2}">
+            </Setter>
+            <Setter Property="Foreground" Value="{DynamicResource Dark}"></Setter>
+        </Style>
+    </Styles>
+</Styles>

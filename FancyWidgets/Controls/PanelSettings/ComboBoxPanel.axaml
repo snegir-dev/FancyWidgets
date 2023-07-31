@@ -1,0 +1,53 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:xamlConverters="clr-namespace:FancyWidgets.Common.XamlConverters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="FancyWidgets.Controls.PanelSettings.ComboBoxPanel">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Resources/ColorResource.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <xamlConverters:SubtractionConverter x:Key="SubtractionConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/ComboBoxStyle.axaml" />
+    </UserControl.Styles>
+
+    <Grid Name="Grid"
+          VerticalAlignment="Center"
+          HorizontalAlignment="Stretch"
+          ColumnDefinitions="Auto,Auto">
+
+        <TextBlock Name="TitleControl" x:FieldModifier="public"
+                   Classes="TitleText"
+                   Text="{Binding Title}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   TextWrapping="Wrap"
+                   TextTrimming="CharacterEllipsis"
+                   FontSize="15"
+                   Padding="0 0 5 0"
+                   Grid.Column="0">
+
+            <TextBlock.Width>
+                <MultiBinding Converter="{StaticResource SubtractionConverter}">
+                    <Binding ElementName="ComboBox" Path="Bounds.Width" />
+                    <Binding ElementName="Grid" Path="Bounds.Width" />
+                </MultiBinding>
+            </TextBlock.Width>
+        </TextBlock>
+
+        <ComboBox Name="ComboBoxControl" x:FieldModifier="public"
+                  SelectedIndex="0"
+                  Classes="ComboBox"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Right"
+                  Grid.Column="1" />
+    </Grid>
+
+</UserControl>
